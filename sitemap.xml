@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>https://4get.ca</loc>
+		<lastmod>2023-07-31T07:56:12+03:00</lastmod>
+	</url>
+	<url>
+		<loc>https://4get.ca/about</loc>
+		<lastmod>2023-07-31T07:56:12+03:00</lastmod>
+	</url>
+	<url>
+		<loc>https://4get.ca/settings</loc>
+		<lastmod>2023-07-31T07:56:12+03:00</lastmod>
+	</url>
+	<url>
+		<loc>https://4get.ca/api.txt</loc>
+		<lastmod>2023-07-31T07:56:12+03:00</lastmod>
+	</url>
+</urlset>

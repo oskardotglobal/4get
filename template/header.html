@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<title>{%title%}</title>
+		<link rel="stylesheet" href="/static/style.css">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta name="robots" content="{%index%}index,{%index%}follow">
+		<link rel="icon" type="image/x-icon" href="/favicon.ico">
+		<meta name="description" content="4get.ca: {%description%}">
+		<link rel="search" type="application/opensearchdescription+xml" title="4get" href="/opensearch.xml">
+	</head>
+	<body{%body_class%}>
+		<form method="GET" autocomplete="off">
+			<div class="searchbox">
+				<input type="submit" value="Search" tabindex="-1">
+				<div class="wrapper">
+					<input type="text" value="{%search%}" maxlength="500" name="s" placeholder="Proxy search..." required>
+				</div>
+				<div class="autocomplete"></div>
+			</div>
+			<div class="tabs">
+				{%tabs%}
+			</div>
+			<div class="filters">
+				{%filters%}
+			</div>
+		</form>

@@ -1,0 +1,289 @@
+                        __ __             __
+                       / // / ____ ____  / /_
+                      / // /_/ __ `/ _ \/ __/
+                     /__  __/ /_/ /  __/ /_ 
+                       /_/  \__, /\___/\__/
+                           /____/         
+
+           + Welcome to the 4get API documentation +
+
++ Terms of use
+    Do NOT misuse the API. Misuses can include... ::
+    
+        1. Serp SEO scanning
+        2. Intensive scraping
+        3. Any other activity that isn't triggered by a human
+        4. Illegal activities in Canada
+        5. Constant "test" queries while developping your program
+           (please cache the API responses!)
+
+
+    Examples of good uses of the API ::
+        
+        1. A chatroom bot that presents users with search results
+        2. Personal use
+        3. Any other activity that is initiated by a human
+
+
+    If you wish to engage in the activities listed under "misuses", feel
+    free to download the source code of the project and running 4get
+    under your own terms. Please respect the terms of use listed here so
+    that this website may be available to all in the far future.
+
+    Get your instance running here ::
+        https://git.lolcat.ca/lolcat/4get
+
+    Thanks!
+
+
++ Decode the data
+    All payloads returned by the API are encoded in the JSON format. If
+    you don't know how to tackle the problem, maybe programming is not
+    for you.
+    
+    All of the endpoints use the GET method.
+
+
++ Check if an API call was successful
+    All API responses come with an array index named "status". If the
+    status is something else than the string "ok", something went wrong.
+    
+    The HTTP code will always be 200 as to not cause issues with CORS.
+
+
++ Get the next page of results
+    All API responses come with an array index named "nextpage". To get
+    the next page of results, you must make another API call with &npt.
+    
+    Example ::
+        
+        + First API call
+            /api/v1/web?s=higurashi
+        
+        + Second API call
+            /api/v1/web?npt=ddg1._rJ2hWmYSjpI2hsXWmYajJx < ... >
+    
+    You shouldn't specify the search term, only the &npt parameter
+    suffices.
+    
+    The first part of the token before the dot (ddg1) refers to an
+    array position on the serber's memory. The second part is an
+    encryption key used to decode the data at that position. This way,
+    it is impossible to supply invalid pagination data and it is
+    impossible for a 4get operator to peek at the private data of the
+    user after a request has been made.
+    
+    The tokens will expire as soon as they are used or after a 7 minutes
+    inactivity period, whichever comes first.
+
+
++ Beware of null values!
+    Most fields in the API responses can return "null". You don't need
+    to worry about unset values.
+
+
++ API Parameters
+    To construct a valid request, you can use the 4get web interface
+    to craft a valid request, and replace "/web" with "/api/v1/web".
+
+
++ "date" and "time" parameters
+    "date" always refer to a calendar date.
+    "time" always refer to the duration of some media.
+    
+    They are both integers that uses seconds as its unit. The "date"
+    parameter specifies the number of seconds that passed since January
+    1st 1970. 
+    
+
+             ______          __            _       __      
+            / ____/___  ____/ /___  ____  (_)___  / /______
+           / __/ / __ \/ __  / __ \/ __ \/ / __ \/ __/ ___/
+          / /___/ / / / /_/ / /_/ / /_/ / / / / / /_(__  ) 
+         /_____/_/ /_/\__,_/ .___/\____/_/_/ /_/\__/____/  
+                          /_/                              
+
++ /api/v1/web
+    + &extendedsearch
+        When using the ddg(DuckDuckGo) scraper, you may make use of the
+        &extendedsearch parameter. If you need rich answer data from
+        additional sources like StackOverflow, music lyrics sites, etc.,
+        you need to specify the value of (string)"true".
+        
+        The default value is "false" for API calls.
+    
+    
+    + Parse the "spelling"
+        The array index named "spelling" contains 3 indexes ::
+            
+            spelling:
+                type:         "including"
+                using:        "4chan"
+                correction:   '"4cha"'
+        
+        
+        The "type" may be any of these 3 values. When rendering the
+        autocorrect text inside your application, it should look like
+        what follows right after the parameter value ::
+            
+            no_correction    <Empty>
+            including        Including results for %using%. Did you mean
+                             %correction%?
+                            
+            not_many         Not many results for %using%. Did you mean
+                             %correction%?
+        
+        
+        As of right now, the "spelling" is only available on
+        "/api/v1/web".
+        
+    
+    + Parse the "answer"
+        The array index named "answer" may contain a list of multiple
+        answers. The array index "description" contains a linear list of
+        nodes that can help you construct rich formatted data inside of
+        your application. The structure is similar to the one below:
+        
+        answer:
+            0:
+                title: "Higurashi"
+                description:
+                    0:
+                        type:     "text"
+                        value:    "Higurashi is a great show!"
+                    1:
+                        type:     "quote"
+                        value:    "Source: my ass"
+        
+        
+        Each "description" node contains an array index named "type".
+        Here is a list of them:
+            
+              text
+            + title
+              italic
+            + quote
+            + code
+              inline_code
+              link
+            + image
+            + audio
+        
+        
+        Each individual node prepended with a "+" should be prepended by
+        a newline when constructing the rendered description object.
+        
+        There are some nodes that differ from the type-value format.
+        Please parse them accordingly ::
+            
+            + link
+                type:     "link"
+                url:      "https://lolcat.ca"
+                value:    "Visit my website!"
+            
+            
+            + image
+                type:    "image"
+                url:     "https://lolcat.ca/static/pixels.png"
+            
+            
+            + audio
+                type:    "audio"
+                url:     "https://lolcat.ca/static/whatever.mp3"
+        
+        
+        The array index named "table" is an associative array. You can
+        loop over the data using this PHP code, for example ::
+            
+            foreach($table as $website_name => $url){ // ...
+        
+        
+		The rest of the JSON is pretty self explanatory.
+        
+        
++ /api/v1/images
+    All images are contained within "image". The structure looks like
+    below ::
+        
+        image:
+            0:
+                title: "My awesome Higurashi image"
+                source:
+                    0:
+                        url: "https://lolcat.ca/static/profile_pix.png"
+                        width: 400
+                        height: 400
+                    1:
+                        url: "https://lolcat.ca/static/pixels.png"
+                        width: 640
+                        height: 640
+                    2:
+                        url: "https://tse1.mm.bing.net/th?id=OIP.VBM3BQg
+                        euf0-xScO1bl1UgHaGG"
+                        width: 194
+                        height: 160
+        
+    
+    The last image of the "source" array is always the thumbnail, and is
+    a good fallback to use when other sources fail to load. There can be
+    more than 1 source; this is especially true when using the Yandex
+    scraper, but beware of captcha rate limits.
+    
+    
++ /api/v1/videos
+    The "time" parameter for videos may be set to "_LIVE". For live
+    streams, the amount of people currently watching is passed in
+    "views".
+
+
++ /api/v1/news
+    Just make a request to "/api/v1/news?s=elon+musk". The payload
+    has nothing special about it and is very self explanatory, just like
+    the endpoint above.
+
+
++ /favicon
+    Get the favicon for a website. The only parameter is "s", and must
+    include the protocol.
+    
+    Example ::
+        
+        /favicon?s=https://lolcat.ca
+    
+    
+    If we had to revert to using Google's favicon cache, it will throw
+    an error in the X-Error header field. If Google's favicon cache
+    also failed to return an image, or if you're too retarded to specify
+    a valid domain name, a default placeholder image will be returned
+    alongside the "404" HTTP error code.
+
+
++ /proxy
+    Get a proxied image. Useful if you don't want to leak your user's IP
+    address. The parameters are "i" for the image link and "s" for the
+    size.
+    
+    Acceptable "s" parameters:
+        
+        portrait     90x160
+        landscape    160x90
+        square       90x90
+        thumb        236x180
+        cover        207x270
+        original     <Original resolution>
+	
+    You can also ommit the "s" parameter if you wish to view the
+    original image. When an error occurs, an "X-Error" header field
+    is set.
+
+
++ /audio
+    Get a proxied audio file. Does not support "Range" headers, as it's
+    only used to proxy small files.
+    
+    The parameter is "s" for the audio link.
+
+
++ Appendix
+    If you have any questions or need clarifications, please send an
+    email my way to will at lolcat.ca
