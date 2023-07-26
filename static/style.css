@@ -50,6 +50,8 @@
 
 audio{
 	max-width:100%;
+	display:block;
+	margin-bottom:17px;
 }
 
 body,html{

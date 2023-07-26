@@ -679,7 +679,7 @@ class ddg{
 				Check for worknik results
 			*/
 			preg_match(
-				'/nrj\(\'\/js\/spice\/dictionary\/definition\/([^\']+)\'\)/',
+				'/nrj\(\'\/js\/spice\/dictionary\/definition\/([^\'\)]+)/',
 				$js,
 				$wordnik
 			);

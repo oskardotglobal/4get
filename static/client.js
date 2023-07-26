@@ -577,7 +577,6 @@ function getproxylink(url){
 		return htmlspecialchars(url);
 	}else{
 		
-		console.log(url);
 		return '/proxy?i=' + encodeURIComponent(url);
 	}
 }

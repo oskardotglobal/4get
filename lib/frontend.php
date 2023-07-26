@@ -143,7 +143,7 @@ class frontend{
 				
 				$payload .=
 					'">' .
-						'<img class="thumb" src="/proxy?i=' . urlencode($site["thumb"]["url"]) . '&s=' . $size . '" alt="thumb">';
+						'<img class="thumb" src="' . $this->htmlimage($site["thumb"]["url"], $size) . '" alt="thumb">';
 				
 				if($duration !== null){
 					
@@ -1271,6 +1271,21 @@ class frontend{
 		}
 		
 		return http_build_query($out);
+	}
+	
+	public function htmlimage($image, $format){
+		
+		if(
+			preg_match(
+				'/^data:/',
+				$image
+			)
+		){
+			
+			return htmlspecialchars($image);
+		}
+		
+		return "/proxy.php?i=" . urlencode($image) . "&s=" . $format;
 	}
 	
 	public function htmlnextpage($gets, $npt, $page){

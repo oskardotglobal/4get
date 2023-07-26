@@ -58,32 +58,15 @@ if(count($results["image"]) === 0){
 	
 foreach($results["image"] as $image){
 	
-	$domain = htmlspecialchars(parse_url($image["url"], PHP_URL_HOST));
-	
-	$c = count($image["source"]) - 1;
-	
-	if(
-		preg_match(
-			'/^data:/',
-			$image["source"][$c]["url"]
-		)
-	){
-		
-		$src = htmlspecialchars($image["source"][$c]["url"]);
-	}else{
-		
-		$src = "/proxy?i=" . urlencode($image["source"][$c]["url"]) . "&s=thumb";
-	}
-	
 	$payload["images"] .=
 		'<div class="image-wrapper" title="' . htmlspecialchars($image["title"]) .'" data-json="' . htmlspecialchars(json_encode($image["source"])) . '">' .
 			'<div class="image">' .
 				'<a href="' . htmlspecialchars($image["source"][0]["url"]) . '" rel="noreferrer nofollow" class="thumb">' .
-					'<img src="' . $src . '" alt="thumbnail">' .
+					'<img src="' . $frontend->htmlimage($image["source"][count($image["source"]) - 1]["url"], "thumb") . '" alt="thumbnail">' .
 					'<div class="duration">' . $image["source"][0]["width"] . 'x' . $image["source"][0]["height"] . '</div>' .
 				'</a>' .
 				'<a href="' . htmlspecialchars($image["url"]) . '" rel="noreferrer nofollow">' .
-					'<div class="title">' . htmlspecialchars($domain) . '</div>' .
+					'<div class="title">' . htmlspecialchars(parse_url($image["url"], PHP_URL_HOST)) . '</div>' .
 					'<div class="description">' . $frontend->highlighttext($get["s"], $image["title"]) . '</div>' .
 				'</a>' .
 			'</div>' .

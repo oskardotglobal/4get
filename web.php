@@ -65,7 +65,13 @@ if($results["spelling"]["type"] != "no_correction"){
 	$payload["left"] .=
 		'<div class="infobox">' .
 			$type . ' <b>' . htmlspecialchars($results["spelling"]["using"]) . '</b>.<br>' .
-			'Did you mean <a href="?s=' . urlencode($results["spelling"]["correction"]) . '">' . $results["spelling"]["correction"] . '</a>?' .
+			'Did you mean <a href="?s=' .
+			urlencode($results["spelling"]["correction"]) .
+			'&' .
+			$frontend->buildquery($get, true) .
+			'">' .
+			$results["spelling"]["correction"] .
+			'</a>?' .
 		'</div>';
 }
 
@@ -120,24 +126,9 @@ if(count($results["image"]) !== 0){
 	
 	foreach($results["image"] as $image){
 		
-		$c = count($image["source"]) - 1;
-		
-		if(
-			preg_match(
-				'/^data:/',
-				$image["source"][$c]["url"]
-			)
-		){
-			
-			$src = htmlspecialchars($image["source"][$c]["url"]);
-		}else{
-			
-			$src = "/proxy?i=" . urlencode($image["source"][$c]["url"]) . "&s=square";
-		}
-		
 		$right["image"] .=
 			'<a class="image" href="' . htmlspecialchars($image["url"]) . '" rel="noreferrer nofollow" title="' . htmlspecialchars($image["title"]) . '" data-json="' . htmlspecialchars(json_encode($image["source"])) . '" tabindex="-1">' .
-				'<img src="' . $src . '" alt="thumb">' .
+				'<img src="' . $frontend->htmlimage($image["source"][count($image["source"]) - 1]["url"], "square") . '" alt="thumb">' .
 				'<div class="duration">' . $image["source"][0]["width"] . 'x' . $image["source"][0]["height"] . '</div>' .
 			'</a>';
 	}
@@ -283,7 +274,7 @@ if(count($results["answer"]) !== 0){
 			
 			$right["answer"] .=
 				'<a href="' . htmlspecialchars($answer["thumb"]) . '" rel="noreferrer nofollow" class="photo">' .
-					'<img src="/proxy?i=' . urlencode($answer["thumb"]) . '&s=cover" alt="thumb" class="openimg">' .
+					'<img src="' . $frontend->htmlimage($answer["thumb"], "cover") . '" alt="thumb" class="openimg">' .
 				'</a>';
 		}
 		
@@ -337,7 +328,7 @@ if(count($results["answer"]) !== 0){
 				
 				case "image":
 					$right["answer"] .=
-						'<a href="' . htmlspecialchars($description["url"]) . '" rel="noreferrer nofollow" tabindex="-1"><img src="/proxy?i=' . urlencode($description["url"]) . '&s=thumb" alt="image" class="fullimg openimg"></a>';
+						'<a href="' . htmlspecialchars($description["url"]) . '" rel="noreferrer nofollow" tabindex="-1"><img src="' . $frontend->htmlimage($description["url"], "thumb") . '" alt="image" class="fullimg openimg"></a>';
 					break;
 				
 				case "audio":
