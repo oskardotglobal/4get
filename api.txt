@@ -73,8 +73,8 @@
     impossible for a 4get operator to peek at the private data of the
     user after a request has been made.
     
-    The tokens will expire as soon as they are used or after a 7 minutes
-    inactivity period, whichever comes first.
+    The tokens will expire as soon as they are used or after a 15
+    minutes inactivity period, whichever comes first.
 
 
 + Beware of null values!

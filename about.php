@@ -60,7 +60,7 @@ $left =
 	Provide users with a privacy oriented, extremely lightweight, ad free, free as in freedom (and free beer!) way to search for documents around the internet, with minimal, optional javascript code. My long term goal would be to build my own index (that doesn\'t suck) and provide users with an unbiased search engine, with no political inclinations. 
 	
 	<a href="#logs"><h2 id="logs">Do you keep logs?</h2></a>
-	I store data temporarly to get the next page of results. This might include search queries, tokens and other parameters. These parameters are encrypted using <div class="code-inline">aes-256-gcm</div> on the serber, for which I give you a key (also known internally as <div class="code-inline">npt</div> token). When you make a request to get the next page, you supply the token, the data is decrypted and the request is fulfilled. This encrypted data is deleted after 7 minutes, or after it\'s used, whichever comes first.<br><br>
+	I store data temporarly to get the next page of results. This might include search queries, tokens and other parameters. These parameters are encrypted using <div class="code-inline">aes-256-gcm</div> on the serber, for which I give you a key (also known internally as <div class="code-inline">npt</div> token). When you make a request to get the next page, you supply the token, the data is decrypted and the request is fulfilled. This encrypted data is deleted after 15 minutes, or after it\'s used, whichever comes first.<br><br>
 	
 	I <b>don\'t</b> log IP addresses, user agents, or anything else. The <div class="code-inline">npt</div> tokens are the only thing that are stored (in RAM, mind you), temporarly, encrypted.
 	

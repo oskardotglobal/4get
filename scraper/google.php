@@ -1565,18 +1565,17 @@ class google{
 			}
 			
 			/*
-				Fallback to parsing it as an embed
+				Detect if its a wikipedia thing
 			*/
+			$h3 =
+				$this->fuckhtml
+				->getElementsByTagName("h3");
 			
-			$table = [
-				"title" => null,
-				"description" => [],
-				"url" => null,
-				"thumb" => null,
-				"table" => [],
-				"sublink" => []
-			];
 			
+			
+			/*
+				Fallback to parsing the word definitions
+			*/
 			$parts =
 				$this->fuckhtml
 				->getElementsByClassName(
@@ -1596,11 +1595,16 @@ class google{
 			
 			$head = $parts[0];
 			
-			$h3 =
-				$this->fuckhtml
-				->getElementsByTagName("h3");
-			
 			if(count($h3) !== 0){
+				
+				$table = [
+					"title" => null,
+					"description" => [],
+					"url" => null,
+					"thumb" => null,
+					"table" => [],
+					"sublink" => []
+				];
 				
 				$h3 = $h3[0];
 				
@@ -1626,201 +1630,201 @@ class google{
 								$head
 							)
 					];
-			}
-			
-			$audio =
-				$this->fuckhtml
-				->getElementsByTagName("audio");
-			
-			if(count($audio) !== 0){
 				
-				$table["description"][] = [
-					"type" => "audio",
-					"url" =>
-						str_replace(
-							"http://",
-							"https://",
-							$this->fuckhtml
-							->getTextContent(
-								$audio[0]["attributes"]["src"]
-							)
-						)
-				];
-			}
-			
-			if(count($parts) >= 2){
-				
-				$this->fuckhtml->load($parts[1]);
-				
-				$parts =
+				$audio =
 					$this->fuckhtml
-					->getElementsByClassName(
-						$this->findstyles(
-							[
-								"padding-bottom" => "12px"
-							],
-							self::is_class
-						),
-						"div"
-					);
+					->getElementsByTagName("audio");
 				
-				foreach($parts as $part){
+				if(count($audio) !== 0){
 					
-					$this->fuckhtml->load($part);
-					
-					$lists =
-						$this->fuckhtml
-						->getElementsByTagName("ol");
-					
-					if(count($lists) !== 0){
-						
-						foreach($lists as $list){
-							
-							$this->fuckhtml->load($list);
-							
-							$list_items =
+					$table["description"][] = [
+						"type" => "audio",
+						"url" =>
+							str_replace(
+								"http://",
+								"https://",
 								$this->fuckhtml
-								->getElementsByTagName("li");
-							
-							$index = 0;
-							
-							if(count($list_items) !== 0){
-								
-								foreach($list_items as $list_item){
-									
-									$index++;
-									
-									$this->fuckhtml->load($list_item);
-									
-									$list_subitems =
-										$this->fuckhtml
-										->getElementsByTagName("div");
-									
-									foreach($list_subitems as $subitem){
-										
-										if($subitem["level"] !== 1){ continue; }
-										
-										$this->fuckhtml->load($subitem);
-										
-										$spans =
-											$this->fuckhtml
-											->getElementsByTagName("span");
-										
-										if(count($spans) !== 0){
-											
-											$type = "quote";
-										}else{
-											
-											$type = "text";
-										}
-										
-										$value =
-											$this->fuckhtml
-											->getTextContent(
-												$subitem
-											);
-										
-										if($type == "text"){
-											
-											$value = $index . ". " . $value;
-										}
-										
-										$table["description"][] = [
-											"type" => $type,
-											"value" => $value
-										];
-									}
-								}
-							}
-						}
-						
-						continue;
-					}
-					
-					// get title
-					$spans =
-						$this->fuckhtml
-						->getElementsByTagName("span");
-					
-					if(count($spans) !== 0){
-						
-						foreach($spans as $span){
-							
-							$part["innerHTML"] =
-								str_replace(
-									$span["outerHTML"],
-									"",
-									$part["innerHTML"]
-								);
-						}
-						
-						if(
-							$this->fuckhtml
-							->getTextContent(
-								$part
+								->getTextContent(
+									$audio[0]["attributes"]["src"]
+								)
 							)
-							== ""
-						){
-							
-							$table["description"][] = [
-								"type" => "title",
-								"value" =>
-									$this->fuckhtml
-									->getTextContent(
-										$spans[0]
-									)
-							];
-							
-							continue;
-						}
-					}
+					];
+				}
+				
+				if(count($parts) >= 2){
 					
-					// fallback to getting non-numbered list
-					$nlist =
+					$this->fuckhtml->load($parts[1]);
+					
+					$parts =
 						$this->fuckhtml
 						->getElementsByClassName(
 							$this->findstyles(
 								[
-									"white-space" => "pre-line",
-									"word-wrap" => "break-word"
+									"padding-bottom" => "12px"
 								],
 								self::is_class
 							),
 							"div"
 						);
 					
-					if(count($nlist) !== 0){
+					foreach($parts as $part){
 						
-						foreach($nlist as $nlist_item){
+						$this->fuckhtml->load($part);
+						
+						$lists =
+							$this->fuckhtml
+							->getElementsByTagName("ol");
+						
+						if(count($lists) !== 0){
 							
-							$text =
+							foreach($lists as $list){
+								
+								$this->fuckhtml->load($list);
+								
+								$list_items =
+									$this->fuckhtml
+									->getElementsByTagName("li");
+								
+								$index = 0;
+								
+								if(count($list_items) !== 0){
+									
+									foreach($list_items as $list_item){
+										
+										$index++;
+										
+										$this->fuckhtml->load($list_item);
+										
+										$list_subitems =
+											$this->fuckhtml
+											->getElementsByTagName("div");
+										
+										foreach($list_subitems as $subitem){
+											
+											if($subitem["level"] !== 1){ continue; }
+											
+											$this->fuckhtml->load($subitem);
+											
+											$spans =
+												$this->fuckhtml
+												->getElementsByTagName("span");
+											
+											if(count($spans) !== 0){
+												
+												$type = "quote";
+											}else{
+												
+												$type = "text";
+											}
+											
+											$value =
+												$this->fuckhtml
+												->getTextContent(
+													$subitem
+												);
+											
+											if($type == "text"){
+												
+												$value = $index . ". " . $value;
+											}
+											
+											$table["description"][] = [
+												"type" => $type,
+												"value" => $value
+											];
+										}
+									}
+								}
+							}
+							
+							continue;
+						}
+						
+						// get title
+						$spans =
+							$this->fuckhtml
+							->getElementsByTagName("span");
+						
+						if(count($spans) !== 0){
+							
+							foreach($spans as $span){
+								
+								$part["innerHTML"] =
+									str_replace(
+										$span["outerHTML"],
+										"",
+										$part["innerHTML"]
+									);
+							}
+							
+							if(
 								$this->fuckhtml
-								->getTextContent($nlist_item);
-							
-							if($text == ""){
+								->getTextContent(
+									$part
+								)
+								== ""
+							){
+								
+								$table["description"][] = [
+									"type" => "title",
+									"value" =>
+										$this->fuckhtml
+										->getTextContent(
+											$spans[0]
+										)
+								];
 								
 								continue;
 							}
+						}
+						
+						// fallback to getting non-numbered list
+						$nlist =
+							$this->fuckhtml
+							->getElementsByClassName(
+								$this->findstyles(
+									[
+										"white-space" => "pre-line",
+										"word-wrap" => "break-word"
+									],
+									self::is_class
+								),
+								"div"
+							);
+						
+						if(count($nlist) !== 0){
 							
-							$this->fuckhtml->load($nlist_item);
-							
-							$spans =
-								$this->fuckhtml
-								->getElementsByTagName("span");
-							
-							if(count($spans) !== 0){
+							foreach($nlist as $nlist_item){
 								
-								// is a quote node
-								$type = "quote";
-							}else{
+								$text =
+									$this->fuckhtml
+									->getTextContent($nlist_item);
 								
-								$type = "text";
+								if($text == ""){
+									
+									continue;
+								}
+								
+								$this->fuckhtml->load($nlist_item);
+								
+								$spans =
+									$this->fuckhtml
+									->getElementsByTagName("span");
+								
+								if(count($spans) !== 0){
+									
+									// is a quote node
+									$type = "quote";
+								}else{
+									
+									$type = "text";
+								}
+								
+								$table["description"][] = [
+									"type" => $type,
+									"value" => $text
+								];
 							}
-							
-							$table["description"][] = [
-								"type" => $type,
-								"value" => $text
-							];
 						}
 					}
 				}

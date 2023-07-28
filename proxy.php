@@ -109,6 +109,7 @@ try{
 		
 		$image->stripImage();
 		$image->setFormat("jpeg");
+		$image->setImageCompressionQuality(90);
 		$image->setImageCompression(Imagick::COMPRESSION_JPEG2000);
 		
 		$proxy->getfilenameheader($payload["headers"], $_GET["i"]);

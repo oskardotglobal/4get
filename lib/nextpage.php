@@ -28,7 +28,7 @@ class nextpage{
 			$this->scraper .
 			(string)($key),
 			gzdeflate($salt.$iv.$out.$tag),
-			420 // cache information for 7 minutes blaze it
+			900 // cache information for 15 minutes blaze it
 		);
 
 		return 

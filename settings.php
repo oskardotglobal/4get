@@ -70,10 +70,10 @@ $settings = [
 						"value" => "brave",
 						"text" => "Brave"
 					],
-					[
-						"value" => "google",
-						"text" => "Google"
-					],
+					//[
+					//	"value" => "google",
+					//	"text" => "Google"
+					//],
 					[
 						"value" => "mojeek",
 						"text" => "Mojeek"
@@ -99,11 +99,11 @@ $settings = [
 					[
 						"value" => "yandex",
 						"text" => "Yandex"
-					],
-					[
-						"value" => "google",
-						"text" => "Google"
-					]
+					]//,
+					//[
+					//	"value" => "google",
+					//	"text" => "Google"
+					//]
 				]
 			],
 			[
@@ -117,11 +117,11 @@ $settings = [
 					[
 						"value" => "ddg",
 						"text" => "DuckDuckGo"
-					],
-					[
-						"value" => "google",
-						"text" => "Google"
-					]
+					]//,
+					//[
+					//	"value" => "google",
+					//	"text" => "Google"
+					//]
 				]
 			],
 			[
@@ -136,10 +136,10 @@ $settings = [
 						"value" => "brave",
 						"text" => "Brave"
 					],
-					[
-						"value" => "google",
-						"text" => "Google"
-					],
+					//[
+					//	"value" => "google",
+					//	"text" => "Google"
+					//],
 					[
 						"value" => "mojeek",
 						"text" => "Mojeek"
@@ -219,7 +219,7 @@ echo
 		'<head>' .
 			'<meta http-equiv="Content-Type" content="text/html;charset=utf-8">' .
 			'<title>Settings</title>' .
-			'<link rel="stylesheet" href="/static/style.css">' .
+			'<link rel="stylesheet" href="/static/style.css?v2">' .
 			'<meta name="viewport" content="width=device-width,initial-scale=1">' .
 			'<meta name="robots" content="index,follow">' .
 			'<link rel="icon" type="image/x-icon" href="/favicon.ico">' .
