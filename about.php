@@ -81,7 +81,7 @@ $left =
 	<div class="code-inline">Escape</div> to exit the image viewer.
 	
 	<a href="#instances"><h2 id="instances">Instances</h2></a>
-	4get is open source, anyone can create their own 4get instance! If you wish to add your website to this list, please <a href="https://lolcat.ca/contact">contact me</a>.
+	4get is open source, anyone can create their own 4get instance! If you wish to add your website to this list, please <a href="https://lolcat.ca">contact me</a>.
 	 
 	<table>
 		<tr>
@@ -102,7 +102,7 @@ $left =
 	
 	<b>Message to all DMCA enforcers:</b> I don\'t host any of the content. Everything you see here is <u>proxied</u> trough my shitbox with no moderation. Please reach out to the people hosting the infringing content instead.<br><br>
 	
-	<a href="https://lolcat.ca/contact" rel="dofollow" class="link">Click here to contact me!</a><br><br>
+	<a href="https://lolcat.ca" rel="dofollow" class="link">Click here to contact me!</a><br><br>
 	
 	<a href="https://validator.w3.org/nu/?doc=https%3A%2F%2F4get.ca" title="W3 Valid!">
 		<img src="/static/icon/w3html.png" alt="Valid W3C HTML 4.01" width="88" height="31">

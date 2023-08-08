@@ -86,6 +86,8 @@ class brave{
 				];
 				break;
 			
+			case "images":
+			case "videos":
 			case "news":
 				return [
 					"country" => [
@@ -143,7 +145,7 @@ class brave{
 		}
 	}
 	
-	private function get($url, $get = [], $nsfw, $country/*, $is_post = false, $additional_cookies = null*/){
+	private function get($url, $get = [], $nsfw, $country){
 		
 		switch($nsfw){
 			
@@ -151,13 +153,6 @@ class brave{
 			case "maybe": $nsfw = "moderate"; break;
 			case "no": $nsfw = "strict"; break;
 		}
-		
-		//$cookie = "safesearch={$nsfw}; country={$country}; useLocation=0";
-		/*
-		if($additional_cookies !== null){
-			
-			$cookie = $additional_cookies . "; " . $cookie;
-		}*/
 		
 		$headers = [
 			"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
@@ -171,8 +166,7 @@ class brave{
 			"Sec-Fetch-Dest: document",
 			"Sec-Fetch-Mode: navigate",
 			"Sec-Fetch-Site: none",
-			"Sec-Fetch-User: ?1"//,
-			//"Content-Type: application/json"
+			"Sec-Fetch-User: ?1"
 		];
 		
 		if($country == "any"){
@@ -182,22 +176,10 @@ class brave{
 		
 		$curlproc = curl_init();
 		
-		/*if($is_post){
-			
-			curl_setopt($curlproc, CURLOPT_POST, true);
-			curl_setopt(
-				$curlproc,
-				CURLOPT_POSTFIELDS,
-				json_encode($get)
-			);
-			
-		}else{
-			*/
-			if($get !== []){
-				$get = http_build_query($get);
-				$url .= "?" . $get;
-			}
-		//}
+		if($get !== []){
+			$get = http_build_query($get);
+			$url .= "?" . $get;
+		}
 		
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
@@ -1950,18 +1932,24 @@ class brave{
 		return $out;
 	}
 	
-	/*
-	public function bypasscaptcha($html, $nsfw, $country){
+	public function image($get){
 		
-		// @TODO figure out why I still cant go trough
-		// the captcha wall even after breaking it
+		$search = $get["s"];
+		$country = $get["country"];
+		$nsfw = $get["nsfw"];
+		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"image" => []
+		];
 		
 		try{
 			$html =
 				$this->get(
-					"https://search.brave.com/goggles",
+					"https://search.brave.com/images",
 					[
-						"q" => "site:dailymotion.com my bloody valentine"
+						"q" => $search
 					],
 					$nsfw,
 					$country
@@ -1969,177 +1957,192 @@ class brave{
 			
 		}catch(Exception $error){
 			
-			throw new Exception("Could not fetch html");
+			throw new Exception("Could not fetch search page");
 		}
+		/*
+		$handle = fopen("scraper/brave-image.html", "r");
+		$html = fread($handle, filesize("scraper/brave-image.html"));
+		fclose($handle);*/
 		
-		// Bypass brave search captcha
-		// this captcha only appears on the goggles page
 		preg_match(
-			'/this\.img\.src = &#34;(.*)&#34;/',
+			'/const data = (\[{.*}\]);/',
 			$html,
-			$image
+			$json
 		);
 		
-		$image =
-			base64_decode(
-				explode(
-					"data:image/png;base64,",
-					$image[1]
-				)[1]
+		if(!isset($json[1])){
+			
+			throw new Exception("Failed to get data object");
+		}
+		
+		$json =
+			$this->fuckhtml
+			->parseJsObject(
+				$json[1]
 			);
 		
-		$im = new Imagick();
-		$im->readImageBlob($image);
-		
-		$im->blurImage(20, 20);
-		$im->posterizeImage(2, imagick::IMGTYPE_COLORSEPARATION);
-		
-		// if we encounter a white line thats longer than 45px
-		// we found the circle position
-		$iterator = $im->getPixelRegionIterator(0, 77, 310, 1);
-		
-		$found = null;
 		foreach(
-			$iterator as $row
+			$json[1]
+			["data"]
+			["body"]
+			["response"]
+			["results"]
+			as $result
 		){
 			
-			$whitecount = 0;
-			$count = 0;
-			
-			foreach($row as $pixel){
-				
-				if($pixel->getColor()["r"] === 255){
-					
-					$whitecount++;
-					$pixel->setColor("rgba(255,0,0,0)");
-					
-					if($whitecount === 45){
-						
-						$found = $count - 45;
-						break 2;
-					}
-				}else{
-					
-					$whitecount = 0;
-				}
-				
-				$count++;
-				$iterator->syncIterator();
-			}
-		}
-		
-		$found = $found + 10;
-		
-		//header("Content-Type: image/png");
-		//echo $im;
-		//die();
-		
-		if($found === null){
-			
-			throw new Exception("Could not bypass captcha");
-		}
-		
-		preg_match(
-			'/data="{&#34;captcha_id&#34;:&#34;([0-9A-z-]+)&#34;}"/',
-			$html,
-			$key
-		);
-		
-		$key = $key[1];
-		// we bypassed captcha, send POST data
-		$order =
-			$this->get(
-				"https://search.brave.com/api/captcha?brave=0&captcha_id={$key}",
-				[
-					"solution" => (string)$found
-				],
-				$nsfw,
-				$country,
-				true
-			);
-		
-		$order = json_decode($order, true)["orderId"];
-		
-		$orderpayload =
-			$this->get(
-				"https://search.brave.com/api/rewards/v1/orders/{$order}",
-				[],
-				$nsfw,
-				$country
-			);
-		
-		$orderpayload = json_decode($orderpayload, true);
-		
-		$creds =
-			$this->get(
-				"https://search.brave.com/api/rewards/v1/orders/{$order}/credentials",
-				[
-					"itemId" => $orderpayload["items"][0]["id"],
-					"blindedCreds" => [
-						"fuYAVcB/m7BU66vf3wkNGxJCSaRhshB9o+8km3F1h2c=",
-						"uswvcWJuPK/1qFlVdzBP3eQd0+V1EQgfAtnEoMIK+Uk=",
-						"fJWKGLBxl3Gyn4n9FjTLq1PjupfABT7Ni8MeB+iGzUs=",
-						"Aq9enJ/VZP9GxQIza3n65ZK7xQhY4VwDxv53BCb/Txg=",
-						"FMJA9eSLHq71K+Pcwgm4gIQOmdR/6KMy5cMgXhpd5Ro=",
-						"2NVhIAbvI317SP9/xXbVe/U57eWgvHyqVbHL/5+Gdmw=",
-						"6mpjsjSCmYEzK2xlbL8DI2P4LuhWUOxjTLvsTAL9l24=",
-						"kAn4wuHvIlKWhfuFfPTSfD4tZ5le9t7/61YbdEc/L3k=",
-						"BjjUyG16aTfd1c0h4oBzgQQOekrH1f+a5CmcXqMPTR4=",
-						"SBNgpCt4/V44yaQTfh+D027Yv1GJFHkjUEpPw6rAwRI=",
-						"XDENAtdQ7PyYx+Qx1wQGQtDWgg8WpIMgWGmd4RDOVWE=",
-						"tF7rB4sqamsiUk3K7fojdQSI0Q6iip72yKyhnvg/bC0=",
-						"VsAqflirAd/u4VsLdfRS2UvnH24ZNkFh6YN3DctLjzQ=",
-						"MntLbXkoI0LdcisCbNazmooiHXJyX91L1KERDAu1JRU=",
-						"TH6Zs8JBvFDbTDWgKbfGE4M5/cSwCtHD8ms5Y/U8zHQ=",
-						"jsZg0Z+qDPHymrbhdnesodhLNJ26QdunyMko1aVe4So=",
-						"rpKsyj6/vdnuMgLI2BApeijtGq9g5USRDL0w6X2bnlQ=",
-						"vCzliGT8A9vcLXj2sFf2kavOuYw69d70NpfgA22B4lI=",
-						"7OWoxSCtYXWcaBSifF7AXNBif/sjcuO0IelzXG/3PFk=",
-						"iiXtByNlT6nDMN9De5B58Jl8J0p6LCjnZ9aS3w2FEQU=",
-						"zDhd7gsJ4h4JkDeGK0Y0mfFd8IBdkLhMOANzwO+4Dig=",
-						"qANZ+AikwFReEA61JF009d/c3IHM/aSfIYwljckhJWE=",
-						"nNC30pDLxtXvUr+WDwfDSrAInNBpfSZkPsV2JlpheWI=",
-						"kGXE1pkt25P71kdJzmKIg4+yMR1VA5wNmbpBb/FhJQ8=",
-						"aLqPsY1Qiz2UCa2Jx3YNNt8r4JINMphks/43EiyZfXU=",
-						"bHGYZoQARZEM5LdFF6B74PkRqNd9EKxzuTvGYxjq+hk=",
-						"JOsYQjfE/9Y1u29hR+GvEkNyxUI8blgLhX1iJI/aGRQ=",
-						"yKjHjH5j600TJD/3WPsA1N3OmItDLifdjlysq4H6NV0=",
-						"9lTnUbsPp7BJ7XVN5/T4yGfzD9DJdqWB7xk72s19MAA=",
-						"5KHG8iY45em7zDhO/HlI0ydcZ0Ubn+XSyjifMmy7qXM="
+			$out["image"][] = [
+				"title" => $result["title"],
+				"source" => [
+					[
+						"url" => $result["properties"]["url"],
+						"width" => null,
+						"height" => null
+					],
+					[
+						"url" => $result["thumbnail"]["src"],
+						"width" => null,
+						"height" => null
 					]
 				],
-				$nsfw,
-				$country,
-				true
+				"url" => $result["url"]
+			];
+		}
+		
+		return $out;
+	}
+	
+	public function video($get){
+		
+		$search = $get["s"];
+		$country = $get["country"];
+		$nsfw = $get["nsfw"];
+		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"video" => [],
+			"author" => [],
+			"livestream" => [],
+			"playlist" => [],
+			"reel" => []
+		];
+		
+		try{
+			$html =
+				$this->get(
+					"https://search.brave.com/videos",
+					[
+						"q" => $search
+					],
+					$nsfw,
+					$country
+				);
+			
+		}catch(Exception $error){
+			
+			throw new Exception("Could not fetch search page");
+		}
+		/*
+		$handle = fopen("scraper/brave-video.html", "r");
+		$html = fread($handle, filesize("scraper/brave-video.html"));
+		fclose($handle);*/
+		
+		preg_match(
+			'/const data = (\[{.*}\]);/',
+			$html,
+			$json
+		);
+		
+		if(!isset($json[1])){
+			
+			throw new Exception("Failed to get data object");
+		}
+		
+		$json =
+			$this->fuckhtml
+			->parseJsObject(
+				$json[1]
 			);
 		
-		var_dump($creds);
+		foreach(
+			$json
+			[1]
+			["data"]
+			["body"]
+			["response"]
+			["results"]
+			as $result
+		){
+			
+			if($result["video"]["author"] != "null"){
+				
+				$author = [
+					"name" => $result["video"]["author"]["name"] == "null" ? null : $result["video"]["author"]["name"],
+					"url" => $result["video"]["author"]["url"] == "null" ? null : $result["video"]["author"]["url"],
+					"avatar" => $result["video"]["author"]["img"] == "null" ? null : $result["video"]["author"]["img"]
+				];
+			}else{
+				
+				$author = [
+					"name" => null,
+					"url" => null,
+					"avatar" => null
+				];
+			}
+			
+			if($result["thumbnail"] != "null"){
+				
+				$thumb = [
+					"url" => $result["thumbnail"]["original"],
+					"ratio" => "16:9"
+				];
+			}else{
+				
+				$thumb = [
+					"url" => null,
+					"ratio" => null
+				];
+			}
+			
+			$out["video"][] = [
+				"title" => $result["title"],
+				"description" => $result["description"] == "null" ? null : $this->titledots($result["description"]),
+				"author" => $author,
+				"date" => $result["age"] == "null" ? null : strtotime($result["age"]),
+				"duration" => $result["video"]["duration"] == "null" ? null : $this->hms2int($result["video"]["duration"]),
+				"views" => $result["video"]["views"] == "null" ? null : (int)$result["video"]["views"],
+				"thumb" => $thumb,
+				"url" => $result["url"]
+			];
+		}
+
+		return $out;
+	}
+	
+	private function hms2int($time){
 		
-		sleep(2);
-		$test =
-			$this->get(
-				"https://search.brave.com/api/rewards/v1/orders/{$order}/credentials",
-				[],
-				$nsfw,
-				$country
-			);
+		$parts = explode(":", $time, 3);
+		$time = 0;
 		
-		var_dump($test);
+		if(count($parts) === 3){
+			
+			// hours
+			$time = $time + ((int)$parts[0] * 3600);
+			array_shift($parts);
+		}
 		
-		$html =
-			$this->get(
-				"https://search.brave.com/goggles",
-				[
-					"q" => "site:dailymotion.com my bloody valentine"
-				],
-				$nsfw,
-				$country,
-				false,
-				"__Secure-sku#brave-search-captcha=eyJ0eXBlIjoic2luZ2xlLXVzZSIsInZlcnNpb24iOjEsInNrdSI6ImJyYXZlLXNlYXJjaC1jYXB0Y2hhIiwicHJlc2VudGF0aW9uIjoiZXlKcGMzTjFaWElpT2lKaWNtRjJaUzVqYjIwL2MydDFQV0p5WVhabExYTmxZWEpqYUMxallYQjBZMmhoSWl3aWMybG5ibUYwZFhKbElqb2lNRzl0VDBneWQxZ3dTazkzU0VFMVJ6QTJaR1V5WjFOQ1dDdGhSM3B2Y2xsTVQwVTJZVVJtTUc5a1IweG1Wa3RhZEd0cU4xbHdia3BPT0VOVGNGbE5lVWR2YmpGRlNTOUhhMlZYU1RWNGQxTjJPWGxJTTNjOVBTSXNJblFpT2lKWlJWWldaVzR5TTJwQ01tSnZkakJ2U1hGNGJtSndUMGxEUW5Kd1drRjBRbWQxVnpoRlNURTNVREY2UVRaQlpUTXJSVGRFYm5NeVFqUmhka0pGYTFWM2FGY3JWRVZJVjNWcE9TdFllRU1yYlVSTVkyMTBRVDA5SW4wPSJ9"
-			);
+		if(count($parts) === 2){
+			
+			// minutes
+			$time = $time + ((int)$parts[0] * 60);
+			array_shift($parts);
+		}
 		
-		var_dump($html);
-	}*/
+		// seconds
+		$time = $time + (int)$parts[0];
+		
+		return $time;
+	}
 	
 	private function appendtext($payload, &$text, &$index){
 		

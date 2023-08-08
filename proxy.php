@@ -57,6 +57,7 @@ try{
 		}
 		
 		$image->readImageBlob($payload["body"]);
+		
 		$image_width = $image->getImageWidth();
 		$image_height = $image->getImageHeight();
 		
@@ -102,15 +103,15 @@ try{
 			$image_width = $image_height * $ratio;
 		}
 		
-		$image->setImageBackgroundColor(new ImagickPixel("#504945"));
-		$image->mergeImageLayers(Imagick::LAYERMETHOD_FLATTEN);
-		
-		$image->resizeImage($image_width, $image_height, Imagick::FILTER_LANCZOS, 1);
+		$image->setImageBackgroundColor("#504945");
+		$image->setImageAlphaChannel(Imagick::ALPHACHANNEL_REMOVE);
 		
 		$image->stripImage();
 		$image->setFormat("jpeg");
 		$image->setImageCompressionQuality(90);
 		$image->setImageCompression(Imagick::COMPRESSION_JPEG2000);
+		
+		$image->resizeImage($image_width, $image_height, Imagick::FILTER_LANCZOS, 1);
 		
 		$proxy->getfilenameheader($payload["headers"], $_GET["i"]);
 		

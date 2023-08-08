@@ -808,6 +808,7 @@ class google{
 			->getElementsByTagName("style");
 		
 		$this->computedstyle = [];
+		$this->ask = [];
 		
 		foreach($styles as $style){
 			
@@ -858,6 +859,22 @@ class google{
 					$this->fuckhtml
 					->getTextContent(
 						$image_grep[1][0]
+					);
+			}
+			
+			// even more javascript crap
+			// "People also ask" node is loaded trough javascript
+			preg_match_all(
+				'/window\.jsl\.dh\(\'([^\']+)\',\'(.+)\'\);/',
+				$script["innerHTML"],
+				$ask_grep
+			);
+			
+			for($i=0; $i<count($ask_grep[0]); $i++){
+				
+				$this->ask[trim($ask_grep[1][$i])] =
+					stripcslashes(
+						$ask_grep[2][$i]
 					);
 			}
 		}
@@ -926,21 +943,21 @@ class google{
 					"div"
 				);
 			
-			$carousel_title =
-				$this->fuckhtml
-				->getElementsByClassName(
-					$this->findstyles(
-						[
-							"font-size" => "16px",
-							"line-height" => "20px",
-							"font-weight" => "400"
-						],
-						self::is_class
-					),
-					"div"
-				);
-			
 			if(count($carousel) !== 0){
+				
+				$carousel_title =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->findstyles(
+							[
+								"font-size" => "16px",
+								"line-height" => "20px",
+								"font-weight" => "400"
+							],
+							self::is_class
+						),
+						"div"
+					);
 				
 				$sublink = []; // twitter carousel sublinks
 				foreach($carousel as $item){
@@ -1212,6 +1229,136 @@ class google{
 				continue;
 			}
 			
+			$people_title =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->findstyles(
+						[
+							"font-weight" => "bold",
+							"font-size" => "16px",
+							"color" => "#000",
+							"margin" => "0",
+							"padding" => "12px 16px 0 16px"
+						],
+						self::is_class
+					),
+					"div"
+				);
+			
+			if(
+				count($people_title) !== 0 &&
+				strtolower(
+					$this->fuckhtml
+					->getTextContent(
+						$people_title[0]
+					)
+				) == "people also ask"
+			){
+				/*
+					Parse "people also ask" node
+				*/
+				
+				$div =
+					$this->fuckhtml
+					->getElementsByTagName("div");
+				
+				// add suggestions
+				$suggestions =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->findstyles(
+							[
+								"display" => "inline-block",
+								"padding-right" => "26px"
+							],
+							self::is_class
+						),
+						$div
+					);
+				
+				foreach($suggestions as $suggestion){
+					
+					$out["related"][] =
+						$this->fuckhtml
+						->getTextContent($suggestion);
+				}
+				
+				// parse websites
+				foreach($div as $d){
+					
+					if(
+						isset($d["attributes"]["id"]) &&
+						strpos(
+							$d["attributes"]["id"],
+							"accdef_"
+						) !== false
+					){
+						
+						$this->fuckhtml->load(
+							$this->ask[
+								$d["attributes"]["id"]
+							]
+						);
+						
+						$description =
+							$this->titledots(
+								$this->fuckhtml
+								->getTextContent(
+									$this->fuckhtml
+									->getElementsByClassName(
+										$this->findstyles(
+											[
+												"white-space" => "pre-line",
+												"word-wrap" => "break-word"
+											],
+											self::is_class
+										),
+										"div"
+									)[0]
+								)
+							);
+						
+						$a =
+							$this->fuckhtml
+							->getElementsByTagName("a")
+							[0];
+						
+						$this->fuckhtml->load($a);
+						
+						$out["web"][] = [
+							"title" =>
+								$this->titledots(
+									$this->fuckhtml
+									->getTextContent(
+										$this->fuckhtml
+										->getElementsByTagName("span")[0]
+									)
+								),
+							"description" => $description,
+							"url" =>
+								$this->decodeurl(
+									$this->fuckhtml
+									->getTextContent(
+										$a
+										["attributes"]
+										["href"]
+									)
+								),
+							"date" => null,
+							"type" => "web",
+							"thumb" => [
+								"url" => null,
+								"ratio" => null
+							],
+							"sublink" => [],
+							"table" => []
+						];
+					}
+				}
+				
+				continue;
+			}
+			
 			if(count($title) !== 0){
 				
 				/*
@@ -1231,6 +1378,19 @@ class google{
 						"url" => $this->getimage($thumb[0]["attributes"]["id"]),
 						"ratio" => "1:1"
 					];
+					
+					if(parse_url($thumb["url"], PHP_URL_HOST) == "i.ytimg.com"){
+						
+						$thumb = [
+							"url" =>
+								str_replace(
+									"default.jpg",
+									"maxresdefault.jpg",
+									$thumb["url"]
+								),
+							"ratio" => "16:9"
+						];
+					}
 				}else{
 					
 					$thumb = [
@@ -1287,18 +1447,33 @@ class google{
 							
 							$cat = explode(":", $cat, 2);
 							
-							$table[
+							$name =
 								$this->fuckhtml
 								->getTextContent(
 									$cat[0]
-								)
-							] =
-								$this->titledots(
-									$this->fuckhtml
-									->getTextContent(
-										$cat[1]
-									)
 								);
+							
+							if(strtolower($name) != "posted"){
+								
+								$table[$name] =
+									$this->titledots(
+										$this->fuckhtml
+										->getTextContent(
+											$cat[1]
+										)
+									);
+							}else{
+								
+								$date =
+									strtotime(
+										$this->titledots(
+											$this->fuckhtml
+											->getTextContent(
+												$cat[1]
+											)
+										)
+									);
+							}
 						}
 						continue;
 					}
@@ -1307,6 +1482,7 @@ class google{
 						$this->fuckhtml
 						->getElementsByTagName("span");
 					
+					$encounter_rating = false;
 					foreach($spans as $span){
 						
 						// replace element with nothing
@@ -1319,10 +1495,53 @@ class google{
 								);
 						}
 						
+						if($encounter_rating !== false){
+							
+							switch($encounter_rating){
+								
+								case 3:
+									$table["Votes"] =
+										number_format(
+											str_replace(
+												[
+													"(",
+													")",
+													","
+												],
+												"",
+												$this->fuckhtml
+												->getTextContent(
+													$span["innerHTML"]
+												)
+											)
+										);
+									break;
+								
+								case 6:
+									$table["Price"] =
+										$this->fuckhtml
+										->getTextContent(
+											$span["innerHTML"]
+										);
+									break;
+								
+								case 8:
+									$table["Support"] =
+										$this->fuckhtml
+										->getTextContent(
+											$span["innerHTML"]
+										);
+									break;
+							}
+							
+							$encounter_rating++;
+						}
+						
 						// get rating
 						if(isset($span["attributes"]["aria-hidden"])){
 							
 							$table["Rating"] = $span["innerHTML"];
+							$encounter_rating = 0;
 							continue;
 						}
 					}
@@ -1565,16 +1784,7 @@ class google{
 			}
 			
 			/*
-				Detect if its a wikipedia thing
-			*/
-			$h3 =
-				$this->fuckhtml
-				->getElementsByTagName("h3");
-			
-			
-			
-			/*
-				Fallback to parsing the word definitions
+				Parse instant answers with parts
 			*/
 			$parts =
 				$this->fuckhtml
@@ -1588,15 +1798,8 @@ class google{
 					"div"
 				);
 			
-			if(count($parts) === 0){
-				
-				continue;
-			}
+			if(count($parts) !== 0){
 			
-			$head = $parts[0];
-			
-			if(count($h3) !== 0){
-				
 				$table = [
 					"title" => null,
 					"description" => [],
@@ -1606,30 +1809,130 @@ class google{
 					"sublink" => []
 				];
 				
-				$h3 = $h3[0];
-				
-				$table["title"] =
+				// get thumb
+				$thumb =
 					$this->fuckhtml
-					->getTextContent(
-						$h3
+					->getElementsByClassName(
+						$this->findstyles(
+							[
+								"float" => "right",
+								"padding-left" => "16px"
+							],
+							self::is_class
+						),
+						"div"
+					);
+					
+				if(count($thumb) !== 0){
+					
+					$this->fuckhtml->load($thumb[0]);
+					
+					$img =
+						$this->fuckhtml
+						->getElementsByTagName("img");
+					
+					if(count($img) !== 0){
+						
+						$table["thumb"] =
+							$this->getimage(
+								$img[0]["attributes"]["id"]
+							);
+					}
+					
+					$this->fuckhtml->load($container);
+				}
+				
+				$h =
+					$this->fuckhtml
+					->getElementsByTagName("h3");
+				
+				if(count($h) === 0){
+					
+					$h =
+						$this->fuckhtml
+						->getElementsByTagName("h2");
+				}
+				
+				if(count($h) !== 0){
+					// set title + subtext for when a word definition
+					// appears
+					$h = $h[0];
+					
+					$table["title"] =
+						$this->fuckhtml
+						->getTextContent(
+							$h
+						);
+					
+					$parts[0]["innerHTML"] =
+						str_replace(
+							$h["outerHTML"],
+							"",
+							$parts[0]["innerHTML"]
+						);
+					
+					$table["description"][] =
+						[
+							"type" => "quote",
+							"value" =>
+								$this->fuckhtml
+								->getTextContent(
+									$parts[0]
+								)
+						];
+				}else{
+					
+					// parse it as a wikipedia header
+					
+				}
+				
+				// get table elements
+				$tables =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->findstyles(
+							[
+								"display" => "table",
+								"width" => "100%",
+								"padding-right" => "16px",
+								"-webkit-box-sizing" => "border-box"
+							],
+							self::is_class
+						),
+						"div"
 					);
 				
-				$head["innerHTML"] =
-					str_replace(
-						$h3["outerHTML"],
-						"",
-						$head["innerHTML"]
-					);
-				
-				$table["description"][] =
-					[
-						"type" => "quote",
-						"value" =>
+				foreach($tables as $tbl){
+					
+					$this->fuckhtml->load($tbl);
+					
+					$images =
+						$this->fuckhtml
+						->getElementsByTagName("img");
+					
+					if(count($images) !== 0){
+						
+						$image = $this->getimage($images[0]["attributes"]["id"]);
+						
+						$text =
 							$this->fuckhtml
 							->getTextContent(
-								$head
-							)
-					];
+								$tbl
+							);
+						
+						$table["description"][] = [
+							"type" => "link",
+							"value" => $text,
+							"url" => "?s=" . urlencode($text) . "&scraper=google"
+						];
+						
+						$table["description"][] = [
+							"type" => "image",
+							"url" => $image
+						];
+					}
+					
+				}
 				
 				$audio =
 					$this->fuckhtml
@@ -1828,9 +2131,9 @@ class google{
 						}
 					}
 				}
+				
+				$out["answer"][] = $table;
 			}
-			
-			$out["answer"][] = $table;
 		}
 		
 		if($dmca_table){
@@ -2136,20 +2439,65 @@ class google{
 			$match
 		);
 		
-		if(count($match) !== 0){
+		if(count($match) === 0){
 			
-			if(!empty($match[1])){
-				
-				return urldecode($match[1]);
-			}
-			
-			if(!empty($match[2])){
-					
-				return urldecode($match[2]);
-			}
+			return null;
 		}
 		
-		return null;
+		$url = empty($match[1]) ? urldecode($match[2]) : urldecode($match[1]);
+		
+		$domain = parse_url($url, PHP_URL_HOST);
+		
+		if(
+			preg_match(
+				'/wikipedia.org$/',
+				$domain
+			)
+		){
+			
+			// rewrite wikipedia mobile URLs to desktop
+			$url =
+				$this->replacedomain(
+					$url,
+					preg_replace(
+						'/([a-z0-9]+)(\.m\.)/',
+						'$1.',
+						$domain
+					)
+				);
+		}
+		
+		if(
+			preg_match(
+				'/imdb\.com$|youtube\.[^.]+$/',
+				$domain
+			)
+		){
+			
+			// rewrite imdb and youtube mobile URLs too
+			$url =
+				$this->replacedomain(
+					$url,
+					preg_replace(
+						'/^m\./',
+						"",
+						$domain
+					)
+				);
+			
+		}
+		
+		return $url;
+	}
+	
+	private function replacedomain($url, $domain){
+		
+		return
+			preg_replace(
+				'/(https?:\/\/)([^\/]+)/',
+				'$1' . $domain,
+				$url
+			);
 	}
 	
 	private function titledots($title){

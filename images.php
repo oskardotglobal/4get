@@ -62,8 +62,13 @@ foreach($results["image"] as $image){
 		'<div class="image-wrapper" title="' . htmlspecialchars($image["title"]) .'" data-json="' . htmlspecialchars(json_encode($image["source"])) . '">' .
 			'<div class="image">' .
 				'<a href="' . htmlspecialchars($image["source"][0]["url"]) . '" rel="noreferrer nofollow" class="thumb">' .
-					'<img src="' . $frontend->htmlimage($image["source"][count($image["source"]) - 1]["url"], "thumb") . '" alt="thumbnail">' .
-					'<div class="duration">' . $image["source"][0]["width"] . 'x' . $image["source"][0]["height"] . '</div>' .
+					'<img src="' . $frontend->htmlimage($image["source"][count($image["source"]) - 1]["url"], "thumb") . '" alt="thumbnail">';
+				
+				if($image["source"][0]["width"] !== null){
+					$payload["images"] .= '<div class="duration">' . $image["source"][0]["width"] . 'x' . $image["source"][0]["height"] . '</div>';
+				}
+				
+			$payload["images"] .=
 				'</a>' .
 				'<a href="' . htmlspecialchars($image["url"]) . '" rel="noreferrer nofollow">' .
 					'<div class="title">' . htmlspecialchars(parse_url($image["url"], PHP_URL_HOST)) . '</div>' .

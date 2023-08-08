@@ -909,6 +909,23 @@ class mojeek{
 				
 				$a = $a[0];
 				
+				$date =
+					explode(
+						" - ",
+						$this->fuckhtml
+						->getTextContent(
+							$this->fuckhtml
+							->getElementsByTagName(
+								"span"
+							)[0]
+						)
+					);
+				
+				$date =
+					strtotime(
+						$date[count($date) - 1]
+					);
+				
 				$out["news"][] = [
 					"title" =>
 						html_entity_decode(
@@ -918,20 +935,7 @@ class mojeek{
 							)
 						),
 					"description" => null,
-					"date" =>
-						strtotime(
-							explode(
-								" - ",
-								$this->fuckhtml
-								->getTextContent(
-									$this->fuckhtml
-									->getElementsByTagName(
-										"span"
-									)[0]
-								),
-								2
-							)[1]
-						),
+					"date" => $date,
 					"thumb" => [
 						"url" => null,
 						"ratio" => null

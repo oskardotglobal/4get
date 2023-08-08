@@ -360,6 +360,23 @@ if(image_class !== null){
 						elem.getAttribute("data-json")
 					);
 				
+				var imagesize = elem.getElementsByTagName("img")[0];
+				
+				if(imagesize.complete){
+					
+					var imagesize_w = imagesize.naturalWidth;
+					var imagesize_h = imagesize.naturalHeight;
+				}
+				
+				for(var i=0; i<collection.length; i++){
+					
+					if(collection[i].width === null){
+						
+						collection[i].width = imagesize_w;
+						collection[i].height = imagesize_h;
+					}
+				}
+				
 				var title = elem.title;
 			}
 			

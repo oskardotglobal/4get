@@ -16,7 +16,8 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 
 try{
 	echo json_encode(
-		$scraper->news($get)
+		$scraper->news($get),
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 	);
 	
 }catch(Exception $e){

@@ -16,7 +16,8 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 
 try{
 	echo json_encode(
-		$scraper->video($get)
+		$scraper->video($get),
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 	);
 	
 }catch(Exception $e){

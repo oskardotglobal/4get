@@ -356,6 +356,91 @@ class fuckhtml{
 		
 		return $out;
 	}
+	
+	public function parseJsObject(string $json){
+		
+		$bracket = false;
+		$is_close_bracket = false;
+		$escape = false;
+		$json_out = null;
+		$last_char = null;
+		
+		for($i=0; $i<strlen($json); $i++){
+			
+			switch($json[$i]){
+				
+				case "\"":
+				case "'":
+					if($escape === true){
+						
+						break;
+					}
+					
+					if($json[$i] == $bracket){
+						
+						$bracket = false;
+						$is_close_bracket = true;
+					}else{
+						
+						if($bracket === false){
+							
+							$bracket = $json[$i];
+						}
+					}
+					break;
+				
+				default:
+					$is_close_bracket = false;
+					break;
+			}
+			
+			$escape = $json[$i] == "\\" ? true : false;
+			
+			if(
+				$bracket === false &&
+				$is_close_bracket === false
+			){
+				
+				// here we know we're not iterating over a quoted string
+				switch($json[$i]){
+					
+					case "[":
+					case "{":
+						// dont execute whats in "default"
+						$json_out .= $json[$i];
+						break;
+					
+					case "]":
+					case "}":
+					case ",":
+					case ":":
+						if(!in_array($last_char, ["[", "{", "}", "]", "\""])){
+							
+							$json_out .= "\"";
+						}
+						
+						$json_out .= $json[$i];
+						break;
+					
+					default:
+						if(in_array($last_char, ["{", "[", ",", ":"])){
+							
+							$json_out .= "\"";
+						}
+						
+						$json_out .= $json[$i];
+						break;
+				}
+			}else{
+				
+				$json_out .= $json[$i];
+			}
+			
+			$last_char = $json[$i];
+		}
+		
+		return json_decode($json_out, true);
+	}
 }
 
 ?>
