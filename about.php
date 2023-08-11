@@ -26,7 +26,9 @@ $left =
 	To set this as your default search engine on Firefox, right click the URL bar and select <div class="code-inline">Add "4get"</div>. Then, visit <a href="about:preferences#search" target="_BLANK" class="link">about:preferences#search</a> and select <div class="code-inline">4get</div> in the dropdown menu.
 	
 	<a href="#chrome"><h2 id="chrome">On Chromium and Blink based browsers</h2></a>
-	Right click the URL bar and click <div class="code-inline">Manage search engines and site search</div>, or visit <a href="chrome://settings/searchEngines" target="_BLANK" class="link">chrome://settings/searchEngines</a>. Then, create a new entry under <div class="code-inline">Search engines</div> and fill in the following details:
+	Click the 3 superpositioned dots at the top right of the screen and click on <div class="code-inline">Settings</div>, then search for <div class="code-inline">default search engine</div>, or visit <a href="chrome://settings/searchEngines">chrome://settings/searchEngines</a>.<br><br>
+	
+	Once you\'re there, click the pencil on the last entry under "Search engines" (it\'s probably DuckDuckGo). Once you do that, a popup will appear. Populate it with the following information: 
 	
 	<table>
 		<tr>
@@ -39,18 +41,15 @@ $left =
 		</tr>
 		<tr>
 			<td>Shortcut</td>
-			<td>4get.ca</td>
+			<td>4get</td>
 		</tr>
 		<tr>
 			<td>URL with %s in place of query</td>
-			<td>https://4get.ca/web?q=%s</td>
+			<td>https://4get.ca/web?s=%s</td>
 		</tr>
 	</table>
 	
 	Once that\'s done, click <div class="code-inline">Save</div>. Then, on the right handside of the newly created entry, open the dropdown menu and select <div class="code-inline">Make default</div>.
-	
-	<a href="#other-browsers"><h2 id="other-browsers">Other browsers</h2></a>
-	Get a real browser.
 	
 	<h1>Frequently asked questions</h1>
 	<a href="#what-is-this"><h2 id="what-is-this">What is this?</h2></a>

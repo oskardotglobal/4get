@@ -1,12 +1,4 @@
 <?php
-/*
-$brave = new brave();
-
-$handle = fopen("captcha.html", "r");
-$html = fread($handle, filesize("captcha.html"));
-fclose($handle);
-
-$brave->bypasscaptcha($html, "yes", "ca");*/
 
 class brave{
 	
@@ -154,6 +146,11 @@ class brave{
 			case "no": $nsfw = "strict"; break;
 		}
 		
+		if($country == "any"){
+			
+			$country = "all";
+		}
+		
 		$headers = [
 			"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -168,11 +165,6 @@ class brave{
 			"Sec-Fetch-Site: none",
 			"Sec-Fetch-User: ?1"
 		];
-		
-		if($country == "any"){
-			
-			$country = "all";
-		}
 		
 		$curlproc = curl_init();
 		
@@ -1989,6 +1981,8 @@ class brave{
 			["results"]
 			as $result
 		){
+			
+			print_r($result);
 			
 			$out["image"][] = [
 				"title" => $result["title"],

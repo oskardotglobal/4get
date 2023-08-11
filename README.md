@@ -7,7 +7,35 @@ https://4get.ca/about
 ## Try it out
 https://4get.ca
 
+## Supported websites
+1. Web
+	- DuckDuckGo
+	- Brave
+	- Mojeek
+	- Marginalia
+	- wiby
+
+2. Images
+	- DuckDuckGo
+	- Yandex
+	- Brave
+
+3. Videos
+	- YouTube
+	- Facebook videos
+	- DuckDuckgo
+	- Brave
+
+4. News
+	- DuckDuckGo
+	- Brave
+	- Mojeek
+
+More scrapers are coming soon. I currently want to add Google, Hackernews, Qwant and find a way to scrape Yandex web without those fucking captchas. A shopping, music and files tab is also in my todo list.
+
 # Setup
+This section is still to-do. You will need to figure shit out for some of the apache2 stuff. Everything else should be OK.
+
 Login as root.
 
 ```sh

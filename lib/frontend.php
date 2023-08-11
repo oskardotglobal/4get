@@ -169,7 +169,7 @@ class frontend{
 		}
 		
 		$payload .=
-			htmlspecialchars($site["title"]) .
+			$this->highlighttext($keywords, $site["title"]) .
 		'</div>';
 		
 		if($greentext !== null){
@@ -903,6 +903,7 @@ class frontend{
 					"display" => "Scraper",
 					"option" => [
 						"yt" => "YouTube",
+						"fb" => "Facebook videos",
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave"//,
 						//"google" => "Google"
@@ -970,6 +971,11 @@ class frontend{
 			case "google":
 				include "scraper/google.php";
 				$lib = new google();
+				break;
+			
+			case "fb":
+				include "scraper/facebook.php";
+				$lib = new facebook();
 				break;
 			
 			case "mojeek":
@@ -1267,6 +1273,14 @@ class frontend{
 			){
 				
 				continue;
+			}
+			
+			if(
+				$key == "older" ||
+				$key == "newer"
+			){
+				
+				$value = date("Y-m-d", (int)$value);
 			}
 			
 			$out[$key] = $value;
