@@ -119,6 +119,10 @@ $settings = [
 						"text" => "YouTube"
 					],
 					[
+						"value" => "fb",
+						"text" => "Facebook videos"
+					],
+					[
 						"value" => "ddg",
 						"text" => "DuckDuckGo"
 					],
