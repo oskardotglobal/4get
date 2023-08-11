@@ -579,6 +579,8 @@ class facebook{
 				["video_metadata_model"]
 				["relative_time_string"];
 			
+			$url_prefix = "https://www.facebook.com/watch/live/?v=";
+			
 		}elseif(
 			stripos(
 				$edge
@@ -601,6 +603,8 @@ class facebook{
 					["video_thumbnail_model"]
 					["video_duration_text"]
 				);
+			
+			$url_prefix = "https://www.facebook.com/watch/live/?v=";
 			
 		}else{
 			
@@ -630,6 +634,8 @@ class facebook{
 					["video_thumbnail_model"]
 					["video_duration_text"]
 				);
+			
+			$url_prefix = "https://www.facebook.com/watch/?v=";
 		}
 		
 		if(
@@ -706,7 +712,7 @@ class facebook{
 					"ratio" => "16:9"
 				],
 			"url" =>
-				"https://www.facebook.com/watch/?v=" .
+				$url_prefix .
 				$edge
 				["video_click_model"]
 				["click_metadata_model"]
