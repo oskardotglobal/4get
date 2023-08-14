@@ -1982,8 +1982,6 @@ class brave{
 			as $result
 		){
 			
-			print_r($result);
-			
 			$out["image"][] = [
 				"title" => $result["title"],
 				"source" => [

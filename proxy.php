@@ -32,11 +32,11 @@ try{
 		
 		switch($_GET["s"]){
 			
-			case "portrait": $req = "&w=50&h=90&p=0&qlt=99"; break;
-			case "landscape": $req = "&w=160&h=90&p=0&qlt=99"; break;
-			case "square": $req = "&w=90&h=90&p=0&qlt=99"; break;
-			case "thumb": $req = "&w=236&h=180&p=0&qlt=99"; break;
-			case "cover": $req = "&w=207&h=270&p=0&qlt=99"; break;
+			case "portrait": $req = "&w=50&h=90&p=0&qlt=90"; break;
+			case "landscape": $req = "&w=160&h=90&p=0&qlt=90"; break;
+			case "square": $req = "&w=90&h=90&p=0&qlt=90"; break;
+			case "thumb": $req = "&w=236&h=180&p=0&qlt=90"; break;
+			case "cover": $req = "&w=207&h=270&p=0&qlt=90"; break;
 		}
 		
 		$proxy->stream_linear_image($_GET["i"] . $req, "https://bing.net");

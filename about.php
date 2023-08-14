@@ -88,8 +88,12 @@ $left =
 			<td>Address</td>
 		</tr>
 		<tr>
-			<td>4get</td>
-			<td><a href="https://4get.ca">4get.ca</a><a href="http://4getwebfrq5zr4sxugk6htxvawqehxtdgjrbcn2oslllcol2vepa23yd.onion/">(tor)</a></td>
+			<td>lolcat\'s instance (master)</td>
+			<td><a href="https://4get.ca">4get.ca</a><a href="http://4getwebfrq5zr4sxugk6htxvawqehxtdgjrbcn2oslllcol2vepa23yd.onion">(tor)</a></td>
+		</tr>
+		<tr>
+			<td>zzls\'s instance</td>
+			<td><a href="https://4get.zzls.xyz/">4get.zzls.xyz</a><a href="http://4get.zzlsghu6mvvwyy75mvga6gaf4znbp3erk5xwfzedb4gg6qqh2j6rlvid.onion">(tor)</a></td>
 		</tr>
 	</table>
 	

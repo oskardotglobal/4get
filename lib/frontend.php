@@ -877,8 +877,8 @@ class frontend{
 					"display" => "Scraper",
 					"option" => [
 						"ddg" => "DuckDuckGo",
-						"brave" => "Brave",
-						//"google" => "Google",
+						//"brave" => "Brave",
+						"google" => "Google",
 						"mojeek" => "Mojeek",
 						"marginalia" => "Marginalia",
 						"wiby" => "wiby"
@@ -892,8 +892,8 @@ class frontend{
 					"option" => [
 						"ddg" => "DuckDuckGo",
 						"yandex" => "Yandex",
-						"brave" => "Brave"//,
-						//"google" => "Google"
+						"brave" => "Brave",
+						"google" => "Google"
 					]
 				];
 				break;

@@ -103,11 +103,11 @@ $settings = [
 					[
 						"value" => "brave",
 						"text" => "Brave"
-					]/*,
+					],
 					[
 						"value" => "google",
 						"text" => "Google"
-					]*/
+					]
 				]
 			],
 			[
@@ -147,8 +147,8 @@ $settings = [
 					[
 						"value" => "brave",
 						"text" => "Brave"
-					],
-					/*[
+					],/*
+					[
 						"value" => "google",
 						"text" => "Google"
 					],*/
