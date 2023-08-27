@@ -228,16 +228,16 @@ class facebook{
 					)
 				);
 		}
-		
+		/*
 		$html =
 			$this->get(
 				"https://www.facebook.com/watch/search/",
 				$req
-			);
-		/*
+			);*/
+		
 		$handle = fopen("scraper/facebook.html", "r");
 		$html = fread($handle, filesize("scraper/facebook.html"));
-		fclose($handle);*/
+		fclose($handle);
 		
 		preg_match_all(
 			'/({"__bbox":.*,"sequence_number":0}})\]\]/',

@@ -878,6 +878,7 @@ class frontend{
 					"option" => [
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
+						"yandex" => "Yandex",
 						//"google" => "Google",
 						"mojeek" => "Mojeek",
 						"marginalia" => "Marginalia",
@@ -903,9 +904,10 @@ class frontend{
 					"display" => "Scraper",
 					"option" => [
 						"yt" => "YouTube",
-						"fb" => "Facebook videos",
+						//"fb" => "Facebook videos",
 						"ddg" => "DuckDuckGo",
-						"brave" => "Brave"//,
+						"brave" => "Brave",
+						"yandex" => "Yandex"
 						//"google" => "Google"
 					]
 				];
@@ -972,11 +974,11 @@ class frontend{
 				include "scraper/google.php";
 				$lib = new google();
 				break;
-			
+			/*
 			case "fb":
 				include "scraper/facebook.php";
 				$lib = new facebook();
-				break;
+				break;*/
 			
 			case "mojeek":
 				include "scraper/mojeek.php";

@@ -824,8 +824,6 @@ class google{
 		$html = fread($handle, filesize("scraper/google.html"));
 		fclose($handle);
 		
-		$this->fuckhtml->load($html);
-		
 		$out = [
 			"status" => "ok",
 			"spelling" => [
@@ -841,6 +839,507 @@ class google{
 			"news" => [],
 			"related" => []
 		];
+		
+		$this->parsejavascript($html);
+		
+		$containers =
+			$this->fuckhtml
+			->getElementsByClassName(
+				$this->findstyles(
+					[
+						"background-color" => "#fff",
+						"margin-bottom" => "10px",
+						"-webkit-box-shadow" => "0 1px 6px rgba(32,33,36,0.28)",
+						"border-radius" => "8px"
+					],
+					self::is_class
+				),
+				"div"
+			);
+		
+		foreach($containers as $container){
+			
+			$this->fuckhtml->load($container);
+			
+			$title =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->findstyles(
+						[
+							"color" => "#1967d2",
+							"font-size" => "20px",
+							"line-height" => "26px"
+						],
+						self::is_class
+					),
+					"div"
+				);
+			
+			if(count($title) !== 0){
+				
+				/*
+					Container is a web link
+				*/
+				$web = [
+					"title" =>
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$title[0]
+							)
+						),
+					"description" => null,
+					"url" =>
+						$this->decodeurl(
+							$this->fuckhtml
+							->getElementsByTagName("a")
+							[0]
+							["attributes"]
+							["href"]
+						),
+					"date" => null,
+					"type" => "web",
+					"thumb" => [
+						"url" => null,
+						"ratio" => null
+					],
+					"sublink" => [],
+					"table" => []
+				];
+				
+				$container = $container["innerHTML"];
+				
+				$description_container =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->findstyles(
+							[
+								"padding" => "12px 16px 12px"
+							],
+							self::is_class
+						),
+						"div"
+					)[1];
+				
+				$description =
+					$description_container["innerHTML"];
+				
+				// get sublinks
+				$this->fuckhtml->load($description);
+				
+				$links =
+					$this->fuckhtml
+					->getElementsByTagName("a");
+				
+				$skip = true;
+				foreach($links as $link){
+					
+					$description =
+						str_replace(
+							$link["outerHTML"],
+							"",
+							$description
+						);
+					
+					if($skip){
+						
+						$skip = false;
+						continue;
+					}
+					
+					$sublink = [
+						"title" => null,
+						"description" => null,
+						"url" => null,
+						"date" => null
+					];
+					
+					$sublink["title"] =
+						$this->fuckhtml
+						->getTextContent(
+							$link
+						);
+					
+					$sublink["url"] =
+						$this->decodeurl(
+							$link
+							["attributes"]
+							["href"]
+						);
+					
+					$web["sublink"][] = $sublink;
+				}
+				
+				// get thumbnail before we call loadhtml again
+				$img =
+					$this->fuckhtml
+					->getElementsByTagName("img");
+				
+				if(count($img) !== 0){
+					
+					if(
+						isset($img[0]["attributes"]["alt"]) &&
+						stripos($img[0]["attributes"]["alt"], "Video for") !== false
+					){
+						
+						// is a video thumbnail
+						$web["thumb"]["ratio"] = "16:9";
+					}else{
+						
+						// is a google thumbnail
+						$web["thumb"]["ratio"] = "1:1";
+					}
+					
+					$web["thumb"]["url"] =
+						$this->getimage(
+							$img[0]["attributes"]["id"]
+						);
+				}
+				
+				// get table elements
+				$this->fuckhtml->load($description);
+				
+				$levels =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->findstyles(
+							[
+								"padding-bottom" => "8px"
+							],
+							self::is_class
+						),
+						"div"
+					);
+				
+				$additional_info = [];
+				foreach($levels as $level){
+					
+					$this->fuckhtml->load($level);
+					
+					$spans =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"span"
+						);
+					
+					$is_rating = -2;
+					
+					foreach($spans as $span){
+						
+						// clean up description
+						$description =
+							str_replace(
+								$span["outerHTML"],
+								"",
+								$description
+							);
+						
+						$innertext =
+							$this->fuckhtml
+							->getTextContent(
+								$span
+							);
+						
+						if($innertext == ""){ continue; }
+						
+						if(
+							strtolower($innertext)
+							== "rating"
+						){
+							
+							$is_rating = -1;
+							continue;
+						}
+						
+						/*
+							Parse rating object
+						*/
+						
+						if($is_rating >= -1){
+							
+							if($span["level"] !== 1){ continue; }
+							
+							$is_rating++;
+							
+							// 10/10 (123)
+							if($is_rating === 0){
+								
+								$innertext = explode(" ", $innertext, 2);
+								
+								$web["table"]["Rating"] = $innertext[0];
+								$web["table"]["Hits"] =
+									trim(
+										str_replace(
+											[
+												"(",
+												")"
+											],
+											"",
+											$innertext[1]
+										)
+									);
+								continue;
+							}
+							
+							// US$4.99
+							// MYR 50.00
+							// $38.34
+							// JP¥6,480
+							if($is_rating === 2){
+								
+								$web["table"]["Price"] = $innertext;
+								continue;
+							}
+							
+							// Android / In stock
+							if($is_rating === 4){
+								
+								$web["table"]["Support"] = $innertext;
+								continue;
+							}
+							
+							// ignore the rest
+							continue;
+						}
+						
+						/*
+							Parse standalone text
+						*/
+						$additional_info[] = $innertext;
+					}
+				}
+				
+				for($i=0; $i<count($additional_info); $i++){
+					
+					// @TODO
+					// generate better node names
+					$web["table"]["Info node #$i"] = $additional_info[$i];
+				}
+				
+				$this->fuckhtml->load($description);
+				
+				// get date node
+				$span =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"span"
+					);
+				
+				if(count($span) !== 0){
+					
+					$description =
+						str_replace(
+							$span[0]["outerHTML"],
+							"",
+							$description
+						);
+					
+					$span =
+						strtotime(
+							$this->fuckhtml
+							->getTextContent(
+								$span[0]
+							)
+						);
+					
+					if($span){
+						
+						$web["date"] = $span;
+					}
+				}
+				
+				$web["description"] =
+					trim(
+						$this->fuckhtml
+						->getTextContent(
+							$description
+						),
+						" ·."
+					);
+				
+				$out["web"][] = $web;
+				
+				continue;
+			}
+			
+			// check for container title header
+			$container_title =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->findstyles(
+						[
+							"font-weight" => "bold",
+							"font-size" => "16px",
+							"color" => "#000",
+							"margin" => "0",
+							"padding" => "12px 16px 0 16px"
+						],
+						self::is_class
+					),
+					"div"
+				);
+			
+			if(count($container_title) !== 0){
+				
+				$container_title =
+					strtolower(
+						$this->fuckhtml
+						->getTextContent(
+							$container_title[0]
+						)
+					);
+				
+				if(
+					$container_title == "related searches" ||
+					$container_title == "people also search for"
+				){
+					
+					/*
+						Parse related searches
+					*/
+					$as =
+						$this->fuckhtml
+						->getElementsByTagName("a");
+					
+					foreach($as as $a){
+						
+						$out["related"][] =
+							$this->fuckhtml
+							->getTextContent($a);
+					}
+				}
+				
+				continue;
+			}
+			
+			/*
+				Parse image carousel
+			*/
+			$title_container =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->findstyles(
+						[
+							"padding" => "12px 16px 12px"
+						],
+						self::is_class
+					),
+					"div"
+				);
+			
+			if(count($title_container) !== 0){
+				
+				$title_container =
+					strtolower(
+						$this->fuckhtml
+						->getTextContent(
+							$title_container[0]
+						)
+					);
+				
+				if($title_container == "imagesview all"){
+					
+					/*
+						Image carousel
+					*/
+					$pcitem =
+						$this->fuckhtml
+						->getElementsByClassName(
+							"pcitem",
+							"div"
+						);
+					
+					foreach($pcitem as $item){
+						
+						$this->fuckhtml->load($item);
+						
+						$link =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"a"
+							)[0];
+						
+						parse_str(
+							parse_url(
+								$this->fuckhtml
+								->getTextContent(
+									$link
+									["attributes"]
+									["href"]
+								),
+								PHP_URL_QUERY
+							),
+							$link
+						);
+						
+						if(isset($link["tbm"])){
+							
+							continue;
+						}
+						
+						$image =
+							$this->fuckhtml
+							->getElementsByTagName("img")[0];
+						
+						$title =
+							$this->fuckhtml
+							->getTextContent(
+								$image
+								["attributes"]
+								["alt"]
+							);
+						
+						$image =
+							$this->getimage(
+								$image
+								["attributes"]
+								["id"]
+							);
+						
+						$out["image"][] = [
+							"title" => $title,
+							"source" => [
+								[
+									"url" => $link["imgurl"],
+									"width" => (int)$link["w"],
+									"height" => (int)$link["h"]
+								],
+								[
+									"url" => $image,
+									"width" => (int)$link["tbnw"],
+									"height" => (int)$link["tbnh"]
+								]
+							],
+							"url" => $link["imgrefurl"]
+						];
+					}
+				}
+			}
+			
+			/*
+				Get next page
+			*/
+			$as =
+				$this->fuckhtml
+				->getElementsByTagName("a");
+			
+			foreach($as as $a){
+				
+				if(
+					isset($a["attributes"]["aria-label"]) &&
+					strtolower($a["attributes"]["aria-label"]) == "next page"
+				){
+					
+					$out["npt"] =
+						$this->fuckhtml
+						->getTextContent(
+							$a["attributes"]["href"]
+						);
+				}
+			}
+		}
+		
+		return $out;
 	}
 	
 	
@@ -1163,7 +1662,7 @@ class google{
 		return $time;
 	}
 	
-	private function loadjavascriptcrap($html){
+	private function parsejavascript($html){
 		
 		$this->fuckhtml->load($html);
 		

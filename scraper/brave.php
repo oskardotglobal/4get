@@ -1183,6 +1183,28 @@ class brave{
 			$div = $this->fuckhtml->getElementsByTagName("div");
 			
 			/*
+				Get small description
+			*/
+			$small_desc =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"infobox-description",
+					$div
+				);
+			
+			if(count($small_desc) !== 0){
+				
+				$answer["description"][] = [
+					"type" => "quote",
+					"value" =>
+						$this->fuckhtml
+						->getTextContent(
+							$small_desc[0]
+						)
+				];
+			}
+			
+			/*
 				Get title + url
 			*/
 			$title =
@@ -1292,28 +1314,25 @@ class brave{
 				
 				if(count($code) === 0){
 					
-					$answer["description"] =
-					[
-						[
-							"type" => "text",
-							"value" =>
-								$this->fuckhtml
-								->getTextContent(
-									$desc_tmp
-								)
-						],
-						[
-							"type" => "quote",
-							"value" =>
-								$this->fuckhtml
-								->getTextContent(
-									$author
-								)
-						]
+					$answer["description"][] = [
+						"type" => "text",
+						"value" =>
+							$this->fuckhtml
+							->getTextContent(
+								$desc_tmp
+							)
+					];
+					
+					$answer["description"][] = [
+						"type" => "quote",
+						"value" =>
+							$this->fuckhtml
+							->getTextContent(
+								$author
+							)
 					];
 				}else{
 					
-					$text = [];
 					$i = 0;
 					
 					foreach($code as $snippet){
@@ -1344,7 +1363,7 @@ class brave{
 										);
 									
 									$value = $this->fuckhtml->getTextContent($tmphtml[0], false, false);
-									$this->appendtext($value, $text, $i);
+									$this->appendtext($value, $answer["description"], $i);
 									
 									$type = null;
 									switch($tag["tagName"]){
@@ -1365,10 +1384,10 @@ class brave{
 												$type == "title"
 											){
 												
-												$text[$i - 1]["value"] = rtrim($text[$i - 1]["value"]);
+												$answer["description"][$i - 1]["value"] = rtrim($answer["description"][$i - 1]["value"]);
 											}
 											
-											$text[] = [
+											$answer["description"][] = [
 												"type" => $type,
 												"value" => $value
 											];
@@ -1393,21 +1412,21 @@ class brave{
 								if(strlen($tmphtml) !== 0){
 									
 									$value = $this->fuckhtml->getTextContent($tmphtml, false, false);
-									$this->appendtext($value, $text, $i);
+									$this->appendtext($value, $answer["description"], $i);
 								}
 								break;
 							
 							case "pre":
 								
-								switch($text[$i - 1]["type"]){
+								switch($answer["description"][$i - 1]["type"]){
 									
 									case "text":
 									case "italic":
-										$text[$i - 1]["value"] = rtrim($text[$i - 1]["value"]);
+										$answer["description"][$i - 1]["value"] = rtrim($answer["description"][$i - 1]["value"]);
 										break;
 								}
 								
-								$text[] =
+								$answer["description"][] =
 									[
 										"type" => "code",
 										"value" =>
@@ -1441,7 +1460,7 @@ class brave{
 										->getTextContent(
 											$elem
 										),
-										$text,
+										$answer["description"],
 										$i
 									);
 								}
@@ -1451,21 +1470,19 @@ class brave{
 					
 					if(
 						$i !== 0 &&
-						$text[$i - 1]["type"] == "text"
+						$answer["description"][$i - 1]["type"] == "text"
 					){
 						
-						$text[$i - 1]["value"] = rtrim($text[$i - 1]["value"]);
+						$answer["description"][$i - 1]["value"] = rtrim($answer["description"][$i - 1]["value"]);
 					}
 					
 					if($author){
 						
-						$text[] = [
+						$answer["description"][] = [
 							"type" => "quote",
 							"value" => $this->fuckhtml->getTextContent($author)
 						];
 					}
-					
-					$answer["description"] = $text;
 				}
 			}else{
 				
@@ -1481,22 +1498,20 @@ class brave{
 				
 				if(count($description) !== 0){
 					
-					$description =
+					$answer["description"][] =
 						[
-							[
-								"type" => "text",
-								"value" =>
-									$this->titledots(
-										preg_replace(
-											'/ Wikipedia$/',
-											"",
-											$this->fuckhtml
-											->getTextContent(
-												$description[0]
-											)
+							"type" => "text",
+							"value" =>
+								$this->titledots(
+									preg_replace(
+										'/ Wikipedia$/',
+										"",
+										$this->fuckhtml
+										->getTextContent(
+											$description[0]
 										)
 									)
-							]
+								)
 						];
 					
 					$ratings =
@@ -1514,7 +1529,7 @@ class brave{
 								"div"
 							);
 						
-						$description[] = [
+						$answer["description"][] = [
 							"type" => "title",
 							"value" => "Ratings"
 						];
@@ -1550,36 +1565,34 @@ class brave{
 									)[0]
 								);
 							
-							$c = count($description) - 1;
+							$c = count($answer["description"]) - 1;
 							
 							if(
 								$c !== -1 &&
-								$description[$c]["type"] == "text"
+								$answer["description"][$c]["type"] == "text"
 							){
 								
-								$description[$c]["value"] .= $num . " ";
+								$answer["description"][$c]["value"] .= $num . " ";
 							}else{
 								
-								$description[] = [
+								$answer["description"][] = [
 									"type" => "text",
 									"value" => $num . " "
 								];
 							}
 							
-							$description[] = [
+							$answer["description"][] = [
 								"type" => "link",
 								"value" => $this->fuckhtml->getTextContent($href),
 								"url" => $this->fuckhtml->getTextContent($href["attributes"]["href"])
 							];
 							
-							$description[] = [
+							$answer["description"][] = [
 								"type" => "text",
 								"value" => " (" . $votes . ")\n"
 							];
 						}
 					}
-					
-					$answer["description"] = $description;
 				}
 			}
 			

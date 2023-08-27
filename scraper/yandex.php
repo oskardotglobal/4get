@@ -18,8 +18,6 @@ class yandex{
 		
 		$curlproc = curl_init();
 		
-		$search = $get["text"];
-		
 		if($get !== []){
 			$get = http_build_query($get);
 			$url .= "?" . $get;
@@ -40,7 +38,7 @@ class yandex{
 			"Accept-Language: en-US,en;q=0.5",
 			"DNT: 1",
 			"Cookie: yp=1716337604.sp.family%3A{$nsfw}#1685406411.szm.1:1920x1080:1920x999",
-			"Referer: https://yandex.com/images/search?text={$search}",
+			"Referer: https://yandex.com/images/search",
 			"Connection: keep-alive",
 			"Upgrade-Insecure-Requests: 1",
 			"Sec-Fetch-Dest: document",
@@ -71,6 +69,35 @@ class yandex{
 	public function getfilters($pagetype){
 		
 		switch($pagetype){
+			
+			case "web":
+				return [
+					"lang" => [
+						"display" => "Language",
+						"option" => [
+							"any" => "Any language",
+							"en" => "English",
+							"ru" => "Russian",
+							"be" => "Belorussian",
+							"fr" => "French",
+							"de" => "German",
+							"id" => "Indonesian",
+							"kk" => "Kazakh",
+							"tt" => "Tatar",
+							"tr" => "Turkish",
+							"uk" => "Ukrainian"
+						]
+					],
+					"newer" => [
+						"display" => "Newer than",
+						"option" => "_DATE"
+					],
+					"older" => [
+						"display" => "Older than",
+						"option" => "_DATE"
+					]
+				];
+				break;
 			
 			case "images":
 				return
@@ -149,12 +176,214 @@ class yandex{
 				];
 				break;
 			
-			default:
-				return [];
+			case "videos":
+				return [
+					"nsfw" => [
+						"display" => "NSFW",
+						"option" => [
+							"yes" => "Yes",
+							"maybe" => "Maybe",
+							"no" => "No"
+						]
+					],
+					"time" => [
+						"display" => "Time posted",
+						"option" => [
+							"any" => "Any time",
+							"9" => "Recently"
+						]
+					],
+					"duration" => [
+						"display" => "Duration",
+						"option" => [
+							"any" => "Any duration",
+							"short" => "Short"
+						]
+					]
+				];
 				break;
 		}
 	}
-
+	
+	public function web($get){
+		
+		// has captcha
+		// https://yandex.com/search/touch/?text=lol&app_platform=android&appsearch_header=1&ui=webmobileapp.yandex&app_version=23070603&app_id=ru.yandex.searchplugin&search_source=yandexcom_touch_native&clid=2218567
+		
+		// https://yandex.com/search/site/?text=minecraft&web=1&frame=1&v=2.0&searchid=3131712
+		// &within=777&from_day=26&from_month=8&from_year=2023&to_day=26&to_month=8&to_year=2023
+		
+		if($get["npt"]){
+			
+			$npt = $this->nextpage->get($get["npt"], "web");
+			
+			$html =
+				$this->get(
+					"https://yandex.com" . $npt,
+					[],
+					"yes"
+				);
+		}else{
+			
+			$search = $get["s"];
+			$lang = $get["lang"];
+			$older = $get["older"];
+			$newer = $get["newer"];
+			
+			$params = [
+				"text" => $search,
+				"web" => "1",
+				"frame" => "1",
+				"searchid" => "3131712"
+			];
+			
+			if($lang != "any"){
+				
+				$params["lang"] = $lang;
+			}
+			
+			if(
+				$newer === false &&
+				$older !== false
+			){
+				
+				$newer = 0;
+			}
+			
+			if($newer !== false){
+				
+				$params["from_day"] = date("j", $newer);
+				$params["from_month"] = date("n", $newer);
+				$params["from_year"] = date("Y", $newer);
+				
+				if($older === false){
+					
+					$older = time();
+				}
+				
+				$params["to_day"] = date("j", $older);
+				$params["to_month"] = date("n", $older);
+				$params["to_year"] = date("Y", $older);
+			}
+			
+			try{
+				$html =
+					$this->get(
+						"https://yandex.com/search/site/",
+						$params,
+						"yes"
+					);
+			}catch(Exception $error){
+				
+				throw new Exception("Could not get search page");
+			}
+			
+			/*
+			$handle = fopen("scraper/yandex.html", "r");
+			$html = fread($handle, filesize("scraper/yandex.html"));
+			fclose($handle);*/
+		}
+		
+		$out = [
+			"status" => "ok",
+			"spelling" => [
+				"type" => "no_correction",
+				"using" => null,
+				"correction" => null
+			],
+			"npt" => null,
+			"answer" => [],
+			"web" => [],
+			"image" => [],
+			"video" => [],
+			"news" => [],
+			"related" => []
+		];
+		
+		$this->fuckhtml->load($html);
+		
+		// get nextpage
+		$npt =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"b-pager__next",
+				"a"
+			);
+		
+		if(count($npt) !== 0){
+			
+			$out["npt"] =
+				$this->nextpage->store(
+					$this->fuckhtml
+					->getTextContent(
+						$npt
+						[0]
+						["attributes"]
+						["href"]
+					),
+					"web"
+				);
+		}
+		
+		// get items
+		$items =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"b-serp-item",
+				"li"
+			);
+		
+		foreach($items as $item){
+			
+			$this->fuckhtml->load($item);
+			
+			$link =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"b-serp-item__title-link",
+					"a"
+				)[0];
+			
+			$out["web"][] = [
+				"title" =>
+					$this->titledots(
+						$this->fuckhtml
+						->getTextContent(
+							$link
+						)
+					),
+				"description" =>
+					$this->titledots(
+						$this->fuckhtml
+						->getTextContent(
+							$this->fuckhtml
+							->getElementsByClassName(
+								"b-serp-item__text",
+								"div"
+							)[0]
+						)
+					),
+				"url" =>
+					$this->fuckhtml
+					->getTextContent(
+						$link
+						["attributes"]
+						["href"]
+					),
+				"date" => null,
+				"type" => "web",
+				"thumb" => [
+					"url" => null,
+					"ratio" => null
+				],
+				"sublink" => [],
+				"table" => []
+			];
+		}
+		
+		return $out;
+	}
+	
 	public function image($get){
 		
 		if($get["npt"]){
@@ -402,7 +631,7 @@ class yandex{
 			$json["type"] == "captcha"
 		){
 			
-			throw new Exception("Yandex blocked this 4get instance. Yandex blocks don't last very long, but the block timer gets reset everytime you make another unsuccessful request. Please try again in ~7 minutes.");
+			throw new Exception("Yandex blocked this 4get instance. Please try again in ~7 minutes.");
 		}
 		
 		if($json === null){
@@ -511,6 +740,359 @@ class yandex{
 		}
 		
 		return $out;
+	}
+	
+	public function video($get){
+		
+		if($get["npt"]){
+			
+			$params =
+				json_decode(
+					$this->nextpage->get(
+						$get["npt"],
+						"web"
+					),
+					true
+				);
+			
+			$nsfw = $params["nsfw"];
+			unset($params["nsfw"]);
+		}else{
+			$search = $get["s"];
+			$nsfw = $get["nsfw"];
+			$time = $get["time"];
+			$duration = $get["duration"];
+			
+			// https://yandex.com/video/search
+			// ?tmpl_version=releases/frontend/video/v1.1168.0#8d942de0f4ebc4eb6b8f3c24ffbd1f8dbc5bbe63
+			// &format=json
+			// &request=
+			// {
+			//		"blocks":[
+			//			{"block":"extra-content","params":{},"version":2},
+			//			{"block":"i-global__params:ajax","params":{},"version":2},
+			//			{"block":"search2:ajax","params":{},"version":2},
+			//			{"block":"vital-incut","params":{},"version":2},
+			//			{"block":"content_type_search","params":{},"version":2},
+			//			{"block":"serp-controller","params":{},"version":2},
+			//			{"block":"cookies_ajax","params":{},"version":2}
+			//		],
+			//		"metadata":{
+			//			"bundles":{"lb":"^G]!q<X120"},
+			//			"assets":{"las":"react-with-dom=1;185.0=1;73.0=1;145.0=1;5a502a.0=1;32c342.0=1;b84ac8.0=1"},
+			//			"extraContent":{"names":["i-react-ajax-adapter"]}
+			//		}
+			// }
+			// &yu=4861394161661655015
+			// &from=tabbar
+			// &reqid=1693106278500184-6825210746979814879-balancer-l7leveler-kubr-yp-sas-7-BAL-4237
+			// &suggest_reqid=486139416166165501562797413447032
+			// &text=minecraft
+			
+			$params = [
+				"tmpl_version" => "releases/frontend/video/v1.1168.0#8d942de0f4ebc4eb6b8f3c24ffbd1f8dbc5bbe63",
+				"format" => "json",
+				"request" => json_encode([
+					"blocks" => [
+						(object)[
+							"block" => "extra-content",
+							"params" => (object)[],
+							"version" => 2
+						],
+						(object)[
+							"block" => "i-global__params:ajax",
+							"params" => (object)[],
+							"version" => 2
+						],
+						(object)[
+							"block" => "search2:ajax",
+							"params" => (object)[],
+							"version" => 2
+						],
+						(object)[
+							"block" => "vital-incut",
+							"params" => (object)[],
+							"version" => 2
+						],
+						(object)[
+							"block" => "content_type_search",
+							"params" => (object)[],
+							"version" => 2
+						],
+						(object)[
+							"block" => "serp-controller",
+							"params" => (object)[],
+							"version" => 2
+						],
+						(object)[
+							"block" => "cookies_ajax",
+							"params" => (object)[],
+							"version" => 2
+						]
+					],
+					"metadata" => (object)[
+						"bundles" => (object)[
+							"lb" => "^G]!q<X120"
+						],
+						"assets" => (object)[
+							"las" => "react-with-dom=1;185.0=1;73.0=1;145.0=1;5a502a.0=1;32c342.0=1;b84ac8.0=1"
+						],
+						"extraContent" => (object)[
+							"names" => [
+								"i-react-ajax-adapter"
+							]
+						]
+					]
+				]),
+				"text" => $search
+			];
+			
+			if($duration != "any"){
+				
+				$params["duration"] = $duration;
+			}
+			
+			if($time != "any"){
+				
+				$params["within"] = $time;
+			}
+		}
+		/*
+		$handle = fopen("scraper/yandex-video.json", "r");
+		$json = fread($handle, filesize("scraper/yandex-video.json"));
+		fclose($handle);
+		*/
+		try{
+			$json =
+				$this->get(
+					"https://yandex.com/video/search",
+					$params,
+					$nsfw
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Could not fetch JSON");
+		}
+		
+		$json = json_decode($json, true);
+		
+		if($json === null){
+			
+			throw new Exception("Could not parse JSON");
+		}
+		
+		if(!isset($json["blocks"])){
+			
+			throw new Exception("Yandex blocked this 4get instance. Please try again in 7~ minutes.");
+		}
+		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"video" => [],
+			"author" => [],
+			"livestream" => [],
+			"playlist" => [],
+			"reel" => []
+		];
+		
+		$html = null;
+		foreach($json["blocks"] as $block){
+			
+			if(isset($block["html"])){
+				
+				$html .= $block["html"];
+			}
+		}
+		
+		$this->fuckhtml->load($html);
+		
+		$div =
+			$this->fuckhtml
+			->getElementsByTagName("div");
+		
+		/*
+			Get nextpage
+		*/
+		$npt =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"more more_direction_next i-bem",
+				$div
+			);
+		
+		if(count($npt) !== 0){
+			
+			$params["p"] = "1";
+			$params["nsfw"] = $nsfw;
+			$out["npt"] =
+				$this->nextpage->store(
+					json_encode($params),
+					"web"
+				);
+		}
+		
+		$items =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"serp-item",
+				$div
+			);
+		
+		foreach($items as $item){
+			
+			$data =
+				json_decode(
+					$this->fuckhtml
+					->getTextContent(
+						$item["attributes"]["data-video"]
+					),
+					true
+				);
+			
+			$this->fuckhtml->load($item);
+			
+			$thumb =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"thumb-image__image",
+					"img"
+				);
+			
+			if(count($thumb) === 0){
+				
+				$thumb = [
+					"url" => null,
+					"ratio" => null
+				];
+			}else{
+				
+				$c = 1;
+				$thumb = [
+					"url" =>
+						str_replace(
+							"//",
+							"https://",
+							$this->fuckhtml
+							->getTextContent(
+								$thumb
+								[0]
+								["attributes"]
+								["src"]
+							),
+							$c
+						),
+					"ratio" => "16:9"
+				];
+			}
+			
+			$smallinfos =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"serp-item__sitelinks-item",
+					"div"
+				);
+			
+			$date = null;
+			$views = null;
+			$first = true;
+			
+			foreach($smallinfos as $info){
+				
+				if($first){
+					
+					$first = false;
+					continue;
+				}
+				
+				$info =
+					$this->fuckhtml
+					->getTextContent(
+						$info
+					);
+				
+				if($temp_date = strtotime($info)){
+					
+					$date = $temp_date;
+				}else{
+					
+					$views = $this->parseviews($info);
+				}
+			}
+			
+			$description =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"serp-item__text serp-item__text_visibleText_always",
+					"div"
+				);
+			
+			if(count($description) === 0){
+				
+				$description = null;
+			}else{
+				
+				$description =
+					$this->titledots(
+						$this->fuckhtml
+						->getTextContent(
+							$description[0]
+						)
+					);
+			}
+			
+			$out["video"][] = [
+				"title" =>
+					$this->fuckhtml
+					->getTextContent(
+						$this->titledots(
+							$data["title"]
+						)
+					),
+				"description" => $description,
+				"author" => [
+					"name" => null,
+					"url" => null,
+					"avatar" => null
+				],
+				"date" => $date,
+				"duration" =>
+					(int)$data
+					["counters"]
+					["toHostingLoaded"]
+					["stredParams"]
+					["duration"],
+				"views" => $views,
+				"thumb" => $thumb,
+				"url" =>
+					$this->fuckhtml
+					->getTextContent(
+						$data["counters"]
+						["toHostingLoaded"]
+						["postfix"]
+						["href"]
+					)
+			];
+		}
+		
+		return $out;
+	}
+	
+	private function parseviews($text){
+		
+		$text = explode(" ", $text);
+		
+		$num = (float)$text[0];
+		$mod = $text[1];
+		
+		switch($mod){
+			
+			case "bln.": $num = $num * 1000000000; break;
+			case "mln.": $num = $num * 1000000; break;
+			case "thsd.": $num = $num * 1000; break;
+		}
+		
+		return $num;
 	}
 	
 	private function titledots($title){

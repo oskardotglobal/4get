@@ -70,6 +70,10 @@ $settings = [
 						"value" => "brave",
 						"text" => "Brave"
 					],
+					[
+						"value" => "yandex",
+						"text" => "Yandex"
+					],
 					/*[
 						"value" => "google",
 						"text" => "Google"
@@ -119,16 +123,16 @@ $settings = [
 						"text" => "YouTube"
 					],
 					[
-						"value" => "fb",
-						"text" => "Facebook videos"
-					],
-					[
 						"value" => "ddg",
 						"text" => "DuckDuckGo"
 					],
 					[
 						"value" => "brave",
 						"text" => "Brave"
+					],
+					[
+						"value" => "yandex",
+						"text" => "Yandex"
 					]/*,
 					[
 						"value" => "google",
@@ -147,8 +151,8 @@ $settings = [
 					[
 						"value" => "brave",
 						"text" => "Brave"
-					],/*
-					[
+					],
+					/*[
 						"value" => "google",
 						"text" => "Google"
 					],*/
