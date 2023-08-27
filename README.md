@@ -102,3 +102,20 @@ service apache2 restart
 You'll probably want to setup a tor address at this point, but I'm too lazy to put instructions here.
 
 Ok bye!!!
+
+
+
+## Docker Install
+
+```
+git clone https://git.lolcat.ca/lolcat/4get
+cd 4get
+docker build -t 4get .
+docker run -d -p 80:80 -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs 4get
+```
+
+replace enviroment variables FOURGET_SERVER_NAME and FOURGET_SERVER_ADMIN_EMAIL with relevant values
+
+the certs directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
+
+
