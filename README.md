@@ -11,7 +11,7 @@ https://4get.ca
 1. Web
 	- DuckDuckGo
 	- Brave
-	- Google
+	- Yandex
 	- Mojeek
 	- Marginalia
 	- wiby
@@ -24,10 +24,9 @@ https://4get.ca
 
 3. Videos
 	- YouTube
-	- Facebook videos
 	- DuckDuckgo
 	- Brave
-	- Google
+	- Yandex
 
 4. News
 	- DuckDuckGo
