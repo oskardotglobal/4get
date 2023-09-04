@@ -37,7 +37,7 @@ https://4get.ca
 5. Music
 	- SoundCloud
 
-More scrapers are coming soon. I currently want to add Hackernews, Qwant and find a way to scrape Yandex web without those fucking captchas. A shopping, music and files tab is also in my todo list.
+More scrapers are coming soon. I currently want to add Google web/video/news search, HackerNews (durr orange site!!) and Qwant. A shopping and files tab is also in my todo list.
 
 # Setup
 This section is still to-do. You will need to figure shit out for some of the apache2 and nginx stuff. Everything else should be OK.
