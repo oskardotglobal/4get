@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 lib/test.html
 lib/postdata.json
 lib/nextpage.json
@@ -21,3 +22,7 @@ scraper/soundcloud.json
 scraper/mp3-pm.html
 banner/*
 !banner/*default*
+=======
+banner/*
+!banner/*default*
+>>>>>>> 77293818cd213ec0ad07c573d298fff9cd5b357d
