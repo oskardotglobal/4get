@@ -51,6 +51,13 @@
 audio{
 	max-width:100%;
 	display:block;
+}
+
+.left audio{
+	margin-top:7px;
+}
+
+.right-wrapper audio{
 	margin-bottom:17px;
 }
 

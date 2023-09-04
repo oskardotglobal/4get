@@ -98,7 +98,7 @@ class frontend{
 			]);
 	}
 	
-	public function drawtextresult($site, $greentext = null, $duration = null, $keywords, $tabindex = true){
+	public function drawtextresult($site, $greentext = null, $duration = null, $keywords, $tabindex = true, $customhtml = null){
 		
 		$payload =
 			'<div class="text-result">';
@@ -187,7 +187,9 @@ class frontend{
 					$this->highlighttext($keywords, $site["description"]) .
 				'</div>';
 		}
-			
+		
+		$payload .= $customhtml;
+		
 		$payload .= '</a>';
 		
 		/*
@@ -764,6 +766,7 @@ class frontend{
 				'<a href="https://webcache.googleusercontent.com/search?q=cache:' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://google.com" alt="go">Google cache</a>' .
 				'<a href="https://web.archive.org/web/' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://archive.org" alt="ar">Archive.org</a>' .
 				'<a href="https://archive.is/newest/' . htmlspecialchars($link) . '" class="list" target="_BLANK"><img src="/favicon?s=https://archive.is" alt="ar">Archive.is</a>' .
+				'<a href="https://ghostarchive.org/search?term=' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://ghostarchive.org" alt="gh">Ghostarchive</a>' .
 				'<a href="https://www.bing.com/search?q=url%3A' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://bing.com" alt="bi">Bing cache</a>' .
 				'<a href="https://megalodon.jp/?url=' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://megalodon.jp" alt="me">Megalodon</a>' .
 			'</div>';
@@ -833,6 +836,10 @@ class frontend{
 				break;
 			
 			case "news":
+				$get_scraper = isset($_COOKIE["scraper_news"]) ? $_COOKIE["scraper_news"] : null;
+				break;
+			
+			case "music":
 				$get_scraper = isset($_COOKIE["scraper_news"]) ? $_COOKIE["scraper_news"] : null;
 				break;
 		}
@@ -923,6 +930,14 @@ class frontend{
 						"mojeek" => "Mojeek"
 					]
 				];
+			
+			case "music":
+				$filters["scraper"] = [
+					"display" => "Scraper",
+					"option" => [
+						"sc" => "SoundCloud"
+					]
+				];
 				break;
 		}
 		
@@ -993,6 +1008,11 @@ class frontend{
 			case "wiby":
 				include "scraper/wiby.php";
 				$lib = new wiby();
+				break;
+			
+			case "sc":
+				include "scraper/sc.php";
+				$lib = new sc();
 				break;
 		}
 		
@@ -1169,7 +1189,7 @@ class frontend{
 		
 		$html = null;
 		
-		foreach(["web", "images", "videos", "news"] as $type){
+		foreach(["web", "images", "videos", "news", "music"] as $type){
 			
 			$html .= '<a href="/' . $type . '?s=' . urlencode($query);
 			
@@ -1303,7 +1323,7 @@ class frontend{
 			return htmlspecialchars($image);
 		}
 		
-		return "/proxy?i=" . urlencode($image) . "&s=" . $format;
+		return "/proxy.php?i=" . urlencode($image) . "&s=" . $format;
 	}
 	
 	public function htmlnextpage($gets, $npt, $page){

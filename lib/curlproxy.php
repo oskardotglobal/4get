@@ -150,7 +150,7 @@ class proxy{
 					$curl,
 					CURLOPT_HTTPHEADER,
 					[
-						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
 						"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 						"Accept-Language: en-US,en;q=0.5",
 						"Accept-Encoding: gzip, deflate",
@@ -178,7 +178,7 @@ class proxy{
 					$curl,
 					CURLOPT_HTTPHEADER,
 					[
-						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0",
+						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
 						"Accept: image/avif,image/webp,*/*",
 						"Accept-Language: en-US,en;q=0.5",
 						"Accept-Encoding: gzip, deflate",
@@ -380,7 +380,7 @@ class proxy{
 					$curl,
 					CURLOPT_HTTPHEADER,
 					[
-						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
 						"Accept: image/avif,image/webp,*/*",
 						"Accept-Language: en-US,en;q=0.5",
 						"Accept-Encoding: gzip, deflate, br",
@@ -396,7 +396,7 @@ class proxy{
 					$curl,
 					CURLOPT_HTTPHEADER,
 					[
-						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+						"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
 						"Accept: audio/webm,audio/ogg,audio/wav,audio/*;q=0.9,application/ogg;q=0.7,video/*;q=0.6,*/*;q=0.5",
 						"Accept-Language: en-US,en;q=0.5",
 						"Accept-Encoding: gzip, deflate, br",

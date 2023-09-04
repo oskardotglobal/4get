@@ -959,6 +959,7 @@ class yandex{
 					"img"
 				);
 			
+			$c = 1;
 			if(count($thumb) === 0){
 				
 				$thumb = [
@@ -967,7 +968,6 @@ class yandex{
 				];
 			}else{
 				
-				$c = 1;
 				$thumb = [
 					"url" =>
 						str_replace(
@@ -1065,12 +1065,17 @@ class yandex{
 				"views" => $views,
 				"thumb" => $thumb,
 				"url" =>
-					$this->fuckhtml
-					->getTextContent(
-						$data["counters"]
-						["toHostingLoaded"]
-						["postfix"]
-						["href"]
+					str_replace(
+						"http://",
+						"https://",
+						$this->fuckhtml
+						->getTextContent(
+							$data["counters"]
+							["toHostingLoaded"]
+							["postfix"]
+							["href"]
+						),
+						$c
 					)
 			];
 		}

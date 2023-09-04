@@ -242,6 +242,21 @@
     the endpoint above.
 
 
++ /api/v1/music
+    Each entry under "song" contains a array index called "stream" that
+    looks like this ::
+    
+        endpoint: audio_sc
+        url: https://api-v2.soundcloud <...>
+    
+    
+    When the endpoint is "audio_sc", you MUST use 4get's audio_sc
+    endpoint, for example, if you want an audio stream back. Otherwise,
+    you are free to handle the json+m3u8 crap yourself. If the endpoint
+    is equal to "audio", that URL SHOULD return a valid HTTP audio
+    stream, and using the "audio" endpoint becomes optional again.
+
+
 + /favicon
     Get the favicon for a website. The only parameter is "s", and must
     include the protocol.
@@ -282,6 +297,20 @@
     only used to proxy small files.
     
     The parameter is "s" for the audio link.
+
+
++ /audio_sc
+    Get a proxied audio file for SoundCloud. Does not support downloads
+    trough WGET or CURL, since it returns 30kb~160kb "206 Partial
+    Content" parts, due to technical limitations that comes with
+    converting m3u8 playlists to seekable audio files. If you use this
+    endpoint, you must support these 206 codes and also handle the
+    initial 302 HTTP redirect. I used this method as I didn't want to
+    store information about your request needlessly. This method also
+    allows noJS users to access the files.
+    
+    The parameter is "s" for the SoundCloud JSON m3u8 abomination. It
+    does not support "normal" SoundCloud URLs at this time.
 
 
 + Appendix
