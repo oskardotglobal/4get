@@ -930,6 +930,7 @@ class frontend{
 						"mojeek" => "Mojeek"
 					]
 				];
+				break;
 			
 			case "music":
 				$filters["scraper"] = [

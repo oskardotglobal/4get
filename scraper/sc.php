@@ -260,7 +260,7 @@ class sc{
 					$out["author"][] = [
 						"title" => $item["username"],
 						"followers" => $item["followers_count"],
-						"description" => $item["track_count"] . " songs. " . $this->limitstrlen($item["description"]),
+						"description" => trim($item["track_count"] . " songs. " . $this->limitstrlen($item["description"])),
 						"thumb" => [
 							"url" => $item["avatar_url"],
 							"ratio" => "1:1"
