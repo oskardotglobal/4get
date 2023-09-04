@@ -128,12 +128,9 @@ class proxy{
 		}
 		
 		// sanitize URL
-		try{
+		if($this->validateurl($url) === false){
 			
-			$this->validateurl($url);
-		}catch(Exception $error){
-			
-			throw new Exception($error->getMessage());
+			throw new Exception("Invalid URL");
 		}
 		
 		$this->clientcache();
@@ -353,12 +350,9 @@ class proxy{
 		$this->format = $format;
 		
 		// sanitize URL
-		try{
+		if($this->validateurl($url) === false){
 			
-			$this->validateurl($url);
-		}catch(Exception $error){
-			
-			throw new Exception($error->getMessage());
+			throw new Exception("Invalid URL");
 		}
 		
 		$this->clientcache();
