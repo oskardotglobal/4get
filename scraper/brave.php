@@ -280,11 +280,11 @@ class brave{
 				$q["spellcheck"] = "0";
 			}
 		}
-		
+		/*
 		$handle = fopen("scraper/brave.html", "r");
 		$html = fread($handle, filesize("scraper/brave.html"));
 		fclose($handle);
-		/*
+		*/
 		try{
 			$html =
 				$this->get(
@@ -298,7 +298,7 @@ class brave{
 			
 			throw new Exception("Could not fetch search page");
 		}
-		*/
+		
 		$out = [
 			"status" => "ok",
 			"spelling" => [
