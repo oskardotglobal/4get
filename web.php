@@ -69,7 +69,7 @@ if($results["spelling"]["type"] != "no_correction"){
 			urlencode($results["spelling"]["correction"]) .
 			'&' .
 			$frontend->buildquery($get, true) .
-			'">' .
+			'&spellcheck=no">' .
 			$results["spelling"]["correction"] .
 			'</a>?' .
 		'</div>';
