@@ -1289,6 +1289,7 @@ class frontend{
 				$key == "extendedsearch" ||
 				$value == "any" ||
 				$value == "all" ||
+				$key == "spellcheck" ||
 				(
 					$ommit === true &&
 					$key == "s"
