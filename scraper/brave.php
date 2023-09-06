@@ -78,8 +78,8 @@ class brave{
 					"spellcheck" => [
 						"display" => "Spellcheck",
 						"option" => [
-							"no" => "No",
-							"yes" => "Yes"
+							"yes" => "Yes",
+							"no" => "No"
 						]
 					]
 				];
@@ -277,7 +277,7 @@ class brave{
 			// spellcheck
 			if($spellcheck == "no"){
 				
-				$q["spellcheck"] = "1";
+				$q["spellcheck"] = "0";
 			}
 		}
 		/*
