@@ -277,7 +277,7 @@ class brave{
 			// spellcheck
 			if($spellcheck == "no"){
 				
-				$q["spellcheck"] = "0";
+				$q["spellcheck"] = "1";
 			}
 		}
 		/*
