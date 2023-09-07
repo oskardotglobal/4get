@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W2OZK5H)
+
 # 4get
 4get is a metasearch engine that doesn't suck (they live in our walls!)
 
