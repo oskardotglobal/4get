@@ -106,6 +106,10 @@ $left =
 	<a href="#schizo"><h2 id="schizo">How can I trust you?</h2></a>
 	You just sort of have to take my word for it right now. If you\'d rather trust yourself instead of me (I believe in you!!), all of the code on this website is available trough my <a href="https://git.lolcat.ca/lolcat" class="link">git page</a> for you to host on your own machines. Just a reminder: if you\'re the sole user of your instance, it doesn\'t take immense brain power for Microshit to figure out you basically just switched IP addresses. Invite your friends to use your instance!
 	
+	<a href="#donate"><h2 id="donate">Support the project</h2></a>
+	Donate to me trough ko-fi: <a href="https://ko-fi.com/lolcat" target="BLANK" rel="noreferrer">ko-fi.com/lolcat</a><br>
+	Please donate I sent myself a donation for testing if it works and it looks fucking dumb. Reasons to donate are listed on there. Thank you!
+	
 	<a href="#contact"><h2 id="contact">I want to report abuse or have erotic roleplay trough email</h2></a>
 	I don\'t know about that second part but if you want to talk to me, just drop me an email...<br><br>
 	
