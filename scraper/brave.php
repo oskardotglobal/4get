@@ -418,7 +418,10 @@ class brave{
 		
 		foreach($data["web"]["results"] as $result){
 			
-			if(isset($result["thumbnail"])){
+			if(
+				isset($result["thumbnail"]) &&
+				is_array($result["thumbnail"])
+			){
 				
 				$thumb = [
 					"ratio" => $result["thumbnail"]["logo"] == "false" ? "16:9" : "1:1",
@@ -433,7 +436,10 @@ class brave{
 			}
 			
 			$sublink = [];
-			if(isset($result["cluster"])){
+			if(
+				isset($result["cluster"]) &&
+				is_array($result["cluster"])
+			){
 				
 				foreach($result["cluster"] as $cluster){
 					
@@ -537,7 +543,10 @@ class brave{
 			}
 			
 			// video
-			if(isset($result["video"])){
+			if(
+				isset($result["video"]) &&
+				is_array($result["video"])
+			){
 				
 				foreach($result["video"] as $key => $value){
 					
@@ -598,7 +607,7 @@ class brave{
 						)
 					),
 				"url" => $result["url"],
-				"date" => isset($result["age"]) ? strtotime($result["age"]) : null,
+				"date" => (isset($result["age"]) && $result["age"] != "void 0") ? strtotime($result["age"]) : null,
 				"type" => "web",
 				"thumb" => $thumb,
 				"sublink" => $sublink,
@@ -789,12 +798,12 @@ class brave{
 				
 				if(isset($disc["data"]["num_votes"])){
 					
-					$table["Votes"] = (int)$disc["data"]["num_votes"];
+					$table["Votes"] = number_format($disc["data"]["num_votes"]);
 				}
 				
 				if(isset($disc["data"]["num_answers"])){
 					
-					$table["Comments"] = (int)$disc["data"]["num_answers"];
+					$table["Comments"] = number_format($disc["data"]["num_answers"]);
 				}
 				
 				$disc_out[] = [
