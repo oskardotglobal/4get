@@ -414,8 +414,6 @@ class brave{
 			return $out;
 		}
 		
-		//$has_so_answer = false;
-		
 		foreach($data["web"]["results"] as $result){
 			
 			if(
@@ -435,6 +433,7 @@ class brave{
 				];
 			}
 			
+			// get sublinks
 			$sublink = [];
 			if(
 				isset($result["cluster"]) &&
@@ -458,10 +457,50 @@ class brave{
 				}
 			}
 			
+			// more sublinks
+			if(
+				isset($result["deep_results"]) &&
+				is_array($result["deep_results"])
+			){
+				
+				foreach($result["deep_results"]["buttons"] as $r){
+					
+					$sublink[] = [
+						"title" => $this->titledots($r["title"]),
+						"description" => null,
+						"url" => $r["url"],
+						"date" => null
+					];
+				}
+			}
+			
 			// parse table elements
 			$table = [];
 			
+			/*
+			[locations] => void 0			Done
+			[video] => void 0				Done
+			[movie] => void 0				Done
+			[faq] => void 0
+			[recipe] => void 0
+			[qa] => void 0					Not needed
+			[book] => void 0
+			[rating] => void 0
+			[article] => void 0
+			[product] => void 0				Done
+			[product_cluster] => void 0
+			[cluster_type] => void 0
+			[cluster] => void 0				Done
+			[creative_work] => void 0		Done
+			[music_recording] => void 0
+			[review] => void 0				Done
+			[software] => void 0			Done
+			[content_type] => void 0
+			[descriptionLength] => 271
+			*/
+			
 			// product
+			// creative_work
 			$ref = null;
 			
 			if(isset($result["product"])){
@@ -535,10 +574,81 @@ class brave{
 						}
 					}
 					
+					echo "test";
+					
 					if($rating !== null){
 						
 						$table["Rating"] = $rating;
 					}
+				}
+			}
+			
+			// review
+			if(
+				isset($result["review"]) &&
+				is_array($result["review"])
+			){
+				
+				if(isset($result["review"]["rating"]["ratingValue"])){
+					
+					$table["Rating"] =
+						$result["review"]["rating"]["ratingValue"] . "/" .
+						$result["review"]["rating"]["bestRating"];
+				}
+			}
+			
+			// software
+			if(
+				isset($result["software"]) &&
+				is_array($result["software"])
+			){
+				
+				if(isset($result["software"]["author"])){
+					$table["Author"] = $result["software"]["author"];
+				}
+				
+				if(isset($result["software"]["stars"])){
+					$table["Stars"] = number_format($result["software"]["stars"]);
+				}
+				
+				if(isset($result["software"]["forks"])){
+					$table["Forks"] = number_format($result["software"]["forks"]);
+				}
+				
+				if(isset($result["software"]["programmingLanguage"])){
+					$table["Programming languages"] = $result["software"]["programmingLanguage"];
+				}
+			}
+			
+			// location
+			if(
+				isset($result["location"]) &&
+				is_array($result["location"])
+			){
+				
+				if(isset($result["location"]["postal_address"]["displayAddress"])){
+					
+					$table["Address"] = $result["location"]["postal_address"]["displayAddress"];
+				}
+				
+				if(isset($result["location"]["rating"])){
+					
+					$table["Rating"] =
+						$result["location"]["rating"]["ratingValue"] . "/" .
+						$result["location"]["rating"]["bestRating"] . " (" .
+						number_format($result["location"]["rating"]["reviewCount"]) . " votes)";
+				}
+				
+				if(isset($result["location"]["contact"]["telephone"])){
+					
+					$table["Phone number"] =
+						$result["location"]["contact"]["telephone"];
+				}
+				
+				if(isset($result["location"]["price_range"])){
+					
+					$table["Price"] =
+						$result["location"]["price_range"];
 				}
 			}
 			
@@ -559,40 +669,86 @@ class brave{
 				}
 			}
 			
-			/*
-				Get StackOverflow answers
-			*/
-			// commented out since it also returns alot of garbage
-			/*
+			// movie
 			if(
-				$has_so_answer === false &&
-				isset($result["qa"])
+				isset($result["video"]) &&
+				is_array($result["movie"])
 			){
 				
-				$has_so_answer = true;
-				$answer = $this->stackoverflow_parse($result["qa"]["answer"]["text"]);
-				
-				if(isset($result["qa"]["answer"]["author"])){
+				if(isset($result["movie"]["release"])){
 					
-					$answer[] = [
-						"type" => "quote",
-						"value" => "Answer from " . $result["qa"]["answer"]["author"]
-					];
+					$table["Release date"] = $result["movie"]["release"];
 				}
 				
-				$out["answer"][] = [
-					"title" =>
-						$this->fuckhtml
-						->getTextContent(
-							$result["qa"]["question"]
-						),
-					"description" => $answer,
-					"url" => $result["url"],
-					"thumb" => null,
-					"table" => [],
-					"sublink" => []
-				];
-			}*/
+				if(isset($result["movie"]["directors"])){
+					
+					$directors = [];
+					
+					foreach($result["movie"]["directors"] as $director){
+						
+						$directors[] = $director["name"];
+					}
+					
+					if(count($directors) !== 0){
+						
+						$table["Directors"] = implode(", ", $directors);
+					}
+				}
+				
+				if(isset($result["movie"]["actors"])){
+					
+					$actors = [];
+					
+					foreach($result["movie"]["actors"] as $actor){
+						
+						$actors[] = $actor["name"];
+					}
+					
+					if(count($actors) !== 0){
+						$table["Actors"] = implode(", ", $actors);
+					}
+				}
+				
+				if(isset($result["movie"]["rating"])){
+					
+					$table["Rating"] =
+						$result["movie"]["rating"]["ratingValue"] . "/" .
+						$result["movie"]["rating"]["bestRating"] . " (" .
+						number_format($result["movie"]["rating"]["reviewCount"]) . " votes)";
+				}
+				
+				if(isset($result["movie"]["duration"])){
+					
+					$table["Duration"] =
+						$result["movie"]["duration"];
+				}
+				
+				if(isset($result["movie"]["genre"])){
+					
+					$genres = [];
+					
+					foreach($result["movie"]["genre"] as $genre){
+						
+						$genres[] = $genre;
+					}
+					
+					if(count($genres) !== 0){
+						$table["Genre"] = implode(", ", $genres);
+					}
+				}
+			}
+			
+			if(
+				isset($result["age"]) &&
+				$result["age"] != "void 0" &&
+				$result["age"] != ""
+			){
+				
+				$date = strtotime($result["age"]);
+			}else{
+				
+				$date = null;
+			}
 			
 			$out["web"][] = [
 				"title" =>
@@ -600,6 +756,10 @@ class brave{
 						$result["title"]
 					),
 				"description" =>
+					isset($result["review"]["description"]) ?
+					$this->limitstrlen(
+						$result["review"]["description"]
+					) :
 					$this->titledots(
 						$this->fuckhtml
 						->getTextContent(
@@ -607,7 +767,7 @@ class brave{
 						)
 					),
 				"url" => $result["url"],
-				"date" => (isset($result["age"]) && $result["age"] != "void 0") ? strtotime($result["age"]) : null,
+				"date" => $date,
 				"type" => "web",
 				"thumb" => $thumb,
 				"sublink" => $sublink,
@@ -622,10 +782,16 @@ class brave{
 			isset($data["query"]["bo_altered_diff"][0][0]) &&
 			$data["query"]["bo_altered_diff"][0][0] == "true"
 		){
+			$using = [];
+			
+			foreach($data["query"]["bo_altered_diff"] as $diff){
+				
+				$using[] = $diff[1];
+			}
 			
 			$out["spelling"] = [
 				"type" => "including",
-				"using" => $data["query"]["bo_altered_diff"][0][1],
+				"using" => implode(" ", $using),
 				"correction" => $get["s"]
 			];
 		}
@@ -1189,7 +1355,7 @@ class brave{
 				"title" => $result["title"],
 				"description" => $result["description"] == "null" ? null : $this->titledots($result["description"]),
 				"author" => $author,
-				"date" => $result["age"] == "null" ? null : strtotime($result["age"]),
+				"date" => ($result["age"] == "null" || $result["age"] == "void 0") ? null : strtotime($result["age"]),
 				"duration" => $result["video"]["duration"] == "null" ? null : $this->hms2int($result["video"]["duration"]),
 				"views" => $result["video"]["views"] == "null" ? null : (int)$result["video"]["views"],
 				"thumb" => $thumb,
