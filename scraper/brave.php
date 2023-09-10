@@ -615,7 +615,10 @@ class brave{
 					$table["Forks"] = number_format($result["software"]["forks"]);
 				}
 				
-				if(isset($result["software"]["programmingLanguage"])){
+				if(
+					isset($result["software"]["programmingLanguage"]) &&
+					$result["software"]["programmingLanguage"] != ""
+				){
 					$table["Programming languages"] = $result["software"]["programmingLanguage"];
 				}
 			}
