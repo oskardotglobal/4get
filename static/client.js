@@ -660,15 +660,16 @@ function changeimage(event){
 	centerpopup();
 }
 
-/*
-	Shortcuts
-*/
 var searchbox_wrapper = document.getElementsByClassName("searchbox");
 
 if(searchbox_wrapper.length !== 0){
+		
 	searchbox_wrapper = searchbox_wrapper[0];
 	var searchbox = searchbox_wrapper.getElementsByTagName("input")[1];
-
+	
+	/*
+		Textarea shortcuts
+	*/
 	document.addEventListener("keydown", function(key){
 		
 		switch(key.keyCode){
@@ -695,4 +696,261 @@ if(searchbox_wrapper.length !== 0){
 				break;
 		}
 	});
+	
+	/*
+		Autocompleter
+	*/
+	if( // make sure the user wants it
+		document.cookie.includes("scraper_ac=") &&
+		document.cookie.includes("scraper_ac=disabled") === false
+	){
+		
+		var autocomplete_cache = [];
+		var focuspos = -1;
+		var list = [];
+		var autocomplete_div = document.getElementsByClassName("autocomplete")[0];
+		
+		if(
+			document.cookie.includes("scraper_ac=auto") &&
+			typeof scraper_dropdown != "undefined"
+		){
+			
+			var ac_req_appendix = "&scraper=" + scraper_dropdown.value;
+		}else{
+			
+			var ac_req_appendix = "";
+		}
+		
+		function getsearchboxtext(){
+			
+			var value =
+				searchbox.value
+				.trim()
+				.replace(
+					/ +/g,
+					" "
+				)
+				.toLowerCase();
+			
+			return value;
+		}
+		
+		searchbox.addEventListener("input", async function(){
+			
+			// ratelimit on input only
+			// dont ratelimit if we already have res
+			if(typeof autocomplete_cache[getsearchboxtext()] != "undefined"){
+				
+				await getac();
+			}else{
+				
+				await getac_ratelimit();
+			}
+		});
+		
+		async function getac(){
+			
+			var curvalue = getsearchboxtext();
+			
+			if(curvalue == ""){
+				
+				// hide autocompleter
+				autocomplete_div.style.display = "none";
+				return;
+			}
+			
+			if(typeof autocomplete_cache[curvalue] == "undefined"){
+				
+				/*
+					Fetch autocomplete
+				*/
+				// make sure we dont fetch same thing twice
+				autocomplete_cache[curvalue] = [];
+				
+				var res = await fetch("/api/v1/ac?s=" + encodeURIComponent(curvalue) + ac_req_appendix);
+				var json = await res.json();
+				
+				autocomplete_cache[curvalue] = json[1];
+				
+				if(curvalue == getsearchboxtext()){
+					
+					render_ac(curvalue, autocomplete_cache[curvalue]);
+				}
+				return;
+			}
+			
+			render_ac(curvalue, autocomplete_cache[curvalue]);	
+		}
+		
+		var ac_func = null;
+		function getac_ratelimit(){
+			
+			return new Promise(async function(resolve, reject){
+				
+				if(ac_func !== null){
+					
+					clearTimeout(ac_func);
+				}//else{
+					
+					// no ratelimits
+					//getac();
+				//}
+				
+				ac_func =
+					setTimeout(function(){
+						
+						ac_func = null;
+						getac(); // get results after 100ms of no keystroke
+						resolve();
+					}, 300);
+			});
+		}
+		
+		function render_ac(query, list){
+			
+			if(list.length === 0){
+				
+				autocomplete_div.style.display = "none";
+				return;
+			}
+			
+			html = "";
+			
+			// prepare regex
+			var highlight = query.split(" ");
+			var regex = [];
+			
+			for(var k=0; k<highlight.length; k++){
+				
+				// espace regex
+				regex.push(
+					highlight[k].replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+				);
+			}
+			
+			regex = new RegExp(highlight.join("|"), "gi");
+			
+			for(var i=0; i<list.length; i++){
+				
+				html +=
+					'<div tabindex="0" class="entry" onclick="handle_entry_click(this);">' +
+						htmlspecialchars(
+							list[i]
+						).replace(
+							regex,
+							'<u>$&</u>'
+						) +
+					'</div>';
+			}
+			
+			autocomplete_div.innerHTML = html;
+			autocomplete_div.style.display = "block";
+		}
+		
+		var should_focus = false;
+		document.addEventListener("keydown", function(event){
+			
+			if(event.key == "Escape"){
+				
+				document.activeElement.blur();
+				focuspos = -1;
+				autocomplete_div.style.display = "none";
+				return;
+			}
+			
+			if(
+				is_click_within(event.target, "searchbox") === false ||
+				typeof autocomplete_cache[getsearchboxtext()] == "undefined"
+			){
+				
+				return;
+			}
+			
+			switch(event.key){
+				
+				case "ArrowUp":
+					event.preventDefault();
+					focuspos--;
+					if(focuspos === -2){
+						
+						focuspos = autocomplete_cache[getsearchboxtext()].length - 1;
+					}
+					break;
+				
+				case "ArrowDown":
+				case "Tab":
+					event.preventDefault();
+					
+					focuspos++;
+					if(focuspos >= autocomplete_cache[getsearchboxtext()].length){
+						
+						focuspos = -1;
+					}
+					break;
+				
+				case "Enter":
+					should_focus = true;
+					
+					if(focuspos !== -1){
+						
+						// replace input content
+						event.preventDefault();
+						searchbox.value =
+							autocomplete_div.getElementsByClassName("entry")[focuspos].innerText;
+						break;
+					}
+					break;
+				
+				default:
+					focuspos = -1;
+					break;
+			}
+			
+			if(focuspos === -1){
+				
+				searchbox.focus();
+				return;
+			}
+			
+			autocomplete_div.getElementsByClassName("entry")[focuspos].focus();
+		});
+		
+		window.addEventListener("blur", function(){
+			
+			autocomplete_div.style.display = "none";
+		});
+		
+		document.addEventListener("keyup", function(event){
+			
+			// handle ENTER key on entry
+			if(should_focus){
+				
+				should_focus = false;
+				searchbox.focus();
+			}
+		});
+		
+		document.addEventListener("mousedown", function(event){
+			
+			// hide input if click is outside
+			if(is_click_within(event.target, "searchbox") === false){
+				
+				autocomplete_div.style.display = "none";
+				return;
+			}
+		});
+		
+		function handle_entry_click(event){
+			
+			searchbox.value = event.innerText;
+			focuspos = -1;
+			searchbox.focus();
+		}
+		
+		searchbox.addEventListener("focus", function(){
+			
+			focuspos = -1;
+			getac();
+		});
+	}
 }

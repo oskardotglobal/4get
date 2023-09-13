@@ -288,7 +288,7 @@ class sc{
 					
 					if(count($description) != 0){
 						
-						$description = $count . " songs. " . implode(", ", $description);
+						$description = trim($count . " songs. " . implode(", ", $description));
 					}
 					
 					if(
@@ -320,7 +320,7 @@ class sc{
 					
 					$out["playlist"][] = [
 						"title" => $item["title"],
-						"description" => $description,
+						"description" => $this->limitstrlen($description),
 						"author" => [
 							"name" => $item["user"]["username"],
 							"url" => $item["user"]["permalink_url"],
@@ -385,13 +385,14 @@ class sc{
 				"\n",
 				wordwrap(
 					str_replace(
-						"\n",
+						["\n\r", "\r\n", "\n", "\r"],
 						" ",
 						$text
 					),
 					300,
 					"\n"
-				)
+				),
+				2
 			)[0];
 	}
 }

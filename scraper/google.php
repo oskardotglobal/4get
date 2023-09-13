@@ -1616,21 +1616,23 @@ class google{
 					$imgvl
 				);
 				
-				$imgvl = $imgvl[1];
-				
-				$params["async"] = "_id:islrg_c,_fmt:html";
-				$params["asearch"] = "ichunklite";
-				$params["ved"] = $ved;
-				$params["vet"] = "1" . $ved . "..i";
-				$params["start"] = 100;
-				$params["ijn"] = 1;
-				$params["imgvl"] = $imgvl;
-				
-				$out["npt"] =
-					$this->nextpage->store(
-						json_encode($params),
-						"images"
-					);
+				if(isset($imgvl[1])){
+					$imgvl = $imgvl[1];
+					
+					$params["async"] = "_id:islrg_c,_fmt:html";
+					$params["asearch"] = "ichunklite";
+					$params["ved"] = $ved;
+					$params["vet"] = "1" . $ved . "..i";
+					$params["start"] = 100;
+					$params["ijn"] = 1;
+					$params["imgvl"] = $imgvl;
+					
+					$out["npt"] =
+						$this->nextpage->store(
+							json_encode($params),
+							"images"
+						);
+				}
 			}
 		}
 		

@@ -59,6 +59,56 @@ $settings = [
 		"name" => "Scrapers to use",
 		"settings" => [
 			[
+				"description" => "Autocomplete<br><i>Picking <div class=\"code-inline\">Auto</div> changes the source dynamically depending of the page's scraper<br>Picking <div class=\"code-inline\">Disabled</div> disables this feature</i>",
+				"parameter" => "scraper_ac",
+				"options" => [
+					[
+						"value" => "disabled",
+						"text" => "Disabled"
+					],
+					[
+						"value" => "auto",
+						"text" => "Auto"
+					],
+					[
+						"value" => "brave",
+						"text" => "Brave"
+					],
+					[
+						"value" => "ddg",
+						"text" => "DuckDuckGo"
+					],
+					[
+						"value" => "yandex",
+						"text" => "Yandex"
+					],
+					[
+						"value" => "google",
+						"text" => "Google"
+					],
+					[
+						"value" => "qwant",
+						"text" => "Qwant"
+					],
+					[
+						"value" => "yep",
+						"text" => "Yep"
+					],
+					[
+						"value" => "marginalia",
+						"text" => "Marginalia"
+					],
+					[
+						"value" => "yt",
+						"text" => "YouTube"
+					],
+					[
+						"value" => "sc",
+						"text" => "SoundCloud"
+					]
+				]
+			],
+			[
 				"description" => "Web",
 				"parameter" => "scraper_web",
 				"options" => [
@@ -183,8 +233,13 @@ $settings = [
 if($_POST){
 
 	$loop = &$_POST;
-}else{
+}elseif(count($_GET) !== 0){
 	
+	// redirect user to front page
+	$loop = &$_GET;
+	header("Location: /");
+	
+}else{
 	// refresh cookie dates
 	$loop = &$_COOKIE;
 }
@@ -245,7 +300,7 @@ echo
 		'<head>' .
 			'<meta http-equiv="Content-Type" content="text/html;charset=utf-8">' .
 			'<title>Settings</title>' .
-			'<link rel="stylesheet" href="/static/style.css?v3">' .
+			'<link rel="stylesheet" href="/static/style.css?v4">' .
 			'<meta name="viewport" content="width=device-width,initial-scale=1">' .
 			'<meta name="robots" content="index,follow">' .
 			'<link rel="icon" type="image/x-icon" href="/favicon.ico">' .
@@ -260,13 +315,13 @@ $left =
 		'By clicking <div class="code-inline">Update settings!</div>, a plaintext <div class="code-inline">key=value</div> cookie will be stored on your browser. When selecting a default setting, the parameter is removed from your cookies.';
 
 $c = count($_COOKIE);
+$code = "";
+
 if($c !== 0){
 	
 	$left .=
 		'<br><br>Your current cookie looks like this:' .
 		'<div class="code">';
-	
-	$code = "";
 	
 	$ca = 0;
 	foreach($_COOKIE as $key => $value){
@@ -326,17 +381,23 @@ $left .=
 	'</div>' .
 	'<div class="settings-submit">' .
 		'<input type="submit" value="Update settings!">' .
-		'<a href="../">&lt; Return to main page</a>' .
+		'<a href="../">&lt; Return to front page</a>' .
 	'</div>' .
 	'</form>';
 
-echo
-	$frontend->load(
-		"search.html",
-		[
-			"class" => "",
-			"right-left" => "",
-			"right-right" => "",
-			"left" => $left
-		]
-	);
+if(count($_GET) === 0){
+
+	echo
+		$frontend->load(
+			"search.html",
+			[
+				"class" => "",
+				"right-left" =>			
+					'<div class="infobox"><h2>Preference link</h2>Follow this link to auto-apply all cookies. Useful if your browser clears out cookies after a browsing session. Following this link will redirect you to the front page, unless no settings are set.<br><br>' .
+					'<a href="settings' . rtrim("?" . str_replace("; ", "&", $code), "?") . '">Bookmark me!</a>' .
+					'</div>',
+				"right-right" => "",
+				"left" => $left
+			]
+		);
+}

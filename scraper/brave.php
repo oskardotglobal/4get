@@ -574,8 +574,6 @@ class brave{
 						}
 					}
 					
-					echo "test";
-					
 					if($rating !== null){
 						
 						$table["Rating"] = $rating;
