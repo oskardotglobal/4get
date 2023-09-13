@@ -225,12 +225,39 @@ Obviously replace `<youronionaddress>` by the onion address of `/var/lib/tor/4ge
 ## Docker Install
 
 ```
-git clone https://git.lolcat.ca/lolcat/4get
-cd 4get
-docker build -t 4get .
-docker run -d -p 80:80 -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs 4get
+docker run -d -p 80:80 -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs luuul/4get:1.0.0
 ```
 
 replace enviroment variables FOURGET_SERVER_NAME and FOURGET_SERVER_ADMIN_EMAIL with relevant values
 
 the certs directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
+
+## Docker compose 
+
+copy `docker-compose.yaml`
+
+create a directory with images named `banners` for example and mount to `/var/www/html/4get/banner`
+to serve custom banners
+
+```
+version: "3.7"
+
+services:
+  fourget:
+    image: luuul/4get:1.0.0
+    restart: always
+    environment:
+      - FOURGET_SERVER_NAME=4get.ca
+      - FOURGET_SERVER_ADMIN_EMAIL="you@example.com"
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /etc/letsencrypt/live/domain.tld:/etc/4get/certs
+      - ./banners:/var/www/html/4get/banner
+```
+
+Replace relevant values and start with `docker-compose up -d`
+

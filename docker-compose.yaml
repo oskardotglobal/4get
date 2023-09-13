@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  fourget:
+    image: luuul/4get:1.0.0
+    restart: always
+    environment:
+      - FOURGET_SERVER_NAME=beak.chat
+      - FOURGET_SERVER_ADMIN_EMAIL="you@example.com"
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /etc/letsencrypt/live/domain.tld:/etc/4get/certs
+      - ./banners:/var/www/html/4get/banner
