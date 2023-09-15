@@ -84,6 +84,13 @@ class calculator extends oracle {
 			}
 		}
 
+		// no implicit multiplication
+		for ($i = 0; $i < count($tokens) - 1; $i++) {
+			if ($tokens[$i][0] == "n" && $tokens[$i+1] == ["g", "("]) {
+				return "";
+			}
+		}
+
 		//strategy:
 		// traverse to group open (if there is one)
 		//  - return to start with the internals
