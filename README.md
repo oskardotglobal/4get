@@ -224,13 +224,20 @@ Obviously replace `<youronionaddress>` by the onion address of `/var/lib/tor/4ge
 
 ## Docker Install
 
+
 ```
-docker run -d -p 80:80 -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs luuul/4get:1.0.0
+docker run -d -p 80:80 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" luuul/4get:latest
+```
+
+With SSL
+```
+docker run -d -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs luuul/4get:latest
 ```
 
 replace enviroment variables FOURGET_SERVER_NAME and FOURGET_SERVER_ADMIN_EMAIL with relevant values
 
-the certs directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
+if the certificate files are not mounted to /etc/4get/certs the service listens to port 80
+the certificate directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
 
 ## Docker compose 
 
@@ -244,7 +251,7 @@ version: "3.7"
 
 services:
   fourget:
-    image: luuul/4get:1.0.0
+    image: luuul/4get:latest
     restart: always
     environment:
       - FOURGET_SERVER_NAME=4get.ca
