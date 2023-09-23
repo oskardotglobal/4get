@@ -8,7 +8,7 @@ class time extends oracle {
 		$prompts = [
 			"what", "time", "is", "it",
 			"right", "now", "the", "current",
-			"get"
+			"get", "date"
 		];
 		$q = str_replace(",", "", $q);
 		$q = str_replace("?", "", $q);
@@ -37,6 +37,7 @@ class time extends oracle {
 		date_default_timezone_set($timezone);
 		return [
 			"The time in ".$timezone => date("H:i:s"),
+			" " => date("l, F jS"),
 			"" => "include the string \"tz:XXX\" to use timezone XXX"
 		];
 	}
