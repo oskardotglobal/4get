@@ -6,6 +6,8 @@ class sc{
 		
 		include "lib/nextpage.php";
 		$this->nextpage = new nextpage("sc");
+		$this->client_id = "ArYppSEotE3YiXCO4Nsgid2LLqJutiww";
+		$this->user_id = "766585-580597-163310-929698";
 	}
 	
 	public function getfilters($page){
@@ -109,12 +111,12 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "model",
-						"user_id" => "351062-302234-707916-795081",
-						"client_id" => "iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E",
+						"user_id" => $this->user_id,
+						"client_id" => $this->client_id,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1693487844,
+						"app_version" => 1696577813,
 						"app_locale" => "en"
 					];
 					break;
@@ -125,12 +127,12 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet_genre" => "",
-						"user_id" => "351062-302234-707916-795081",
-						"client_id" => "iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E",
+						"user_id" => $this->user_id,
+						"client_id" => $this->client_id,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1693487844,
+						"app_version" => 1696577813,
 						"app_locale" => "en"
 					];
 					break;
@@ -141,12 +143,12 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "place",
-						"user_id" => "351062-302234-707916-795081",
-						"client_id" => "iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E",
+						"user_id" => $this->user_id,
+						"client_id" => $this->client_id,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1693487844,
+						"app_version" => 1696577813,
 						"app_locale" => "en"
 					];
 					break;
@@ -157,12 +159,12 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "genre",
-						"user_id" => "351062-302234-707916-795081",
-						"client_id" => "iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E",
+						"user_id" => $this->user_id,
+						"client_id" => $this->client_id,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1693487844,
+						"app_version" => 1696577813,
 						"app_locale" => "en"
 					];
 					break;
@@ -173,12 +175,12 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "genre",
-						"user_id" => "351062-302234-707916-795081",
-						"client_id" => "iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E",
+						"user_id" => $this->user_id,
+						"client_id" => $this->client_id,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1693487844,
+						"app_version" => 1696577813,
 						"app_locale" => "en"
 					];
 					break;
@@ -190,12 +192,12 @@ class sc{
 						"variant_ids" => "",
 						"filter.content_tier" => "SUB_HIGH_TIER",
 						"facet" => "genre",
-						"user_id" => "351062-302234-707916-795081",
-						"client_id" => "iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E",
+						"user_id" => $this->user_id,
+						"client_id" => $this->client_id,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1693487844,
+						"app_version" => 1696577813,
 						"app_locale" => "en"
 					];
 					break;
@@ -340,7 +342,7 @@ class sc{
 							"endpoint" => "audio_sc",
 							"url" =>
 								$item["media"]["transcodings"][0]["url"] .
-								"?client_id=iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E" .
+								"?client_id=" . $this->client_id .
 								"&track_authorization=" .
 								$item["track_authorization"]
 						];
