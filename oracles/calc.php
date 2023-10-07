@@ -118,7 +118,7 @@ class calculator extends oracle {
 		if (count($tokens) > 0 && $tokens[0][0] == "o" || $tokens[count($tokens)-1][0] == "o") {
 			throw new Exception("Error Processing Request", 1);
 		}
-		if (in_array(["g", "("], $tokens)) {
+		while (in_array(["g", "("], $tokens)) {
 			$first_open = array_search(["g", "("], $tokens);
 			$enclosedality = 1;
 			for ($i = $first_open+1; $i < count($tokens); $i++) {
