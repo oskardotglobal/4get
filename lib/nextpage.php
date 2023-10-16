@@ -26,7 +26,7 @@ class nextpage{
 		apcu_store(
 			$page . "." .
 			$this->scraper .
-			(string)($key),
+			(string)$key,
 			gzdeflate($salt.$iv.$out.$tag),
 			900 // cache information for 15 minutes blaze it
 		);

@@ -127,6 +127,11 @@ class proxy{
 			throw new Exception("Too many redirects");
 		}
 		
+		if($url == "https://i.imgur.com/removed.png"){
+			
+			throw new Exception("Encountered imgur 404");
+		}
+		
 		// sanitize URL
 		if($this->validateurl($url) === false){
 			

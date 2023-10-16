@@ -901,7 +901,11 @@ class frontend{
 						"ddg" => "DuckDuckGo",
 						"yandex" => "Yandex",
 						"brave" => "Brave",
-						"google" => "Google"
+						"google" => "Google",
+						"yep" => "Yep",
+						//"pinterest" => "Pinterest",
+						"imgur" => "Imgur",
+						"ftm" => "FindThatMeme"
 					]
 				];
 				break;
@@ -1011,9 +1015,29 @@ class frontend{
 				$lib = new wiby();
 				break;
 			
+			case "yep":
+				include "scraper/yep.php";
+				$lib = new yep();
+				break;
+			
 			case "sc":
 				include "scraper/sc.php";
 				$lib = new sc();
+				break;
+			
+			case "pinterest":
+				include "scraper/pinterest.php";
+				$lib = new pinterest();
+				break;
+			
+			case "imgur":
+				include "scraper/imgur.php";
+				$lib = new imgur();
+				break;
+			
+			case "ftm":
+				include "scraper/ftm.php";
+				$lib = new ftm();
 				break;
 		}
 		

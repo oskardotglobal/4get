@@ -7,6 +7,12 @@ chdir("../../");
 include "lib/frontend.php";
 $frontend = new frontend();
 
+/*
+	Captcha
+*/
+include "lib/captcha_gen.php";
+new captcha($frontend, false);
+
 [$scraper, $filters] = $frontend->getscraperfilters(
 	"images",
 	isset($_GET["scraper"]) ? $_GET["scraper"] : null

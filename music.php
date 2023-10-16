@@ -10,11 +10,11 @@ $frontend = new frontend();
 
 $get = $frontend->parsegetfilters($_GET, $filters);
 
-$frontend->loadheader(
-	$get,
-	$filters,
-	"music"
-);
+/*
+	Captcha
+*/
+include "lib/captcha_gen.php";
+new captcha($frontend, $get, $filters, "music", true);
 
 $payload = [
 	"class" => "",

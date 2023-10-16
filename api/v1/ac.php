@@ -17,7 +17,7 @@ class autocomplete{
 			"yep" => "https://api.yep.com/ac/?query={searchTerms}",
 			"marginalia" => "https://search.marginalia.nu/suggest/?partial={searchTerms}",
 			"yt" => "https://suggestqueries-clients6.youtube.com/complete/search?client=youtube&q={searchTerms}",
-			"sc" => "https://api-v2.soundcloud.com/search/queries?q={searchTerms}&client_id=iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E&limit=10&offset=0&linked_partitioning=1&app_version=1693487844&app_locale=en"
+			"sc" => "https://api-v2.soundcloud.com/search/queries?q={searchTerms}&client_id=ArYppSEotE3YiXCO4Nsgid2LLqJutiww&limit=10&offset=0&linked_partitioning=1&app_version=1693487844&app_locale=en"
 		];
 		
 		/*
@@ -100,7 +100,7 @@ class autocomplete{
 				
 				foreach($js[1] as $item){
 					
-					$json[] = strip_tags($item[0]);
+					$json[] = htmlspecialchars_decode(strip_tags($item[0]));
 				}
 				
 				echo json_encode(

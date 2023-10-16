@@ -30,10 +30,23 @@
     under your own terms. Please respect the terms of use listed here so
     that this website may be available to all in the far future.
 
+    P.s fuck whoever botted my site for months on end, choke on my dick
+    lol!!!!
+
     Get your instance running here ::
         https://git.lolcat.ca/lolcat/4get
 
     Thanks!
+
+
++ Passes
+    Depending of the instance, you may need to provide a "pass" token
+    in the cookies of your request. These can be obtained from solving
+    a captcha which will allow you to make 100 requests in the next 24
+    hours. In the future, you will be able to ask the serber maintainer
+    for a "pass" which will allow you to bypass the captcha requirement.
+    
+    The captcha doesn't need javascript to work.
 
 
 + Decode the data
@@ -47,8 +60,11 @@
 + Check if an API call was successful
     All API responses come with an array index named "status". If the
     status is something else than the string "ok", something went wrong.
+    You can supply the content of the "status" string back to your
+    application to inform the user of what went wrong.
     
-    The HTTP code will always be 200 as to not cause issues with CORS.
+    The HTTP code will be 429 if your pass is invalid. It is set to 200
+    otherwise.
 
 
 + Get the next page of results

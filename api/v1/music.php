@@ -7,6 +7,13 @@ chdir("../../");
 include "lib/frontend.php";
 $frontend = new frontend();
 
+/*
+	Captcha
+*/
+$null = null;
+include "lib/captcha_gen.php";
+new captcha($null, $null, $null, $null, false);
+
 [$scraper, $filters] = $frontend->getscraperfilters(
 	"music",
 	isset($_GET["scraper"]) ? $_GET["scraper"] : null

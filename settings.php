@@ -161,6 +161,22 @@ $settings = [
 					[
 						"value" => "google",
 						"text" => "Google"
+					],
+					[
+						"value" => "yep",
+						"text" => "Yep"
+					],
+					/*[
+						"value" => "pinterest",
+						"text" => "Pinterest"
+					],*/
+					[
+						"value" => "imgur",
+						"text" => "Imgur"
+					],
+					[
+						"value" => "ftm",
+						"text" => "FindThatMeme"
 					]
 				]
 			],
@@ -243,7 +259,7 @@ if($_POST){
 	// refresh cookie dates
 	$loop = &$_COOKIE;
 }
-	
+
 foreach($loop as $key => $value){
 	
 	foreach($settings as $title){
@@ -262,7 +278,8 @@ foreach($loop as $key => $value){
 					"",
 					[
 						"expires" => -1, // removes cookie
-						"samesite" => "Strict"
+						"samesite" => "Strict",
+						"path" => "/"
 					]
 				);
 				

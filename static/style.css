@@ -283,7 +283,79 @@ h3,h4,h5,h6{
 	WEB
 */
 
-/* Left wrapper */
+/* Captcha */
+.captcha-wrapper{
+	position:relative;
+	max-width:400px;
+	margin:17px auto 0;
+	border:1px solid var(--928374);
+}
+
+.captcha{
+	padding-bottom:100%;
+	padding-top:6.2%;
+}
+
+.captcha-wrapper img{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+
+.captcha-controls{
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	top:6.3%;
+}
+
+.captcha-wrapper img{
+	display:block;
+	background:#282828;
+}
+
+.captcha-wrapper input{
+	display:none;
+}
+
+.captcha-wrapper label{
+	float:left;
+	width:25%;
+	height:25%;
+	position:relative;
+	cursor:pointer;
+}
+
+.captcha-wrapper label:hover{
+	background:rgba(255,255,255,0.2);
+}
+
+.captcha-wrapper input:checked + label{
+	background:rgba(0,0,0,0.5);
+}
+
+.captcha-wrapper input:checked + label:after{
+	content:"";
+	position:absolute;
+	left:39%;
+	top:29%;
+	width:20%;
+	height:30%;
+	transform:rotate(45deg);
+	border-right:7px solid var(--ebdbb2);
+	border-bottom:7px solid var(--ebdbb2);
+	box-sizing:border-box;
+}
+
+.captcha-submit{
+	float:right;
+	margin:12px 0 4px;
+}
+
 .web .left{
 	width:40%;
 	float:left;
@@ -294,6 +366,7 @@ h3,h4,h5,h6{
 	border:1px dashed var(--504945);
 	padding:10px;
 	margin-bottom:17px;
+	overflow:hidden;
 }
 
 .infobox .code{

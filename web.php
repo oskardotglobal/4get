@@ -10,11 +10,11 @@ $frontend = new frontend();
 
 $get = $frontend->parsegetfilters($_GET, $filters);
 
-$frontend->loadheader(
-	$get,
-	$filters,
-	"web"
-);
+/*
+	Captcha
+*/
+include "lib/captcha_gen.php";
+new captcha($frontend, $get, $filters, true);
 
 $payload = [
 	"class" => "",
@@ -43,6 +43,35 @@ try{
 		);
 	die();
 }
+
+/*
+	Prepend Oracle output, if applicable
+*/
+include("oracles/encoder.php");
+include("oracles/calc.php");
+include("oracles/time.php");
+include("oracles/numerics.php");
+$oracles = [new calculator(), new encoder(), new time(), new numerics()];
+$fortune = "";
+foreach ($oracles as $oracle) {
+	if ($oracle->check_query($_GET["s"])) {
+		$resp = $oracle->generate_response($_GET["s"]);
+		if ($resp != "") {
+			$fortune .= "<div class=\"infobox\">";
+			foreach ($resp as $title => $r) {
+				if ($title) {
+					$fortune .= "<h3>".htmlspecialchars($title)."</h3><div class=\"code\">".htmlspecialchars($r)."</div>";
+				}
+				else {
+					$fortune .= "<i>".$r."</i><br>";
+				}
+			}
+			$fortune .= "<small>Answer provided by oracle: ".$oracle->info["name"]."</small></div>";
+		}
+		break;
+	}
+}
+$payload["left"] = $fortune;
 
 $answerlen = 0;
 
@@ -474,35 +503,6 @@ if($c !== 0){
 	
 	$payload["left"] .= '</table>';
 }
-
-/*
-	Prepend Oracle output, if applicable
-*/
-include_once("oracles/encoder.php");
-include_once("oracles/calc.php");
-include_once("oracles/time.php");
-include_once("oracles/numerics.php");
-$oracles = [new calculator(), new encoder(), new time(), new numerics()];
-$fortune = "";
-foreach ($oracles as $oracle) {
-	if ($oracle->check_query($_GET["s"])) {
-		$resp = $oracle->generate_response($_GET["s"]);
-		if ($resp != "") {
-			$fortune .= "<div class=\"infobox\">";
-			foreach ($resp as $title => $r) {
-				if ($title) {
-					$fortune .= "<h3>".htmlspecialchars($title)."</h3><div class=\"code\">".htmlspecialchars($r)."</div>";
-				}
-				else {
-					$fortune .= "<i>".$r."</i><br>";
-				}
-			}
-			$fortune .= "<small>Answer provided by oracle: ".$oracle->info["name"]."</small></div>";
-		}
-		break;
-	}
-}
-$payload["left"] = $fortune . $payload["left"];
 
 /*
 	Load next page

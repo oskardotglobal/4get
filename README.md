@@ -23,6 +23,9 @@ https://4get.ca
 	- Yandex
 	- Google
 	- Brave
+	- Yep
+	- Imgur
+	- FindThatMeme
 
 3. Videos
 	- YouTube
@@ -37,6 +40,17 @@ https://4get.ca
 	- Mojeek
 
 5. Music
+	- SoundCloud
+
+6. Autocompleter
+	- Brave
+	- DuckDuckGo
+	- Yandex
+	- Google
+	- Qwant
+	- Yep
+	- Marginalia
+	- YouTube
 	- SoundCloud
 
 More scrapers are coming soon. I currently want to add Google web/video/news search, HackerNews (durr orange site!!) and Qwant. A shopping and files tab is also in my todo list.
@@ -166,7 +180,11 @@ certbot --nginx --key-type ecdsa -d www.yourdomain.com -d yourdomain.com
 
 After doing that certbot should deploy the certificate automatically into your 4get nginx config file. It should be ready to use at that point.
 
-Ok bye!!!
+## Captcha
+
+Right now the setup for this shit is absolutely awful.
+
+Edit line 190 in `lib/captcha_gen.php` and specify your image sets. You can't disable the captcha right now lol. Just use a previous commit if you want to do that. Call me a shitcoder all you want I've had no energy lately. Images must be stored in `data/captcha`. Create a folder for each category. All files in there should be named from `1.png` to `321839.png`, for example.
 
 ## Tor Setup
 
