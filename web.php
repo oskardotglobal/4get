@@ -14,7 +14,7 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 	Captcha
 */
 include "lib/captcha_gen.php";
-new captcha($frontend, $get, $filters, true);
+new captcha($frontend, $get, $filters, "web", true);
 
 $payload = [
 	"class" => "",
