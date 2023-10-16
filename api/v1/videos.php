@@ -11,7 +11,8 @@ $frontend = new frontend();
 	Captcha
 */
 include "lib/captcha_gen.php";
-new captcha($frontend, false);
+$null = null;
+new captcha($null, $null, $null, "videos", false);
 
 [$scraper, $filters] = $frontend->getscraperfilters(
 	"videos",

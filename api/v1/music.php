@@ -10,9 +10,9 @@ $frontend = new frontend();
 /*
 	Captcha
 */
-$null = null;
 include "lib/captcha_gen.php";
-new captcha($null, $null, $null, $null, false);
+$null = null;
+new captcha($null, $null, $null, "music", false);
 
 [$scraper, $filters] = $frontend->getscraperfilters(
 	"music",
