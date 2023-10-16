@@ -269,7 +269,7 @@ class captcha{
 					'<form method="POST" enctype="text/plain" autocomplete="off">' .
 						'<div class="captcha-wrapper">' .
 							'<div class="captcha">' .
-								'<img src="captcha.php?k=' . $key . '" alt="Captcha image">' .
+								'<img src="captcha?k=' . $key . '" alt="Captcha image">' .
 								'<div class="captcha-controls">' .
 									'<input type="checkbox" name="c[0]" id="c0">' .
 									'<label for="c0"></label>' .
@@ -316,7 +316,7 @@ class captcha{
 		$frontend->loadheader(
 			$get,
 			$filters,
-			"web"
+			$page
 		);
 		
 		echo $frontend->load("search.html", $payload);
