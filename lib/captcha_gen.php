@@ -166,7 +166,7 @@ class captcha{
 					$key,
 					[
 						"expires" => time() + 86400, // expires in 24 hours
-						"samesite" => "Strict",
+						"samesite" => "Lax",
 						"path" => "/"
 					]
 				);

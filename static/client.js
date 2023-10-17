@@ -767,7 +767,12 @@ if(searchbox_wrapper.length !== 0){
 				// make sure we dont fetch same thing twice
 				autocomplete_cache[curvalue] = [];
 				
-				var res = await fetch("/api/v1/ac?s=" + encodeURIComponent(curvalue) + ac_req_appendix);
+				var res = await fetch("/api/v1/ac?s=" + (encodeURIComponent(curvalue).replaceAll("%20", "+")) + ac_req_appendix);
+				if(!res.ok){
+					
+					return;
+				}
+				
 				var json = await res.json();
 				
 				autocomplete_cache[curvalue] = json[1];
@@ -802,7 +807,7 @@ if(searchbox_wrapper.length !== 0){
 						ac_func = null;
 						getac(); // get results after 100ms of no keystroke
 						resolve();
-					}, 300);
+					}, 200);
 			});
 		}
 		

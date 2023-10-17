@@ -278,7 +278,7 @@ foreach($loop as $key => $value){
 					"",
 					[
 						"expires" => -1, // removes cookie
-						"samesite" => "Strict",
+						"samesite" => "Lax",
 						"path" => "/"
 					]
 				);
@@ -303,7 +303,8 @@ foreach($loop as $key => $value){
 		$value,
 		[
 			"expires" => strtotime("+400 days"), // maximal cookie ttl in chrome
-			"samesite" => "Strict"
+			"samesite" => "Lax",
+			"path" => "/"
 		]
 	);
 }
