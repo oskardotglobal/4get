@@ -3,7 +3,8 @@
 class marginalia{
 	public function __construct(){
 		
-		$this->key = "public";
+		include "lib/backend.php";
+		$this->backend = new backend("marginalia");
 	}
 	
 	public function getfilters($page){
@@ -76,10 +77,10 @@ class marginalia{
 		}
 	}
 	
-	private function get($url, $get = []){
+	private function get($proxy, $url, $get = []){
 		
 		$headers = [
-			"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+			"User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -109,6 +110,8 @@ class marginalia{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -124,6 +127,11 @@ class marginalia{
 	public function web($get){
 		
 		$search = [$get["s"]];
+		if(strlen($get["s"]) === 0){
+			
+			throw new Exception("Search term is empty!");
+		}
+		
 		$profile = $get["profile"];
 		$format = $get["format"];
 		$file = $get["file"];
@@ -184,7 +192,8 @@ class marginalia{
 		try{
 			$json =
 				$this->get(
-					"https://api.marginalia.nu/{$this->key}/search/" . urlencode($search),
+					$this->backend->get_ip(), // no nextpage
+					"https://api.marginalia.nu/" . config::MARGINALIA_API_KEY . "/search/" . urlencode($search),
 					$params
 				);
 		}catch(Exception $error){

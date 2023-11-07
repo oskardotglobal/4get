@@ -1,5 +1,6 @@
 <?php
 
+include "data/config.php";
 include "lib/curlproxy.php";
 $proxy = new proxy();
 

@@ -1,8 +1,14 @@
 <?php
 
+chdir("../../");
 header("Content-Type: application/json");
 
-chdir("../../");
+include "data/config.php";
+if(config::API_ENABLED === false){
+	
+	echo json_encode(["status" => "The server administrator disabled the API!"]);
+	return;
+}
 
 include "lib/frontend.php";
 $frontend = new frontend();

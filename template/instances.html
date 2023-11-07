@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<title>Instance browser</title>
+	<link title="​{%server_name%}" href="/opensearch{%ac%}" rel="search" type="application/opensearchdescription+xml">
+	<link rel="stylesheet" href="/static/style.css?v{%version%}">
+	{%style%}
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="robots" content="index,follow">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<meta name="description" content="{%server_name%}: Instances">
+</head>
+<body class="instances">
+	<h1>Instance browser</h1>
+	Learn how to setup your own instance here! <a href="https://git.lolcat.ca/lolcat/4get" target="_BLANK">https://git.lolcat.ca/lolcat/4get</a>
+	<noscript>
+		<div class="quote">For a better experience, whitelist javascript usage on this page.</div>
+		<table>
+			<thead>
+				<tr>
+					<th class="expand">Server</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%instances_html%}
+			</tbody>
+		</table>
+	</noscript>
+	<div id="popup-bg"></div>
+	<div class="popup-wrapper">
+		<div class="popup"></div>
+	</div>
+	<script src="static/serverping.js?v{%version%}"></script>
+</body>
+</html>

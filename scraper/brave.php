@@ -7,8 +7,8 @@ class brave{
 		include "lib/fuckhtml.php";
 		$this->fuckhtml = new fuckhtml();
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("brave");
+		include "lib/backend.php";
+		$this->backend = new backend("brave");
 	}
 	
 	public function getfilters($page){
@@ -138,13 +138,20 @@ class brave{
 							"maybe" => "Maybe",
 							"no" => "No"
 						]
+					],
+					"spellcheck" => [
+						"display" => "Spellcheck",
+						"option" => [
+							"yes" => "Yes",
+							"no" => "No"
+						]
 					]
 				];
 				break;
 		}
 	}
 	
-	private function get($url, $get = [], $nsfw, $country){
+	private function get($proxy, $url, $get = [], $nsfw, $country){
 		
 		switch($nsfw){
 			
@@ -159,7 +166,7 @@ class brave{
 		}
 		
 		$headers = [
-			"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+			"User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -190,11 +197,12 @@ class brave{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
 		if(curl_errno($curlproc)){
-			
 			throw new Exception(curl_error($curlproc));
 		}
 		
@@ -207,7 +215,9 @@ class brave{
 		if($get["npt"]){
 			
 			// get next page data
-			$q = json_decode($this->nextpage->get($get["npt"], "web"), true);
+			[$q, $proxy] = $this->backend->get($get["npt"], "web");
+			
+			$q = json_decode($q, true);
 			
 			$search = $q["q"];
 			$q["spellcheck"] = "0";
@@ -222,7 +232,6 @@ class brave{
 			
 			// get _GET data instead
 			$search = $get["s"];
-			
 			if(strlen($search) === 0){
 				
 				throw new Exception("Search term is empty!");
@@ -230,9 +239,10 @@ class brave{
 			
 			if(strlen($search) > 2048){
 				
-				throw new Exception("Search query is too long!");
+				throw new Exception("Search term is too long!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$nsfw = $get["nsfw"];
 			$country = $get["country"];
 			$older = $get["older"];
@@ -288,6 +298,7 @@ class brave{
 		try{
 			$html =
 				$this->get(
+					$proxy,
 					"https://search.brave.com/search",
 					$q,
 					$nsfw,
@@ -361,9 +372,10 @@ class brave{
 					$q["country"] = $country;
 					
 					$out["npt"] =
-						$this->nextpage->store(
+						$this->backend->store(
 							json_encode($q),
-							"web"
+							"web",
+							$proxy
 						);
 				}
 			}
@@ -759,7 +771,9 @@ class brave{
 				"description" =>
 					isset($result["review"]["description"]) ?
 					$this->limitstrlen(
-						$result["review"]["description"]
+						strip_tags(
+							$result["review"]["description"]
+						)
 					) :
 					$this->titledots(
 						$this->fuckhtml
@@ -839,6 +853,32 @@ class brave{
 							"value" => $this->titledots($info["long_desc"])
 						];
 					}
+					
+					// parse ratings
+					if(
+						isset($info["ratings"]) &&
+						$info["ratings"] != "void 0"
+					){
+						
+						$description[] = [
+							"type" => "title",
+							"value" => "Ratings"
+						];
+						
+						foreach($info["ratings"] as $rating){
+							
+							$description[] = [
+								"type" => "link",
+								"url" => $rating["profile"]["url"],
+								"value" => $rating["profile"]["name"]
+							];
+							
+							$description[] = [
+								"type" => "text",
+								"value" => ": " . $rating["ratingValue"] . "/" . $rating["bestRating"] . "\n"
+							];
+						}
+					}
 				}
 				
 				$table = [];
@@ -908,9 +948,9 @@ class brave{
 				$out["video"][] = [
 					"title" => $this->titledots($video["title"]),
 					"description" => $this->titledots($video["description"]),
-					"date" => isset($video["age"]) ? strtotime($video["age"]) : null,
-					"duration" => isset($video["video"]["duration"]) ? $this->hms2int($video["video"]["duration"]) : null,
-					"views" => null,
+					"date" => isset($video["age"]) && $video["age"] != "void 0" ? strtotime($video["age"]) : null,
+					"duration" => isset($video["video"]["duration"]) && $video["video"]["duration"] != "void 0" ? $this->hms2int($video["video"]["duration"]) : null,
+					"views" => isset($video["video"]["views"]) && $video["video"]["views"] != "void 0" ? (int)$video["video"]["views"] : null,
 					"thumb" =>
 						isset($video["thumbnail"]["src"]) ?
 						[
@@ -1008,37 +1048,75 @@ class brave{
 	
 	public function news($get){
 		
-		$search = $get["s"];
-		if(strlen($search) === 0){
+		if($get["npt"]){
 			
-			throw new Exception("Search term is empty!");
-		}
-		
-		$nsfw = $get["nsfw"];
-		$country = $get["country"];
-		
-		if(strlen($search) > 2048){
+			[$req, $proxy] = $this->backend->get($get["npt"], "news");
 			
-			throw new Exception("Search query is too long!");
-		}
-		/*
-		$handle = fopen("scraper/brave-news.html", "r");
-		$html = fread($handle, filesize("scraper/brave-news.html"));
-		fclose($handle);*/
-		try{
-			$html =
-				$this->get(
-					"https://search.brave.com/news",
-					[
-						"q" => $search
-					],
-					$nsfw,
-					$country
-				);
+			$req = json_decode($req, true);
 			
-		}catch(Exception $error){
+			$search = $req["q"];
+			$country = $req["country"];
+			$nsfw = $req["nsfw"];
+			$offset = $req["offset"];
+			$spellcheck = $req["spellcheck"];
 			
-			throw new Exception("Could not fetch search page");
+			try{
+				$html =
+					$this->get(
+						$proxy,
+						"https://search.brave.com/news",
+						[
+							"q" => $search,
+							"offset" => $offset,
+							"spellcheck" => $spellcheck
+						],
+						$nsfw,
+						$country
+					);
+				
+			}catch(Exception $error){
+				
+				throw new Exception("Could not fetch search page");
+			}
+			
+		}else{
+			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			if(strlen($search) > 2048){
+				
+				throw new Exception("Search term is too long!");
+			}
+			
+			$proxy = $this->backend->get_ip();
+			$nsfw = $get["nsfw"];
+			$country = $get["country"];
+			$spellcheck = $get["spellcheck"] == "yes" ? "1" : "0";
+			
+			/*
+			$handle = fopen("scraper/brave-news.html", "r");
+			$html = fread($handle, filesize("scraper/brave-news.html"));
+			fclose($handle);*/
+			try{
+				$html =
+					$this->get(
+						$proxy,
+						"https://search.brave.com/news",
+						[
+							"q" => $search,
+							"spellcheck" => $spellcheck
+						],
+						$nsfw,
+						$country
+					);
+				
+			}catch(Exception $error){
+				
+				throw new Exception("Could not fetch search page");
+			}
 		}
 		
 		$out = [
@@ -1049,6 +1127,17 @@ class brave{
 		
 		// load html
 		$this->fuckhtml->load($html);
+		
+		// get npt
+		$out["npt"] =
+			$this->generatenextpagetoken(
+				$search,
+				$nsfw,
+				$country,
+				$spellcheck,
+				"news",
+				$proxy
+			);
 		
 		$news =
 			$this->fuckhtml
@@ -1183,8 +1272,19 @@ class brave{
 	public function image($get){
 		
 		$search = $get["s"];
+		if(strlen($search) === 0){
+			
+			throw new Exception("Search term is empty!");
+		}
+		
+		if(strlen($search) > 2048){
+			
+			throw new Exception("Search term is too long!");
+		}
+		
 		$country = $get["country"];
 		$nsfw = $get["nsfw"];
+		$spellcheck = $get["spellcheck"] == "yes" ? "1" : "0";
 		
 		$out = [
 			"status" => "ok",
@@ -1195,9 +1295,11 @@ class brave{
 		try{
 			$html =
 				$this->get(
+					$this->backend->get_ip(), // no nextpage right now, pass proxy directly
 					"https://search.brave.com/images",
 					[
-						"q" => $search
+						"q" => $search,
+						"spellcheck" => $spellcheck
 					],
 					$nsfw,
 					$country
@@ -1261,9 +1363,75 @@ class brave{
 	
 	public function video($get){
 		
-		$search = $get["s"];
-		$country = $get["country"];
-		$nsfw = $get["nsfw"];
+		if($get["npt"]){
+			
+			[$npt, $proxy] = $this->backend->get($get["npt"], "videos");
+			
+			$npt = json_decode($npt, true);
+			$search = $npt["q"];
+			$offset = $npt["offset"];
+			$spellcheck = $npt["spellcheck"];
+			$country = $npt["country"];
+			$nsfw = $npt["nsfw"];
+			
+			try{
+				$html =
+					$this->get(
+						$proxy,
+						"https://search.brave.com/videos",
+						[
+							"q" => $search,
+							"offset" => $offset,
+							"spellcheck" => $spellcheck
+						],
+						$nsfw,
+						$country
+					);
+				
+			}catch(Exception $error){
+				
+				throw new Exception("Could not fetch search page");
+			}
+			
+		}else{
+			
+			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			if(strlen($search) > 2048){
+				
+				throw new Exception("Search term is too long!");
+			}
+			
+			$country = $get["country"];
+			$nsfw = $get["nsfw"];
+			$spellcheck = $get["spellcheck"] == "yes" ? "1" : "0";
+			
+			$proxy = $this->backend->get_ip();
+			
+			try{
+				$html =
+					$this->get(
+						$proxy,
+						"https://search.brave.com/videos",
+						[
+							"q" => $search,
+							"spellcheck" => $spellcheck
+						],
+						$nsfw,
+						$country
+					);
+				
+			}catch(Exception $error){
+				
+				throw new Exception("Could not fetch search page");
+			}
+		}
+		
+		$this->fuckhtml->load($html);
 		
 		$out = [
 			"status" => "ok",
@@ -1275,21 +1443,17 @@ class brave{
 			"reel" => []
 		];
 		
-		try{
-			$html =
-				$this->get(
-					"https://search.brave.com/videos",
-					[
-						"q" => $search
-					],
-					$nsfw,
-					$country
-				);
-			
-		}catch(Exception $error){
-			
-			throw new Exception("Could not fetch search page");
-		}
+		// get npt
+		$out["npt"] =
+			$this->generatenextpagetoken(
+				$search,
+				$nsfw,
+				$country,
+				$spellcheck,
+				"videos",
+				$proxy
+			);
+		
 		/*
 		$handle = fopen("scraper/brave-video.html", "r");
 		$html = fread($handle, filesize("scraper/brave-video.html"));
@@ -1606,7 +1770,7 @@ class brave{
 			$data["table"][trim($html[0])] = trim($html[1]);
 		}
 	}
-	
+	/*
 	private function getimagelinkfromstyle($thumb){
 		
 		$thumb =
@@ -1646,13 +1810,13 @@ class brave{
 			"url" => $url,
 			"ratio" => "16:9"
 		];
-	}
+	}*/
 	
 	private function limitstrlen($text){
 		
 		return explode("\n", wordwrap($text, 300, "\n"))[0];
 	}
-	
+	/*
 	private function limitwhitespace($text){
 		
 		return
@@ -1661,7 +1825,7 @@ class brave{
 				" ",
 				$text
 			);
-	}
+	}*/
 	
 	private function titledots($title){
 		
@@ -1676,6 +1840,52 @@ class brave{
 		}
 		
 		return trim($title);
+	}
+	
+	private function generatenextpagetoken($q, $nsfw, $country, $spellcheck, $page, $proxy){
+		
+		$nextpage =
+			$this->fuckhtml
+			->getElementsByClassName("btn", "a");
+		
+		if(count($nextpage) !== 0){
+			
+			$nextpage =
+				$nextpage[count($nextpage) - 1];
+			
+			if(
+				strtolower(
+					$this->fuckhtml
+					->getTextContent(
+						$nextpage
+					)
+				) == "next"
+			){
+				
+				preg_match(
+					'/offset=([0-9]+)/',
+					$this->fuckhtml->getTextContent($nextpage["attributes"]["href"]),
+					$nextpage
+				);
+				
+				return
+					$this->backend->store(
+						json_encode(
+							[
+								"q" => $q,
+								"offset" => (int)$nextpage[1],
+								"nsfw" => $nsfw,
+								"country" => $country,
+								"spellcheck" => $spellcheck
+							]
+						),
+						$page,
+						$proxy
+					);
+			}
+		}
+		
+		return null;
 	}
 	
 	private function unshiturl($url){

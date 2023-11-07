@@ -442,5 +442,3 @@ class fuckhtml{
 		return json_decode($json_out, true);
 	}
 }
-
-?>

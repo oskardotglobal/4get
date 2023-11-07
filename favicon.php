@@ -6,6 +6,7 @@ if(!isset($_GET["s"])){
 	die();
 }
 
+include "data/config.php";
 new favicon($_GET["s"]);
 
 class favicon{

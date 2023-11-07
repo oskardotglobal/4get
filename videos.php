@@ -3,6 +3,8 @@
 /*
 	Initialize random shit
 */
+include "data/config.php";
+
 include "lib/frontend.php";
 $frontend = new frontend();
 
@@ -28,20 +30,7 @@ try{
 	
 }catch(Exception $error){
 	
-	echo
-		$frontend->drawerror(
-			"Shit",
-			'This scraper returned an error:' .
-			'<div class="code">' . htmlspecialchars($error->getMessage()) . '</div>' .
-			'Things you can try:' .
-			'<ul>' . 
-				'<li>Use a different scraper</li>' .
-				'<li>Remove keywords that could cause errors</li>' .
-				'<li>Use another 4get instance</li>' .
-			'</ul><br>' .
-			'If the error persists, please <a href="/about">contact the administrator</a>.'
-		);
-	die();
+	$frontend->drawscrapererror($error->getMessage(), $get, "videos");
 }
 
 $categories = [

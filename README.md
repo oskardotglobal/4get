@@ -3,11 +3,20 @@
 # 4get
 4get is a metasearch engine that doesn't suck (they live in our walls!)
 
-## About 4get
+# About 4get
 https://4get.ca/about
 
-## Try it out
+# Try it out
 https://4get.ca
+
+# Totally unbiased comparison between alternatives
+
+|                            | 4get                    | searx(ng) | librex      | araa     |
+|----------------------------|-------------------------|-----------|-------------|----------|
+| RAM usage                  | 200-400mb~              | 2GB~      | 200-400mb~  | 2GB~     |
+| Does it suck               | no (debunked by snopes) | yes       | yes         | a little |
+| Does it work               | ye                      | no        | no          | ye       |
+| Did the dev commit suicide | not until my 30s        | idk       | yes         | no       |
 
 ## Supported websites
 1. Web
@@ -36,7 +45,6 @@ https://4get.ca
 4. News
 	- DuckDuckGo
 	- Brave
-	- Google
 	- Mojeek
 
 5. Music
@@ -55,15 +63,15 @@ https://4get.ca
 
 More scrapers are coming soon. I currently want to add Google web/video/news search, HackerNews (durr orange site!!) and Qwant. A shopping and files tab is also in my todo list.
 
-# Setup
+# Installation
 This section is still to-do. You will need to figure shit out for some of the apache2 and nginx stuff. Everything else should be OK.
 
-## Apache
+## Install on Apache
 
 Login as root.
 
 ```sh
-apt install apache2 certbot php-dom php-imagick imagemagick php-curl curl php-apcu git libapache2-mod-php python3-certbot-apache
+apt install apache2 certbot php-imagick imagemagick php-curl curl php-apcu git libapache2-mod-php python3-certbot-apache
 service apache2 start
 a2enmod rewrite
 ```
@@ -90,7 +98,7 @@ chmod 777 -R icons/
 
 Restart the service for good measure... `service apache2 restart`
 
-## NGINX
+## Install on NGINX
 
 Login as root.
 
@@ -138,10 +146,54 @@ ln -s /etc/nginx/sites-available/4get.conf /etc/nginx/sites-available/4get.conf
 
 Now test the nginx config with `nginx -t`, if it says that everything is good, restart nginx using `systemctl restart nginx`
 
-## Setup encryption
+## Install using Docker (lol u lazy fuck)
+
+```
+docker run -d -p 80:80 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" luuul/4get:latest
+```
+
+...Or with SSL:
+```
+docker run -d -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs luuul/4get:latest
+```
+
+replace enviroment variables FOURGET_SERVER_NAME and FOURGET_SERVER_ADMIN_EMAIL with relevant values
+
+if the certificate files are not mounted to /etc/4get/certs the service listens to port 80
+the certificate directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
+
+## Install using Docker Compose 
+copy `docker-compose.yaml`
+
+create a directory with images named `banners` for example and mount to `/var/www/html/4get/banner`
+to serve custom banners
+
+```
+version: "3.7"
+
+services:
+  fourget:
+    image: luuul/4get:latest
+    restart: always
+    environment:
+      - FOURGET_SERVER_NAME=4get.ca
+      - FOURGET_SERVER_ADMIN_EMAIL="you@example.com"
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /etc/letsencrypt/live/domain.tld:/etc/4get/certs
+      - ./banners:/var/www/html/4get/banner
+```
+
+Replace relevant values and start with `docker-compose up -d`
+
+# Encryption setup
 I'm schizoid (as you should) so I'm gonna setup 4096bit key encryption. To complete this step, you need a domain or subdomain in your possession. Make sure that the DNS shit for your domain has propagated properly before continuing, because certbot is a piece of shit that will error out the ass once you reach 5 attempts under an hour.
 
-### Apache
+## Encryption setup on Apache
 
 ```sh
 certbot --apache --rsa-key-size 4096 -d www.yourdomain.com -d yourdomain.com
@@ -169,7 +221,7 @@ Restart again
 service apache2 restart
 ```
 
-### NGINX
+## Encryption setup on NGINX
 
 Generate a certificate for the domain using:
 
@@ -180,15 +232,13 @@ certbot --nginx --key-type ecdsa -d www.yourdomain.com -d yourdomain.com
 
 After doing that certbot should deploy the certificate automatically into your 4get nginx config file. It should be ready to use at that point.
 
-## Captcha
+# Jesse it is time to configure the server the fucking bots are back
 
-Right now the setup for this shit is absolutely awful.
+Wohoo the awful piece of shit setup and fiddling with 3 gazillion files is GONE. All you need to do to configure your shit is to go in `data/config.php` and edit the self-documenting configuration file. You can also specify proxies in `data/proxies/whatever.txt` and captcha images in `data/captcha/category/1.png`... I further explain how to deal with that garbage in the config file I mentionned.
 
-Edit line 190 in `lib/captcha_gen.php` and specify your image sets. You can't disable the captcha right now lol. Just use a previous commit if you want to do that. Call me a shitcoder all you want I've had no energy lately. Images must be stored in `data/captcha`. Create a folder for each category. All files in there should be named from `1.png` to `321839.png`, for example.
+# (Optional) Tor setup
 
-## Tor Setup
-
-1. Install tor.
+1. Install `tor`.
 2. Open `/etc/tor/torrc`
 3. Go to the line that contains `HiddenServiceDir` and `HiddenServicePort`
 4. Uncomment those 2 lines and set them like this: 
@@ -205,7 +255,7 @@ After you get your onion address you will need to configure your Apache or Nginx
 
 I don't know to configure this shit on Apache so here is the NGINX one.
 
-### NGINX
+## Tor setup on NGINX
 
 Open your current 4get NGINX config (that is under `/etc/nginx/sites-available/`) and append this to the end of the file:
 
@@ -240,49 +290,5 @@ server {
 
 Obviously replace `<youronionaddress>` by the onion address of `/var/lib/tor/4get/hostname` and then check if the nginx config is valid with `nginx -t` if yes, then restart the nginx service and try opening the onion address into the Tor Browser. You can see a real world example [here](https://git.zzls.xyz/Fijxu/etc-configs/src/branch/selfhost/nginx/sites-available/4get.zzls.xyz.conf)
 
-## Docker Install
-
-
-```
-docker run -d -p 80:80 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" luuul/4get:latest
-```
-
-With SSL
-```
-docker run -d -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs luuul/4get:latest
-```
-
-replace enviroment variables FOURGET_SERVER_NAME and FOURGET_SERVER_ADMIN_EMAIL with relevant values
-
-if the certificate files are not mounted to /etc/4get/certs the service listens to port 80
-the certificate directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
-
-## Docker compose 
-
-copy `docker-compose.yaml`
-
-create a directory with images named `banners` for example and mount to `/var/www/html/4get/banner`
-to serve custom banners
-
-```
-version: "3.7"
-
-services:
-  fourget:
-    image: luuul/4get:latest
-    restart: always
-    environment:
-      - FOURGET_SERVER_NAME=4get.ca
-      - FOURGET_SERVER_ADMIN_EMAIL="you@example.com"
-
-    ports:
-      - "80:80"
-      - "443:443"
-
-    volumes:
-      - /etc/letsencrypt/live/domain.tld:/etc/4get/certs
-      - ./banners:/var/www/html/4get/banner
-```
-
-Replace relevant values and start with `docker-compose up -d`
-
+# Contact
+shit breaks all the time but I repair it all the time too. Email me here: will<at>lolcat(dot)ca

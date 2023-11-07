@@ -1,0 +1,77 @@
+<a href="/" class="link">&lt; Go back</a>
+
+<h1>Set as default search engine</h1>
+<a href="#firefox"><h2 id="firefox">On Firefox and other Gecko based browsers</h2></a>
+To set this as your default search engine on Firefox, right click the URL bar and select <div class="code-inline">Add "4get"</div>. Then, visit <a href="about:preferences#search" target="_BLANK" class="link">about:preferences#search</a> and select <div class="code-inline">4get</div> in the dropdown menu.
+
+<a href="#chrome"><h2 id="chrome">On Chromium and Blink based browsers</h2></a>
+Click the 3 superpositioned dots at the top right of the screen and click on <div class="code-inline">Settings</div>, then search for <div class="code-inline">default search engine</div>, or visit <a href="chrome://settings/searchEngines">chrome://settings/searchEngines</a>.<br><br>
+
+Once you're there, click the pencil on the last entry under "Search engines" (it's probably DuckDuckGo). Once you do that, a popup will appear. Populate it with the following information: 
+
+<table>
+	<tr>
+		<td><b>Field</b></td>
+		<td><b>Value</b></td>
+	</tr>
+	<tr>
+		<td>Search engine</td>
+		<td>{%server_name%}</td>
+	</tr>
+	<tr>
+		<td>Shortcut</td>
+		<td>{%server_name%}</td>
+	</tr>
+	<tr>
+		<td>URL with %s in place of query</td>
+		<td>https://4get.ca/web?s=%s</td>
+	</tr>
+</table>
+
+Once that's done, click <div class="code-inline">Save</div>. Then, on the right handside of the newly created entry, open the dropdown menu and select <div class="code-inline">Make default</div>.
+
+<h1>Frequently asked questions</h1>
+<a href="#what-is-this"><h2 id="what-is-this">What is this?</h2></a>
+This is a metasearch engine that gets results from other engines, and strips away all of the tracking parameters and Microsoft/globohomo bullshit they add. Most of the other alternatives to Google jack themselves off about being ""privacy respecting"" or whatever the fuck but it always turns out to be a total lie, and I just got fed up with their shit honestly. Alternatives like Searx or YaCy all fucking sucks so I made my own thing.
+
+<a href="#goal"><h2 id="goal">My goal</h2></a>
+Provide users with a privacy oriented, extremely lightweight, ad free, free as in freedom (and free beer!) way to search for documents around the internet, with minimal, optional javascript code. My long term goal would be to build my own index (that doesn't suck) and provide users with an unbiased search engine, with no political inclinations. 
+
+<a href="#logs"><h2 id="logs">Do you keep logs?</h2></a>
+I store data temporarly to get the next page of results. This might include search queries, tokens and other parameters. These parameters are encrypted using <div class="code-inline">aes-256-gcm</div> on the serber, for which I give you a key (also known internally as <div class="code-inline">npt</div> token). When you make a request to get the next page, you supply the token, the data is decrypted and the request is fulfilled. This encrypted data is deleted after 15 minutes, or after it's used, whichever comes first.<br><br>
+
+I <b>don't</b> log IP addresses, user agents, or anything else. The <div class="code-inline">npt</div> tokens are the only thing that are stored (in RAM, mind you), temporarly, encrypted.
+
+<a href="#information-sharing"><h2 id="information-sharing">Do you share information with third parties?</h2></a>
+Your search queries and supplied filters are shared with the scraper you chose (so I can get the search results, duh). I don't share anything else (that means I don't share your IP address, location, or anything of this kind). There is no way that site can know you're the one searching for something, <u>unless you send out a search query that de-anonymises you.</u> For example, a search query like "hello my full legal name is jonathan gallindo and i want pictures of cloacas" would definitively blow your cover. 4get doesn't contain ads or any third party javascript applets or trackers. I don't profile you, and quite frankly, I don't give a shit about what you search on there.<br><br>
+
+TL;DR assume those websites can see what you search for, but can't see who you are (unless you're really dumb).
+
+<a href="#hosting"><h2 id="hosting">Where is this website hosted?</h2></a>
+This website is hosted on a Contabo shitbox in the United States.
+
+<a href="#keyboard-shortcuts"><h2 id="keyboard-shortcuts">Keyboard shortcuts?</h2></a>
+Use <div class="code-inline">/</div> to focus the search box.<br><br>
+
+When the image viewer is open, you can use the following keybinds:<br>
+<div class="code-inline">Up</div>, <div class="code-inline">Down</div>, <div class="code-inline">Left</div>, <div class="code-inline">Right</div> to rotate the image.<br>
+<div class="code-inline">CTRL+Up</div>, <div class="code-inline">CTRL+Down</div>, <div class="code-inline">CTRL+Left</div>, <div class="code-inline">CTRL+Right</div> to mirror the image.<br>
+<div class="code-inline">Escape</div> to exit the image viewer.
+
+<a href="#schizo"><h2 id="schizo">How can I trust you?</h2></a>
+You just sort of have to take my word for it right now. If you'd rather trust yourself instead of me (I believe in you!!), all of the code on this website is available trough my <a href="https://git.lolcat.ca/lolcat" class="link">git page</a> for you to host on your own machines. Just a reminder: if you're the sole user of your instance, it doesn't take immense brain power for Microshit to figure out you basically just switched IP addresses. Invite your friends to use your instance!
+
+<a href="#donate"><h2 id="donate">Support the project</h2></a>
+Donate to me trough ko-fi: <a href="https://ko-fi.com/lolcat" target="BLANK" rel="noreferrer">ko-fi.com/lolcat</a><br>
+Please donate I sent myself a donation for testing if it works and it looks fucking dumb. Reasons to donate are listed on there. Thank you!
+
+<a href="#contact"><h2 id="contact">I want to report abuse or have erotic roleplay trough email</h2></a>
+I don't know about that second part but if you want to talk to me, just drop me an email...<br><br>
+
+<b>Message to all DMCA enforcers:</b> I don't host any of the content. Everything you see here is <u>proxied</u> trough my shitbox with no moderation. Please reach out to the people hosting the infringing content instead.<br><br>
+
+<a href="https://lolcat.ca" rel="dofollow" class="link">Click here to contact me!</a><br><br>
+
+<a href="https://validator.w3.org/nu/?doc=https%3A%2F%2F4get.ca" title="W3 Valid!">
+	<img src="/static/icon/w3html.png" alt="Valid W3C HTML 4.01" width="88" height="31">
+</a>

@@ -119,6 +119,11 @@
          /_____/_/ /_/\__,_/ .___/\____/_/_/ /_/\__/____/  
                           /_/                              
 
++ /ami4get
+    Tells you basic information about the 4get instance. CORS requests
+    are allowed on this endpoint.
+
+
 + /api/v1/web
     + &extendedsearch
         When using the ddg(DuckDuckGo) scraper, you may make use of the

@@ -2,15 +2,17 @@
 <html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-		<title>4get</title>
+		<title>{%server_name%}</title>
+		<link title="​{%server_name%}" href="/opensearch{%ac%}" rel="search" type="application/opensearchdescription+xml">
+		<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<link rel="stylesheet" href="/static/style.css?v4">
+		<link rel="stylesheet" href="/static/style.css?v{%version%}">
+		{%style%}
 		<meta name="robots" content="index,follow">
 		<link rel="icon" type="image/x-icon" href="/favicon.ico">
-		<meta name="description" content="4get.ca: They live in our walls!">
-		<link rel="search" type="application/opensearchdescription+xml" title="4get" href="/opensearch.xml">
+		<meta name="description" content="{%server_name%}: {%server_short_description%}">
 	</head>
-	<body class="home {%body_class%}">
+	<body class="home">
 		<div id="center">
 			<form method="GET" autocomplete="off" action="web">
 				<div class="logo">
@@ -26,13 +28,12 @@
 					<div class="autocomplete"></div>
 				</div>
 			</form>
-			<a href="settings">Settings</a> • <a href="api.txt">API</a> • <a href="about">About</a> • <a href="https://git.lolcat.ca/lolcat/4get">Source</a> • <a href="https://ko-fi.com/lolcat" rel="noreferrer" target="BLANK">Donate</a>
+			<a href="settings">Settings</a> • <a href="instances">Instances</a> • <a href="api.txt">API</a> • <a href="about">About</a> • <a href="https://git.lolcat.ca/lolcat/4get">Source</a> • <a href="https://ko-fi.com/lolcat" rel="noreferrer" target="BLANK">Donate</a>
 			<div class="subtext">
-				Clearnet: <a href="https://4get.ca">4get.ca</a><br>
-				Tor: <a href="http://4getwebfrq5zr4sxugk6htxvawqehxtdgjrbcn2oslllcol2vepa23yd.onion">4getwebfrq5zr4sxugk6htxvawqehxtdgjrbcn2oslllcol2vepa23yd.onion</a><br>
-				Report a problem: <a href="https://lolcat.ca">lolcat.ca</a>
+				<a href="https://4get.ca">Clearnet</a> • <a href="http://4getwebfrq5zr4sxugk6htxvawqehxtdgjrbcn2oslllcol2vepa23yd.onion">Tor</a> • <a href="https://lolcat.ca">Report a problem</a><br>
+				Running on <b>v{%version%}</b>!!
 			</div>
 		</div>
-		<script src="/static/client.js?v4"></script>
+		<script src="/static/client.js?v{%version%}"></script>
 	</body>
 </html>

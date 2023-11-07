@@ -4,6 +4,41 @@ class frontend{
 	
 	public function load($template, $replacements = []){
 		
+		$replacements["server_name"] = htmlspecialchars(config::SERVER_NAME);
+		$replacements["version"] = config::VERSION;
+		
+		if(isset($_COOKIE["theme"])){
+			
+			$theme = str_replace(["/". "."], "", $_COOKIE["theme"]);
+			
+			if(
+				$theme != "Dark" &&
+				!is_file("static/themes/" . $theme . ".css")
+			){
+				
+				$theme = config::DEFAULT_THEME;
+			}
+		}else{
+			
+			$theme = config::DEFAULT_THEME;
+		}
+		
+		if($theme != "Dark"){
+			
+			$replacements["style"] = '<link rel="stylesheet" href="/static/themes/' . $theme . '.css?v' . config::VERSION . '">';
+		}else{
+			
+			$replacements["style"] = "";
+		}
+		
+		if(isset($_COOKIE["scraper_ac"])){
+			
+			$replacements["ac"] = '?ac=' . htmlspecialchars($_COOKIE["scraper_ac"]);
+		}else{
+			
+			$replacements["ac"] = '';
+		}
+		
 		$handle = fopen("template/{$template}", "r");
 		$data = fread($handle, filesize("template/{$template}"));
 		fclose($handle);
@@ -29,30 +64,6 @@ class frontend{
 		return trim($html);
 	}
 	
-	public function getthemeclass($raw = true){
-		
-		if(
-			isset($_COOKIE["theme"]) &&
-			$_COOKIE["theme"] == "cream"
-		){
-			
-			$body_class = "theme-white ";
-		}else{
-			
-			$body_class = "";
-		}
-		
-		if(
-			$raw &&
-			$body_class != ""
-		){
-			
-			return ' class="' . rtrim($body_class) . '"';
-		}
-		
-		return $body_class;
-	}
-	
 	public function loadheader(array $get, array $filters, string $page){
 		
 		echo
@@ -62,8 +73,7 @@ class frontend{
 				"index" => "no",
 				"search" => htmlspecialchars($get["s"]),
 				"tabs" => $this->generatehtmltabs($page, $get["s"]),
-				"filters" => $this->generatehtmlfilters($filters, $get),
-				"body_class" => $this->getthemeclass()
+				"filters" => $this->generatehtmlfilters($filters, $get)
 			]);
 		
 		if(
@@ -74,18 +84,17 @@ class frontend{
 		){
 			
 			// bot detected !!
-			echo
-				$this->drawerror(
-					"Tshh, blocked!",
-					'You were blocked from viewing this page. If you wish to scrape data from 4get, please consider running <a href="https://git.lolcat.ca/lolcat/4get" rel="noreferrer nofollow">your own 4get instance</a> or using <a href="/api.txt">the API</a>.',
-				);
+			$this->drawerror(
+				"Tshh, blocked!",
+				'You were blocked from viewing this page. If you wish to scrape data from 4get, please consider running <a href="https://git.lolcat.ca/lolcat/4get" rel="noreferrer nofollow">your own 4get instance</a> or using <a href="/api.txt">the API</a>.',
+			);
 			die();
 		}
 	}
 	
 	public function drawerror($title, $error){
 		
-		return
+		echo
 			$this->load("search.html", [
 				"class" => "",
 				"right-left" => "",
@@ -96,6 +105,23 @@ class frontend{
 						$error .
 					'</div>'
 			]);
+		die();
+	}
+	
+	public function drawscrapererror($error, $get, $target){
+		
+		$this->drawerror(
+			"Shit",
+			'This scraper returned an error:' .
+			'<div class="code">' . htmlspecialchars($error) . '</div>' .
+			'Things you can try:' .
+			'<ul>' . 
+				'<li>Use a different scraper</li>' .
+				'<li>Remove keywords that could cause errors</li>' .
+				'<li><a href="/instances?target=' . $target . "&" . $this->buildquery($get, false) . '">Try your search on another 4get instance</a></li>' .
+			'</ul><br>' .
+			'If the error persists, please <a href="/about">contact the administrator</a>.'
+		);
 	}
 	
 	public function drawtextresult($site, $greentext = null, $duration = null, $keywords, $tabindex = true, $customhtml = null){
@@ -819,30 +845,7 @@ class frontend{
 	
 	public function getscraperfilters($page){
 		
-		$get_scraper = null;
-		
-		switch($page){
-			
-			case "web":
-				$get_scraper = isset($_COOKIE["scraper_web"]) ? $_COOKIE["scraper_web"] : null;
-				break;
-			
-			case "images":
-				$get_scraper = isset($_COOKIE["scraper_images"]) ? $_COOKIE["scraper_images"] : null;
-				break;
-			
-			case "videos":
-				$get_scraper = isset($_COOKIE["scraper_videos"]) ? $_COOKIE["scraper_videos"] : null;
-				break;
-			
-			case "news":
-				$get_scraper = isset($_COOKIE["scraper_news"]) ? $_COOKIE["scraper_news"] : null;
-				break;
-			
-			case "music":
-				$get_scraper = isset($_COOKIE["scraper_news"]) ? $_COOKIE["scraper_news"] : null;
-				break;
-		}
+		$get_scraper = isset($_COOKIE["scraper_$page"]) ? $_COOKIE["scraper_$page"] : null;
 		
 		if(
 			isset($_GET["scraper"]) &&
@@ -1148,32 +1151,8 @@ class frontend{
 						break;
 					
 					case "_SEARCH":
-						
-						// get search string & bang
-						$sanitized[$parameter] = trim($sanitized[$parameter]);
-						$sanitized["bang"] = "";
-						
-						if(
-							strlen($sanitized[$parameter]) !== 0 &&
-							$sanitized[$parameter][0] == "!"
-						){
-							
-							$sanitized[$parameter] = explode(" ", $sanitized[$parameter], 2);
-							
-							$sanitized["bang"] = trim($sanitized[$parameter][0]);
-							
-							if(count($sanitized[$parameter]) === 2){
-								
-								$sanitized[$parameter] = trim($sanitized[$parameter][1]);
-							}else{
-								
-								$sanitized[$parameter] = "";
-							}
-							
-							$sanitized["bang"] = ltrim($sanitized["bang"], "!");
-						}
-						
-						$sanitized[$parameter] = ltrim($sanitized[$parameter], "! \n\r\t\v\x00");
+						// get search string
+						$sanitized["s"] = trim($sanitized[$parameter]);
 				}
 			}
 		}

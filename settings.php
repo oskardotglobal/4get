@@ -1,5 +1,7 @@
 <?php
 
+include "data/config.php";
+
 /*
 	Define settings
 */
@@ -28,16 +30,7 @@ $settings = [
 			[
 				"description" => "Theme",
 				"parameter" => "theme",
-				"options" => [
-					[
-						"value" => "dark",
-						"text" => "Gruvbox dark"
-					],
-					[
-						"value" => "cream",
-						"text" => "Gruvbox cream"
-					]
-				]
+				"options" => []
 			],
 			[
 				"description" => "Prevent clicking background elements when image viewer is open",
@@ -59,7 +52,7 @@ $settings = [
 		"name" => "Scrapers to use",
 		"settings" => [
 			[
-				"description" => "Autocomplete<br><i>Picking <div class=\"code-inline\">Auto</div> changes the source dynamically depending of the page's scraper<br>Picking <div class=\"code-inline\">Disabled</div> disables this feature</i>",
+				"description" => "Autocomplete<br><i>Picking <span class=\"code-inline\">Auto</span> changes the source dynamically depending of the page's scraper<br><b>Warning:</b> If you edit this field, you will need to re-add the search engine so that the new autocomplete settings are applied!</i>",
 				"parameter" => "scraper_ac",
 				"options" => [
 					[
@@ -243,6 +236,26 @@ $settings = [
 ];
 
 /*
+	Set theme collection
+*/
+$themes = glob("static/themes/*");
+
+$settings[0]["settings"][1]["options"][] = [
+	"value" => "Dark",
+	"text" => "Dark"
+];
+
+foreach($themes as $theme){
+	
+	$theme = explode(".", basename($theme))[0];
+	
+	$settings[0]["settings"][1]["options"][] = [
+		"value" => $theme,
+		"text" => $theme
+	];
+}
+
+/*
 	Set cookies
 */
 
@@ -262,28 +275,48 @@ if($_POST){
 
 foreach($loop as $key => $value){
 	
-	foreach($settings as $title){
+	if($key == "theme"){
 		
-		foreach($title["settings"] as $list){
+		if($value == config::DEFAULT_THEME){
 			
-			if(
-				$list["parameter"] == $key &&
-				$list["options"][0]["value"] == $value
-			){
+			unset($_COOKIE[$key]);
+			
+			setcookie(
+				"theme",
+				"",
+				[
+					"expires" => -1, // removes cookie
+					"samesite" => "Lax",
+					"path" => "/"
+				]
+			);
+			continue;
+		}
+	}else{
+		
+		foreach($settings as $title){
+			
+			foreach($title["settings"] as $list){
 				
-				unset($_COOKIE[$key]);
-				
-				setcookie(
-					$key,
-					"",
-					[
-						"expires" => -1, // removes cookie
-						"samesite" => "Lax",
-						"path" => "/"
-					]
-				);
-				
-				continue 3;
+				if(
+					$list["parameter"] == $key &&
+					$list["options"][0]["value"] == $value
+				){
+					
+					unset($_COOKIE[$key]);
+					
+					setcookie(
+						$key,
+						"",
+						[
+							"expires" => -1, // removes cookie
+							"samesite" => "Lax",
+							"path" => "/"
+						]
+					);
+					
+					continue 3;
+				}
 			}
 		}
 	}
@@ -313,19 +346,13 @@ include "lib/frontend.php";
 $frontend = new frontend();
 
 echo
-	'<!DOCTYPE html>' .
-	'<html lang="en">' .
-		'<head>' .
-			'<meta http-equiv="Content-Type" content="text/html;charset=utf-8">' .
-			'<title>Settings</title>' .
-			'<link rel="stylesheet" href="/static/style.css?v4">' .
-			'<meta name="viewport" content="width=device-width,initial-scale=1">' .
-			'<meta name="robots" content="index,follow">' .
-			'<link rel="icon" type="image/x-icon" href="/favicon.ico">' .
-			'<meta name="description" content="4get.ca: Settings">' .
-			'<link rel="search" type="application/opensearchdescription+xml" title="4get" href="/opensearch.xml">' .
-		'</head>' .
-		'<body' . $frontend->getthemeclass() . '>';
+	$frontend->load(
+		"header_nofilters.html",
+		[
+			"title" => "Settings",
+			"class" => ""
+		]
+	);
 
 $left =
 	'<h1>Settings</h1>' .
@@ -375,6 +402,14 @@ foreach($settings as $title){
 			'<div class="setting">' .
 				'<div class="title">' . $setting["description"] . '</div>' .
 				'<select name="' . $setting["parameter"] . '">';
+		
+		if($setting["parameter"] == "theme"){
+			
+			if(!isset($_COOKIE["theme"])){
+				
+				$_COOKIE["theme"] = config::DEFAULT_THEME;
+			}
+		}
 		
 		foreach($setting["options"] as $option){
 			

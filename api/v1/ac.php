@@ -1,5 +1,6 @@
 <?php
 
+include "../../data/config.php";
 new autocomplete();
 
 class autocomplete{
@@ -17,7 +18,7 @@ class autocomplete{
 			"yep" => "https://api.yep.com/ac/?query={searchTerms}",
 			"marginalia" => "https://search.marginalia.nu/suggest/?partial={searchTerms}",
 			"yt" => "https://suggestqueries-clients6.youtube.com/complete/search?client=youtube&q={searchTerms}",
-			"sc" => "https://api-v2.soundcloud.com/search/queries?q={searchTerms}&client_id=ArYppSEotE3YiXCO4Nsgid2LLqJutiww&limit=10&offset=0&linked_partitioning=1&app_version=1693487844&app_locale=en"
+			"sc" => "https://api-v2.soundcloud.com/search/queries?q={searchTerms}&client_id=" . config::SC_CLIENT_TOKEN . "&limit=10&offset=0&linked_partitioning=1&app_version=1693487844&app_locale=en"
 		];
 		
 		/*
@@ -107,7 +108,8 @@ class autocomplete{
 					[
 						$_GET["s"],
 						$json
-					]
+					],
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 				);
 				break;
 			
@@ -132,7 +134,8 @@ class autocomplete{
 					[
 						$_GET["s"],
 						$json
-					]
+					],
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 				);
 				break;
 			
@@ -150,7 +153,8 @@ class autocomplete{
 					[
 						$_GET["s"],
 						$json
-					]
+					],
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 				);
 				break;
 			
@@ -162,7 +166,8 @@ class autocomplete{
 					[
 						$_GET["s"],
 						$json[1] // ensure it contains valid key 0
-					]
+					],
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 				);
 				break;
 		}
@@ -170,45 +175,54 @@ class autocomplete{
 	
 	private function get($url, $query){
 		
-		$curlproc = curl_init();
-		
-		$url = str_replace("{searchTerms}", urlencode($query), $url);
-		
-		curl_setopt($curlproc, CURLOPT_URL, $url);
-		
-		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
-		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
-			["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
-			"Accept: application/json, text/javascript, */*; q=0.01",
-			"Accept-Language: en-US,en;q=0.5",
-			"Accept-Encoding: gzip",
-			"DNT: 1",
-			"Connection: keep-alive",
-			"Sec-Fetch-Dest: empty",
-			"Sec-Fetch-Mode: cors",
-			"Sec-Fetch-Site: same-site"]
-		);
-		
-		curl_setopt($curlproc, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curlproc, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
-		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
-		
-		$data = curl_exec($curlproc);
-		
-		if(curl_errno($curlproc)){
+		try{
+			$curlproc = curl_init();
 			
-			throw new Exception(curl_error($curlproc));
-		}
+			$url = str_replace("{searchTerms}", urlencode($query), $url);
+			
+			curl_setopt($curlproc, CURLOPT_URL, $url);
+			
+			curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
+			curl_setopt($curlproc, CURLOPT_HTTPHEADER,
+				["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+				"Accept: application/json, text/javascript, */*; q=0.01",
+				"Accept-Language: en-US,en;q=0.5",
+				"Accept-Encoding: gzip",
+				"DNT: 1",
+				"Connection: keep-alive",
+				"Sec-Fetch-Dest: empty",
+				"Sec-Fetch-Mode: cors",
+				"Sec-Fetch-Site: same-site"]
+			);
+			
+			curl_setopt($curlproc, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curlproc, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
+			curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+			
+			$data = curl_exec($curlproc);
+			
+			if(curl_errno($curlproc)){
+				
+				throw new Exception(curl_error($curlproc));
+			}
+			
+			curl_close($curlproc);
+			return $data;
 		
-		curl_close($curlproc);
-		return $data;
+		}catch(Exception $error){
+			
+			do404("Curl error: " . $error->getMessage());
+		}
 	}
 	
 	private function do404($error){
 		
-		echo json_encode(["error" => $error]);
+		echo json_encode(
+			["error" => $error],
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+		);
 		die();
 	}
 	
@@ -218,7 +232,8 @@ class autocomplete{
 			[
 				$_GET["s"],
 				[]
-			]
+			],
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 		);
 		die();
 	}

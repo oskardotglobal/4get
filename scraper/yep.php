@@ -4,8 +4,8 @@ class yep{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("yep");
+		include "lib/backend.php";
+		$this->backend = new backend("yep");
 	}
 	
 	public function getfilters($page){
@@ -238,7 +238,7 @@ class yep{
 		];
 	}
 	
-	private function get($url, $get = []){
+	private function get($proxy, $url, $get = []){
 		
 		$curlproc = curl_init();
 		
@@ -251,7 +251,7 @@ class yep{
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
-			["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+			["User-Agent: " . config::USER_AGENT,
 			"Accept: */*",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -269,6 +269,8 @@ class yep{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -284,6 +286,11 @@ class yep{
 	public function image($get){
 		
 		$search = $get["s"];
+		if(strlen($search) === 0){
+			
+			throw new Exception("Search term is empty!");
+		}
+		
 		$country = $get["country"];
 		$nsfw = $get["nsfw"];
 		
@@ -305,6 +312,7 @@ class yep{
 			$json =
 				json_decode(
 					$this->get(
+						$this->backend->get_ip(), // no nextpage!
 						"https://api.yep.com/fs/2/search",
 						[
 							"client" => "web",

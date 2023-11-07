@@ -10,11 +10,11 @@ class yandex{
 		include "lib/fuckhtml.php";
 		$this->fuckhtml = new fuckhtml();
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("yandex");
+		include "lib/backend.php";
+		// backend included in the scraper functions
 	}
 	
-	private function get($url, $get = [], $nsfw){
+	private function get($proxy, $url, $get = [], $nsfw){
 		
 		$curlproc = curl_init();
 		
@@ -32,7 +32,7 @@ class yandex{
 		}
 		
 		$headers =
-			["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0",
+			["User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Encoding: gzip",
 			"Accept-Language: en-US,en;q=0.5",
@@ -54,6 +54,8 @@ class yandex{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -207,6 +209,8 @@ class yandex{
 	
 	public function web($get){
 		
+		$this->backend = new backend("yandex_w");
+		
 		// has captcha
 		// https://yandex.com/search/touch/?text=lol&app_platform=android&appsearch_header=1&ui=webmobileapp.yandex&app_version=23070603&app_id=ru.yandex.searchplugin&search_source=yandexcom_touch_native&clid=2218567
 		
@@ -215,10 +219,11 @@ class yandex{
 		
 		if($get["npt"]){
 			
-			$npt = $this->nextpage->get($get["npt"], "web");
+			[$npt, $proxy] = $this->backend->get($get["npt"], "web");
 			
 			$html =
 				$this->get(
+					$proxy,
 					"https://yandex.com" . $npt,
 					[],
 					"yes"
@@ -226,6 +231,12 @@ class yandex{
 		}else{
 			
 			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			$proxy = $this->backend->get_ip();
 			$lang = $get["lang"];
 			$older = $get["older"];
 			$newer = $get["newer"];
@@ -269,6 +280,7 @@ class yandex{
 			try{
 				$html =
 					$this->get(
+						$proxy,
 						"https://yandex.com/search/site/",
 						$params,
 						"yes"
@@ -313,7 +325,7 @@ class yandex{
 		if(count($npt) !== 0){
 			
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					$this->fuckhtml
 					->getTextContent(
 						$npt
@@ -321,7 +333,8 @@ class yandex{
 						["attributes"]
 						["href"]
 					),
-					"web"
+					"web",
+					$proxy
 				);
 		}
 		
@@ -386,16 +399,17 @@ class yandex{
 	
 	public function image($get){
 		
+		$this->backend = new backend("yandex_i");
+		
 		if($get["npt"]){
 			
-			$request =
-				json_decode(
-					$this->nextpage->get(
-						$get["npt"],
-						"images"
-					),
-					true
+			[$request, $proxy] =
+				$this->backend->get(
+					$get["npt"],
+					"images"
 				);
+			
+			$request = json_decode($request, true);
 			
 			$nsfw = $request["nsfw"];
 			unset($request["nsfw"]);
@@ -407,6 +421,7 @@ class yandex{
 				throw new Exception("Search term is empty!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$nsfw = $get["nsfw"];
 			$time = $get["time"];
 			$size = $get["size"];
@@ -611,9 +626,11 @@ class yandex{
 		
 		try{
 			$json = $this->get(
+				$proxy,
 				"https://yandex.com/images/search",
 				$request,
-				$nsfw
+				$nsfw,
+				"yandex_i"
 			);
 		}catch(Exception $err){
 			
@@ -676,7 +693,12 @@ class yandex{
 				$request["p"] = 1;
 			}
 			
-			$out["npt"] = $this->nextpage->store(json_encode($request), "images");
+			$out["npt"] =
+				$this->backend->store(
+					json_encode($request),
+					"images",
+					$proxy
+				);
 		}
 		
 		// get search results
@@ -744,21 +766,29 @@ class yandex{
 	
 	public function video($get){
 		
+		$this->backend = new backend("yandex_v");
+		
 		if($get["npt"]){
 			
-			$params =
-				json_decode(
-					$this->nextpage->get(
-						$get["npt"],
-						"web"
-					),
-					true
+			[$params, $proxy] =
+				$this->backend->get(
+					$get["npt"],
+					"video"
 				);
+			
+			$params = json_decode($params, true);
 			
 			$nsfw = $params["nsfw"];
 			unset($params["nsfw"]);
 		}else{
+			
 			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			$proxy = $this->backend->get_ip();
 			$nsfw = $get["nsfw"];
 			$time = $get["time"];
 			$duration = $get["duration"];
@@ -865,9 +895,11 @@ class yandex{
 		try{
 			$json =
 				$this->get(
+					$proxy,
 					"https://yandex.com/video/search",
 					$params,
-					$nsfw
+					$nsfw,
+					"yandex_v"
 				);
 		}catch(Exception $error){
 			
@@ -926,9 +958,10 @@ class yandex{
 			$params["p"] = "1";
 			$params["nsfw"] = $nsfw;
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					json_encode($params),
-					"web"
+					"video",
+					$proxy
 				);
 		}
 		

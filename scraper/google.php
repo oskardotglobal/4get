@@ -10,8 +10,8 @@ class google{
 		include "lib/fuckhtml.php";
 		$this->fuckhtml = new fuckhtml();
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("google");
+		include "lib/backend.php";
+		$this->backend = new backend("google");
 	}
 	
 	public function getfilters($page){
@@ -727,7 +727,7 @@ class google{
 		}
 	}
 	
-	private function get($url, $get = []){
+	private function get($proxy, $url, $get = []){
 		
 		$headers = [
 			"User-Agent: Mozilla/5.0 (Linux; U; Android 2.3.3; pt-pt; LG-P500h-parrot Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 MMS/LG-Android-MMS-V1.0/1.2",
@@ -760,6 +760,8 @@ class google{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -771,7 +773,7 @@ class google{
 		curl_close($curlproc);
 		return $data;
 	}
-	
+	/*
 	public function web($get){
 		
 		$search = $get["s"];
@@ -877,9 +879,9 @@ class google{
 			
 			if(count($title) !== 0){
 				
-				/*
-					Container is a web link
-				*/
+				//
+				//	Container is a web link
+				//
 				$web = [
 					"title" =>
 						$this->titledots(
@@ -1051,9 +1053,9 @@ class google{
 							continue;
 						}
 						
-						/*
-							Parse rating object
-						*/
+						//
+						//	Parse rating object
+						//
 						
 						if($is_rating >= -1){
 							
@@ -1102,9 +1104,9 @@ class google{
 							continue;
 						}
 						
-						/*
-							Parse standalone text
-						*/
+						//
+						//	Parse standalone text
+						//
 						$additional_info[] = $innertext;
 					}
 				}
@@ -1194,9 +1196,9 @@ class google{
 					$container_title == "people also search for"
 				){
 					
-					/*
-						Parse related searches
-					*/
+					//
+					//	Parse related searches
+					//
 					$as =
 						$this->fuckhtml
 						->getElementsByTagName("a");
@@ -1212,9 +1214,9 @@ class google{
 				continue;
 			}
 			
-			/*
-				Parse image carousel
-			*/
+			//
+			//	Parse image carousel
+			//
 			$title_container =
 				$this->fuckhtml
 				->getElementsByClassName(
@@ -1239,9 +1241,9 @@ class google{
 				
 				if($title_container == "imagesview all"){
 					
-					/*
-						Image carousel
-					*/
+					//
+					//	Image carousel
+					//
 					$pcitem =
 						$this->fuckhtml
 						->getElementsByClassName(
@@ -1316,9 +1318,9 @@ class google{
 				}
 			}
 			
-			/*
-				Get next page
-			*/
+			//
+			//	Get next page
+			//
 			$as =
 				$this->fuckhtml
 				->getElementsByTagName("a");
@@ -1340,7 +1342,7 @@ class google{
 		}
 		
 		return $out;
-	}
+	}*/
 	
 	
 	public function image($get){
@@ -1348,17 +1350,22 @@ class google{
 		// generate parameters
 		if($get["npt"]){
 			
-			$params =
-				json_decode(
-					$this->nextpage->get(
-						$get["npt"],
-						"images"
-					),
-					true
+			[$params, $proxy] =
+				$this->backend->get(
+					$get["npt"],
+					"images"
 				);
+			
+			$params = json_decode($params, true);
 		}else{
 			
 			$search = $get["s"];
+			if(strlen($search) === 0){
+			
+				throw new Exception("Search term is empty!");
+			}
+			
+			$proxy = $this->backend->get_ip();
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
 			$lang = $get["lang"];
@@ -1475,6 +1482,7 @@ class google{
 		try{
 			$html = 
 				$this->get(
+					$proxy,
 					"https://www.google.com/search",
 					$params
 				);
@@ -1578,9 +1586,10 @@ class google{
 			$params["ijn"] = (int)$params["ijn"] + 1;
 			
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					json_encode($params),
-					"images"
+					"images",
+					$proxy
 				);
 		}else{
 			
@@ -1628,9 +1637,10 @@ class google{
 					$params["imgvl"] = $imgvl;
 					
 					$out["npt"] =
-						$this->nextpage->store(
+						$this->backend->store(
 							json_encode($params),
-							"images"
+							"images",
+							$proxy
 						);
 				}
 			}

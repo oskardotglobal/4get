@@ -1,0 +1,31 @@
+:root{
+	/* background */
+	--1d2021: #bdae93;
+	--282828: #a89984;
+	--3c3836: #a89984;
+	--504945: #504945;
+	
+	/* font */
+	--928374: #1d2021;
+	--a89984: #282828;
+	--bdae93: #3c3836;
+	--8ec07c: #52520e;
+	--ebdbb2: #1d2021;
+	
+	/* code highlighter */
+	--comment: #6a4400;
+	--default: #d4be98;
+	--keyword: #4a4706;
+	--string: #076678;
+	
+	/* color codes for instance list */
+	--green: #636311;
+	--yellow: #8a6214;
+	--red: #711410;
+}
+
+.autocomplete .entry:hover,
+.instances th:hover
+{
+	background:#928374;
+}

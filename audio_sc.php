@@ -1,5 +1,6 @@
 <?php
 
+include "data/config.php";
 new sc_audio();
 
 class sc_audio{

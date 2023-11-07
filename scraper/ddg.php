@@ -4,8 +4,11 @@ class ddg{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("ddg");
+		include "lib/backend.php";
+		$this->backend = new backend("ddg");
+		
+		include "lib/fuckhtml.php";
+		$this->fuckhtml = new fuckhtml();
 	}
 	
 	/*
@@ -14,7 +17,7 @@ class ddg{
 	private const req_web = 0;
 	private const req_xhr = 1;
 	
-	private function get($url, $get = [], $reqtype = self::req_web){
+	private function get($proxy, $url, $get = [], $reqtype = self::req_web){
 		
 		$curlproc = curl_init();
 		
@@ -28,7 +31,7 @@ class ddg{
 		switch($reqtype){
 			case self::req_web:
 				$headers =
-					["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0",
+					["User-Agent: " . config::USER_AGENT,
 					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 					"Accept-Encoding: gzip",
 					"Accept-Language: en-US,en;q=0.5",
@@ -43,7 +46,7 @@ class ddg{
 			
 			case self::req_xhr:
 				$headers =
-					["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0",
+					["User-Agent: " . config::USER_AGENT,
 					"Accept: */*",
 					"Accept-Encoding: gzip",
 					"Accept-Language: en-US,en;q=0.5",
@@ -57,6 +60,8 @@ class ddg{
 				break;
 		}
 		
+		$this->backend->assign_proxy($curlproc, $proxy);
+		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER, $headers);
 		
@@ -69,7 +74,6 @@ class ddg{
 		$data = curl_exec($curlproc);
 		
 		if(curl_errno($curlproc)){
-			
 			throw new Exception(curl_error($curlproc));
 		}
 		
@@ -541,9 +545,11 @@ class ddg{
 	
 	public function web($get){
 		
+		$proxy = null;
+		
 		if($get["npt"]){
 			
-			$jsgrep = $this->nextpage->get($get["npt"], "web");
+			[$jsgrep, $proxy] = $this->backend->get($get["npt"], "web");
 						
 			$extendedsearch = false;
 			$inithtml = "";
@@ -555,6 +561,7 @@ class ddg{
 				throw new Exception("Search term is empty!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
 			$older = $get["older"];
@@ -614,9 +621,9 @@ class ddg{
 			/*
 				Get html
 			*/
-			// https://duckduckgo.com/?q=minecraft&kz=1&k1=-1&kp=-2
 			try{
 				$inithtml = $this->get(
+					$proxy,
 					"https://duckduckgo.com/",
 					$get_filters
 				);
@@ -643,6 +650,7 @@ class ddg{
 		try{
 			
 			$js = $this->get(
+				$proxy,
 				"https://links.duckduckgo.com" . $jsgrep,
 				[],
 				ddg::req_xhr
@@ -692,6 +700,7 @@ class ddg{
 					
 					// get definition
 					$wordnikjs = $this->get(
+						$proxy,
 						"https://duckduckgo.com/js/spice/dictionary/definition/" . $wordnik,
 						[],
 						ddg::req_xhr
@@ -725,6 +734,7 @@ class ddg{
 						$wordnikaudio_json =
 							json_decode(
 								$this->get(
+									$proxy,
 									"https://duckduckgo.com/js/spice/dictionary/audio/" . $wordnik,
 									[],
 									ddg::req_xhr
@@ -922,6 +932,7 @@ class ddg{
 				
 				try{
 					$stackjs = $this->get(
+						$proxy,
 						"https://duckduckgo.com" . $stack,
 						[],
 						ddg::req_xhr
@@ -944,7 +955,7 @@ class ddg{
 						
 						$out["answer"][] = [
 							"title" => $stackjson["Heading"],
-							"description" => $this->htmltoarray($stackjson["Abstract"]),
+							"description" => $this->stackoverflow_parse($stackjson["Abstract"]),
 							"url" => str_replace(["http://", "ddg"], ["https://", ""], $stackjson["AbstractURL"]),
 							"thumb" => null,
 							"table" => [],
@@ -973,6 +984,7 @@ class ddg{
 				
 				try{
 					$lyricsjs = $this->get(
+						$proxy,
 						"https://duckduckgo.com" . $lyrics,
 						[],
 						ddg::req_xhr
@@ -1166,13 +1178,13 @@ class ddg{
 					
 					if(isset($answers[$i]["data"]["AbstractText"]) && !empty($answers[$i]["data"]["AbstractText"])){
 						
-						$description = $this->htmltoarray($answers[$i]["data"]["AbstractText"]);
+						$description = $this->stackoverflow_parse($answers[$i]["data"]["AbstractText"]);
 					}elseif(isset($answers[$i]["data"]["Abstract"]) && !empty($answers[$i]["data"]["Abstract"])){
 						
-						$description = $this->htmltoarray($answers[$i]["data"]["Abstract"]);
+						$description = $this->stackoverflow_parse($answers[$i]["data"]["Abstract"]);
 					}elseif(isset($answers[$i]["data"]["Answer"]) && !empty($answers[$i]["data"]["Answer"])){
 						
-						$description = $this->htmltoarray($answers[$i]["data"]["Answer"]);
+						$description = $this->stackoverflow_parse($answers[$i]["data"]["Answer"]);
 					}else{
 						
 						$description = [];
@@ -1310,6 +1322,7 @@ class ddg{
 					$description = [];
 						
 					$shitcoinjs = $this->get(
+						$proxy,
 						"https://duckduckgo.com/js/spice/cryptocurrency/{$shitcoins[1]}/{$shitcoins[2]}/1",
 						[],
 						ddg::req_xhr
@@ -1408,6 +1421,7 @@ class ddg{
 					
 					try{
 						$currencyjs = $this->get(
+							$proxy,
 							"https://duckduckgo.com/js/spice/currency/{$amount}/" . strtolower($currencies[1]) . "/" . strtolower($currencies[2]),
 							[],
 							ddg::req_xhr
@@ -1607,7 +1621,7 @@ class ddg{
 					// store next page token
 					if(isset($web[$i]["n"])){
 						
-						$out["npt"] = $this->nextpage->store($web[$i]["n"] . "&biaexp=b&eslexp=a&litexp=c&msvrtexp=b&wrap=1", "web");
+						$out["npt"] = $this->backend->store($web[$i]["n"] . "&biaexp=b&eslexp=a&litexp=c&msvrtexp=b&wrap=1", "web", $proxy);
 						continue;
 					}
 					
@@ -1874,10 +1888,11 @@ class ddg{
 		
 		if($get["npt"]){
 			
-			$npt = $this->nextpage->get($get["npt"], "images");
+			[$npt, $proxy] = $this->backend->get($get["npt"], "images");
 			
 			try{
 				$json = json_decode($this->get(
+					$proxy,
 					"https://duckduckgo.com/i.js?" . $npt,
 					[],
 					ddg::req_xhr
@@ -1895,6 +1910,7 @@ class ddg{
 				throw new Exception("Search term is empty!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
 			$date = $get["date"];
@@ -1934,6 +1950,7 @@ class ddg{
 			try{
 				
 				$html = $this->get(
+					$proxy,
 					"https://duckduckgo.com",
 					$get_filters,
 					ddg::req_web
@@ -1980,6 +1997,7 @@ class ddg{
 			
 			try{
 				$json = json_decode($this->get(
+					$proxy,
 					"https://duckduckgo.com/i.js",
 					$js_params,
 					ddg::req_xhr
@@ -2005,10 +2023,11 @@ class ddg{
 			}
 			
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					explode("?", $json["next"])[1] . "&vqd=" .
 					$vqd,
-					"images"
+					"images",
+					$proxy
 				);
 		}
 		
@@ -2046,10 +2065,11 @@ class ddg{
 		
 		if($get["npt"]){
 			
-			$npt = $this->nextpage->get($get["npt"], "videos");
+			[$npt, $proxy] = $this->backend->get($get["npt"], "videos");
 			
 			try{
 				$json = json_decode($this->get(
+					$proxy,
 					"https://duckduckgo.com/v.js?" .
 					$npt,
 					[],
@@ -2068,6 +2088,7 @@ class ddg{
 				throw new Exception("Search term is empty!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
 			$date = $get["date"];
@@ -2099,6 +2120,7 @@ class ddg{
 			try{
 				
 				$html = $this->get(
+					$proxy,
 					"https://duckduckgo.com",
 					$get_filters,
 					ddg::req_web
@@ -2123,6 +2145,7 @@ class ddg{
 			
 			try{
 				$json = json_decode($this->get(
+					$proxy,
 					"https://duckduckgo.com/v.js",
 					[
 						"l" => "us-en",
@@ -2155,9 +2178,10 @@ class ddg{
 		if(isset($json["next"])){
 			
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					explode("?", $json["next"])[1],
-					"videos"
+					"videos",
+					$proxy
 				);
 		}
 		
@@ -2213,11 +2237,12 @@ class ddg{
 		
 		if($get["npt"]){
 			
-			$req = $this->nextpage->get($get["npt"], "news");
+			[$req, $proxy] = $this->backend->get($get["npt"], "news");
 			
 			try{
 				
 				$json = json_decode($this->get(
+					$proxy,
 					"https://duckduckgo.com/news.js?" .
 					$req,
 					[],
@@ -2236,6 +2261,7 @@ class ddg{
 				throw new Exception("Search term is empty!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
 			$date = $get["date"];
@@ -2261,6 +2287,7 @@ class ddg{
 			try{
 				
 				$html = $this->get(
+					$proxy,
 					"https://duckduckgo.com",
 					$get_params,
 					ddg::req_web
@@ -2303,6 +2330,7 @@ class ddg{
 				}
 				
 				$json = json_decode($this->get(
+					$proxy,
 					"https://duckduckgo.com/news.js",
 					$js_params,
 					ddg::req_xhr
@@ -2323,9 +2351,10 @@ class ddg{
 		if(isset($json["next"])){
 			
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					explode("?", $json["next"])[1],
-					"news"
+					"news",
+					$proxy
 				);
 		}
 		
@@ -2415,192 +2444,193 @@ class ddg{
 		return "https://" . $parse["host"] . "/th?id=" . urlencode($parts["id"]);
 	}
 	
-	private function htmltoarray($html){
+	private function appendtext($payload, &$text, &$index){
 		
-		$html = strip_tags($html, ["img", "pre", "code", "br", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "a"]);
+		if(trim($payload) == ""){
+			
+			return;
+		}
 		
-		libxml_use_internal_errors(true);
-		$dom = new DOMDocument("1.0", "utf-8");
-		$dom->loadHTML('<div>' . $html . '</div>');
-		$xpath = new DOMXPath($dom);
-		$descendants = $xpath->query('//div/node()');
+		if(
+			$index !== 0 &&
+			$text[$index - 1]["type"] == "text"
+		){
+			
+			$text[$index - 1]["value"] .= preg_replace('/  $/', " ", $payload);
+		}else{
+			
+			$text[] = [
+				"type" => "text",
+				"value" => preg_replace('/  $/', " ", $payload)
+			];
+			$index++;
+		}
+	}
+	
+	private function stackoverflow_parse($html){
 		
-		$images = $xpath->query('//div/node()/img');
-		$imageiterator = 0;
+		$i = 0;
+		$answer = [];
 		
-		if(count($descendants) === 0){
+		$this->fuckhtml->load($html);
+		
+		$tags = $this->fuckhtml->getElementsByTagName("*");
+		
+		if(count($tags) === 0){
 			
 			return [
-				"type" => "text",
-				"value" => $this->unescapehtml($html)
+				[
+					"type" => "text",
+					"value" => htmlspecialchars_decode($html)
+				]
 			];
 		}
 		
-		$array = [];
-		$previoustype = null;
-		
-		foreach($descendants as $node){
+		foreach($tags as $snippet){
 			
-			// $node->nodeValue = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $node->nodeValue);
-			
-			// get node type
-			switch($node->nodeName){
-				case "#text":
-					$type = "text";
-					break;
+			switch($snippet["tagName"]){
 				
-				case "pre":
-					$type = "code";
-					break;
-				
-				case "code":
-					$type = "inline_code";
-					break;
-				
-				case "h1":
-				case "h2":
-				case "h3":
-				case "h4":
-				case "h5":
-				case "h6":
-					$type = "title";
-					break;
-				
-				case "blockquote":
-					$type = "quote";
-					break;
-				
-				case "a":
-					$type = "link";
+				case "p":
+					$this->fuckhtml->load($snippet["innerHTML"]);
+					
+					$codetags =
+						$this->fuckhtml
+						->getElementsByTagName("*");
+					
+					$tmphtml = $snippet["innerHTML"];
+					
+					foreach($codetags as $tag){
+						
+						if(!isset($tag["outerHTML"])){
+							
+							continue;
+						}
+						
+						$tmphtml =
+							explode(
+								$tag["outerHTML"],
+								$tmphtml,
+								2
+							);
+						
+						$value = $this->fuckhtml->getTextContent($tmphtml[0], false, false);
+						$this->appendtext($value, $answer, $i);
+						
+						$type = null;
+						switch($tag["tagName"]){
+							
+							case "code": $type = "inline_code"; break;
+							case "em": $type = "italic"; break;
+							case "blockquote": $type = "quote"; break;
+							default: $type = "text";
+						}
+						
+						if($type !== null){
+							$value = $this->fuckhtml->getTextContent($tag, false, false);
+							
+							if(trim($value) != ""){
+								
+								$answer[] = [
+									"type" => $type,
+									"value" => rtrim($value)
+								];
+								$i++;
+							}
+						}
+						
+						if(count($tmphtml) === 2){
+							
+							$tmphtml = $tmphtml[1] . "\n";
+						}else{
+							
+							break;
+						}
+					}
+					
+					if(is_array($tmphtml)){
+						
+						$tmphtml = $tmphtml[0];
+					}
+					
+					if(strlen($tmphtml) !== 0){
+						
+						$value = $this->fuckhtml->getTextContent($tmphtml, true, false);
+						$this->appendtext($value, $answer, $i);
+					}
 					break;
 				
 				case "img":
-					$type = "image";
-					break;
-			}
-			
-			// add node to array
-			switch($type){
-				
-				case "text":
-					$value = preg_replace(
-						'/ {2,}/',
-						" ",
-						$this->limitnewlines($this->unescapehtml($node->textContent))
-					);
-					
-					if(
-						$previoustype == "quote" ||
-						$previoustype === null ||
-						$previoustype == "image" ||
-						$previoustype == "title" ||
-						$previoustype == "code"
-					){
-						
-						$value = ltrim($value);
-					}
-					
-					if($value == ""){
-						
-						$previoustype = $type;
-						continue 2;
-					}
-					
-					// merge with previous text node
-					if($previoustype == "text"){
-						
-						$array[count($array) - 1]["value"] = trim($array[count($array) - 1]["value"]) . "\n" . $this->bstoutf8($value);
-					}else{
-						
-						$array[] = [
-							"type" => "text",
-							"value" => $this->bstoutf8($value)
-						];
-					}
-					break;
-				
-				case "inline_code":
-				case "bold":
-					$array[] = [
-						"type" => "inline_code",
-						"value" => $this->bstoutf8(trim($this->limitnewlines($this->unescapehtml($node->textContent))))
-					];
-					break;
-				
-				case "link":
-					// check for link nested inside of image
-					
-					if(strlen($node->childNodes->item(0)->textContent) !== 0){
-						
-						$array[] = [
-							"type" => "link",
-							"value" => $this->bstoutf8(trim($this->unescapehtml($node->textContent))),
-							"url" => $this->bstoutf8(preg_replace('/\/ddg$/', "", preg_replace('/^http:\/\//', "https://", $this->sanitizeurl($node->getAttribute("href")))))
-						];
-						break;
-					}
-					
-					$type = "image";
-					
-					if($previoustype == "text"){
-						
-						$array[count($array) - 1]["value"] = rtrim($array[count($array) - 1]["value"]);
-					}
-					
-					$array[] = [
+					$answer[] = [
 						"type" => "image",
-						"url" => $this->bstoutf8(preg_replace('/^http:\/\//', "https://", preg_replace('/^\/\/images\.duckduckgo\.com\/iu\/\?u=/', "", $images->item($imageiterator)->getAttribute("src"))))
+						"url" =>
+							$this->fuckhtml
+							->getTextContent(
+								$tag["attributes"]["src"]
+							)
 					];
+					$i++;
+					break;
+				
+				case "pre":
+					switch($answer[$i - 1]["type"]){
+						
+						case "text":
+						case "italic":
+							$answer[$i - 1]["value"] = rtrim($answer[$i - 1]["value"]);
+							break;
+					}
 					
-					$imageiterator++;
+					$answer[] =
+						[
+							"type" => "code",
+							"value" =>
+								rtrim(
+									$this->fuckhtml
+									->getTextContent(
+										$snippet,
+										true,
+										false
+									)
+								)
+						];
+					$i++;
 					
 					break;
 				
-				case "image":
+				case "ol":
+					$o = 0;
 					
-					if($previoustype == "text"){
-						
-						$array[count($array) - 1]["value"] = rtrim($array[count($array) - 1]["value"]);
-					}
+					$this->fuckhtml->load($snippet);
+					$li =
+						$this->fuckhtml
+						->getElementsByTagName("li");
 					
-					$array[] = [
-						"type" => "image",
-						"url" => $this->bstoutf8(preg_replace('/^http:\/\//', "https://", preg_replace('/^\/\/images\.duckduckgo\.com\/iu\/\?u=/', "", $node->getAttribute("src"))))
-					];
-					break;
-				
-				case "quote":
-				case "title":
-				case "code":
-					if($previoustype == "text"){
+					foreach($li as $elem){
+						$o++;
 						
-						$array[count($array) - 1]["value"] = rtrim($array[count($array) - 1]["value"]);
-					}
-					// no break
-				
-				default:
-					
-					$value = trim($this->limitnewlines($this->unescapehtml($node->textContent)));
-					if($type != "code"){
-						
-						$value = preg_replace(
-							'/ {2,}/',
-							" ",
-							$value
+						$this->appendtext(
+							$o . ". " .
+							$this->fuckhtml
+							->getTextContent(
+								$elem
+							),
+							$answer,
+							$i
 						);
 					}
-					
-					$array[] = [
-						"type" => $type,
-						"value" => $this->bstoutf8($value)
-					];
 					break;
 			}
-			
-			$previoustype = $type;
 		}
 		
-		return $array;
+		if(
+			$i !== 0 &&
+			$answer[$i - 1]["type"] == "text"
+		){
+			
+			$answer[$i - 1]["value"] = rtrim($answer[$i - 1]["value"]);
+		}
+		
+		return $answer;
 	}
 	
 	private function bstoutf8($bs){

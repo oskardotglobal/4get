@@ -3,14 +3,15 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 		<title>{%title%}</title>
-		<link rel="stylesheet" href="/static/style.css?v4">
+		<link title="​{%server_name%}" href="/opensearch{%ac%}" rel="search" type="application/opensearchdescription+xml">
+		<link rel="stylesheet" href="/static/style.css?v{%version%}">
+		{%style%}
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<meta name="robots" content="{%index%}index,{%index%}follow">
 		<link rel="icon" type="image/x-icon" href="/favicon.ico">
-		<meta name="description" content="4get.ca: {%description%}">
-		<link rel="search" type="application/opensearchdescription+xml" title="4get" href="/opensearch.xml">
+		<meta name="description" content="{%server_name%}: {%description%}">
 	</head>
-	<body{%body_class%}>
+	<body>
 		<form method="GET" autocomplete="off">
 			<div class="searchbox">
 				<input type="submit" value="Search" tabindex="-1">

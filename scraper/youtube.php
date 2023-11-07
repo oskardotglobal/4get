@@ -8,8 +8,8 @@ class youtube{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("yt");
+		include "lib/backend.php";
+		$this->backend = new backend("yt");
 	}
 	
 	public function getfilters($page){
@@ -340,7 +340,7 @@ class youtube{
 	const req_web = 0;
 	const req_xhr = 1;
 	
-	private function get($url, $get = [], $reqtype = self::req_web, $continuation = null){
+	private function get($proxy, $url, $get = [], $reqtype = self::req_web, $continuation = null){
 		
 		$curlproc = curl_init();
 		
@@ -354,7 +354,7 @@ class youtube{
 		switch($reqtype){
 			case self::req_web:
 				$headers =
-					["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+					["User-Agent: " . config::USER_AGENT,
 					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 					"Accept-Language: en-US,en;q=0.5",
 					"Accept-Encoding: gzip",
@@ -370,7 +370,7 @@ class youtube{
 			
 			case self::req_xhr:
 				$headers =
-					["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:110.0) Gecko/20100101 Firefox/110.0",
+					["User-Agent: " . config::USER_AGENT,
 					"Accept: */*",
 					"Accept-Language: en-US,en;q=0.5",
 					"Accept-Encoding: gzip",
@@ -397,6 +397,8 @@ class youtube{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -430,17 +432,17 @@ class youtube{
 			$json = fread($handle, filesize("nextpage.json"));
 			fclose($handle);*/
 			
-			$npt =
-				json_decode(
-					$this->nextpage->get(
-						$get["npt"],
-						"videos"
-					),
-					true
+			[$npt, $proxy] =
+				$this->backend->get(
+					$get["npt"],
+					"videos"
 				);
+			
+			$npt = json_decode($npt, true);
 			
 			try{
 				$json = $this->get(
+					$proxy,
 					"https://www.youtube.com/youtubei/v1/search",
 					[
 						"key" => $npt["key"],
@@ -507,6 +509,7 @@ class youtube{
 				throw new Exception("Search term is empty!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$date = $get["date"];
 			$type = $get["type"];
 			$duration = $get["duration"];
@@ -537,6 +540,7 @@ class youtube{
 			
 			try{
 				$json = $this->get(
+					$proxy,
 					"https://www.youtube.com/results",
 					$get
 				);
@@ -942,7 +946,14 @@ class youtube{
 		
 		if($this->out["npt"] !== null){
 			
-			$this->out["npt"] = $this->nextpage->store(json_encode($this->out["npt"]), "videos");
+			$this->out["npt"] =
+				$this->backend->store(
+					json_encode(
+						$this->out["npt"]
+					),
+					"videos",
+					$proxy
+				);
 		}
 		
 		return $this->out;

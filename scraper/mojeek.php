@@ -6,8 +6,8 @@ class mojeek{
 		include "lib/fuckhtml.php";
 		$this->fuckhtml = new fuckhtml();
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("mojeek");
+		include "lib/backend.php";
+		$this->backend = new backend("mojeek");
 	}
 	
 	public function getfilters($page){
@@ -371,10 +371,10 @@ class mojeek{
 		}
 	}
 	
-	private function get($url, $get = []){
+	private function get($proxy, $url, $get = []){
 		
 		$headers = [
-			"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+			"User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -404,6 +404,8 @@ class mojeek{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -420,11 +422,12 @@ class mojeek{
 		
 		if($get["npt"]){
 			
-			$token = $this->nextpage->get($get["npt"], "web");
+			[$token, $proxy] = $this->backend->get($get["npt"], "web");
 			
 			try{
 				$html =
 					$this->get(
+						$proxy,
 						"https://www.mojeek.com" . $token,
 						[]
 					);
@@ -485,9 +488,12 @@ class mojeek{
 				$params["si"] = $domain;
 			}
 			
+			$proxy = $this->backend->get_ip();
+			
 			try{
 				$html =
 					$this->get(
+						$proxy,
 						"https://www.mojeek.com/search",
 						$params
 					);
@@ -529,88 +535,90 @@ class mojeek{
 			return $out;
 		}
 		
-		$this->fuckhtml->load($results[0]);
-		
 		/*
-			Get search results
+			Get all search result divs
 		*/
-		$results =
-			$this->fuckhtml
-			->getElementsByTagName("li");
-		
-		foreach($results as $result){
+		foreach($results as $container){
 			
-			$data = [
-				"title" => null,
-				"description" => null,
-				"url" => null,
-				"date" => null,
-				"type" => "web",
-				"thumb" => [
-					"url" => null,
-					"ratio" => null
-				],
-				"sublink" => [],
-				"table" => []
-			];
-			
-			$this->fuckhtml->load($result);
-			
-			$title =
+			$this->fuckhtml->load($container);
+			$results =
 				$this->fuckhtml
-				->getElementsByClassName("title", "a")[0];
+				->getElementsByTagName("li");
 			
-			$data["title"] =
-				html_entity_decode(
-					$this->fuckhtml
-					->getTextContent(
-						$title["innerHTML"]
-					)
-				);
-			
-			$data["url"] =
-				html_entity_decode(
-					$this->fuckhtml
-					->getTextContent(
-						$title["attributes"]["href"]
-					)
-				);
-			
-			$description =
-				$this->fuckhtml
-				->getElementsByClassName(
-					"s", "p"
-				);
-			
-			if(count($description) !== 0){
+			foreach($results as $result){
 				
-				$data["description"] =
-					$this->titledots(
-						html_entity_decode(
-							$this->fuckhtml
-							->getTextContent(
-								$description[0]
-							)
+				$data = [
+					"title" => null,
+					"description" => null,
+					"url" => null,
+					"date" => null,
+					"type" => "web",
+					"thumb" => [
+						"url" => null,
+						"ratio" => null
+					],
+					"sublink" => [],
+					"table" => []
+				];
+				
+				$this->fuckhtml->load($result);
+				
+				$title =
+					$this->fuckhtml
+					->getElementsByClassName("title", "a")[0];
+				
+				$data["title"] =
+					html_entity_decode(
+						$this->fuckhtml
+						->getTextContent(
+							$title["innerHTML"]
 						)
 					);
-			}
-			
-			$data["date"] =
-				explode(
-					" - ",
-					$this->fuckhtml
-					->getTextContent(
+				
+				$data["url"] =
+					html_entity_decode(
 						$this->fuckhtml
-						->getElementsByClassName("i", "p")[1]
-					)
-				);
-			
-			$data["date"] =
-				strtotime(
-					$data["date"][count($data["date"]) - 1]
-				);
-			
-			$out["web"][] = $data;
+						->getTextContent(
+							$title["attributes"]["href"]
+						)
+					);
+				
+				$description =
+					$this->fuckhtml
+					->getElementsByClassName(
+						"s", "p"
+					);
+				
+				if(count($description) !== 0){
+					
+					$data["description"] =
+						$this->titledots(
+							html_entity_decode(
+								$this->fuckhtml
+								->getTextContent(
+									$description[0]
+								)
+							)
+						);
+				}
+				
+				$data["date"] =
+					explode(
+						" - ",
+						$this->fuckhtml
+						->getTextContent(
+							$this->fuckhtml
+							->getElementsByClassName("i", "p")[1]
+						)
+					);
+				
+				$data["date"] =
+					strtotime(
+						$data["date"][count($data["date"]) - 1]
+					);
+				
+				$out["web"][] = $data;
+			}
 		}
 		
 		/*
@@ -969,12 +977,13 @@ class mojeek{
 				
 				if($a["innerHTML"] == "Next"){
 					
-					$out["npt"] = $this->nextpage->store(
+					$out["npt"] = $this->backend->store(
 						$this->fuckhtml
 						->getTextContent(
 							$a["attributes"]["href"]
 						),
-						"web"
+						"web",
+						$proxy
 					);
 				}
 			}
@@ -1001,6 +1010,7 @@ class mojeek{
 		try{
 			$html =
 				$this->get(
+					$this->backend->get_ip(),
 					"https://www.mojeek.com/search",
 					[
 						"q" => $search,
@@ -1011,168 +1021,139 @@ class mojeek{
 			
 			throw new Exception("Failed to get HTML");
 		}
-		
 		/*
 		$handle = fopen("scraper/mojeek.html", "r");
 		$html = fread($handle, filesize("scraper/mojeek.html"));
-		fclose($handle);*/
-		
-		/*
-			Get big, standard and smaller nodes
+		fclose($handle);
 		*/
-		foreach(
-			[
-				"results-extended",
-				"results-standard"
-			]
-			as $categoryname
-		){
+		
+		$this->fuckhtml->load($html);
+		
+		$articles =
+			$this->fuckhtml->getElementsByTagName("article");
+		
+		foreach($articles as $article){
 			
-			$this->fuckhtml->load($html);
+			$this->fuckhtml->load($article);
 			
-			$categories =
+			$data = [
+				"title" => null,
+				"author" => null,
+				"description" => null,
+				"date" => null,
+				"thumb" =>
+					[
+						"url" => null,
+						"ratio" => null
+					],
+				"url" => null
+			];
+			
+			$a = $this->fuckhtml->getElementsByTagName("a")[0];
+			
+			$data["title"] =
 				$this->fuckhtml
-				->getElementsByClassName(
-					$categoryname,
-					"ul"
+				->getTextContent(
+					$a["attributes"]["title"]
 				);
-						
-			foreach($categories as $category){
-				
-				$this->fuckhtml->load($category);
-				
-				$nodes =
+			
+			$data["url"] =
+				$this->fuckhtml
+				->getTextContent(
+					$a["attributes"]["href"]
+				);
+			
+			$p = $this->fuckhtml->getElementsByTagName("p");
+			
+			$data["description"] =
+				$this->titledots(
 					$this->fuckhtml
-					->getElementsByTagName("li");
-				
-				foreach($nodes as $node){
-					
-					$data = [
-						"title" => null,
-						"author" => null,
-						"description" => null,
-						"date" => null,
-						"thumb" =>
-							[
-								"url" => null,
-								"ratio" => null
-							],
-						"url" => null
-					];
-					
-					/*
-						Parse the results
-					*/
-					$this->fuckhtml->load($node);
-					
-					// get title + url
-					$a =
-						$this->fuckhtml
-						->getElementsByTagName("a")[0];
-					
-					$data["title"] =
-						$this->fuckhtml
-						->getTextContent(
-							$a["attributes"]["title"]
-						);
-					
-					$data["url"] =
-						$this->fuckhtml
-						->getTextContent(
-							$a["attributes"]["href"]
-						);
-					
-					// get image
-					$image =
-						$this->fuckhtml
-						->getElementsByTagName("img");
-					
-					if(count($image) !== 0){
-						
-						$data["thumb"] = [
-							"url" =>
-								urldecode(
-									str_replace(
-										"/image?img=",
-										"",
-										$this->fuckhtml
-										->getTextContent(
-											$image[0]["attributes"]["src"]
-										)
-									)
-								),
-							"ratio" => "16:9"
-						];
-					}
-					
-					// get description
-					$description =
-						$this->fuckhtml
-						->getElementsByClassName("s", "p");
-					
-					if(count($description) !== 0){
-						
-						$data["description"] =
-							$this->titledots(
-								$this->fuckhtml
-								->getTextContent(
-									$description[0]
-								)
-							);
-					}
-					
-					// get date + time
-					$date =
+					->getTextContent(
 						$this->fuckhtml
 						->getElementsByClassName(
-							"date",
-							"p"
-						);
-					
-					$i =
-						$this->fuckhtml
-						->getElementsByClassName("i", "p");
-					
-					if(count($date) !== 0){
-						
-						// we're inside a big node
-						$data["date"] = strtotime($date[0]["innerHTML"]);
-						
-						if(count($i) !== 0){
-							
-							$this->fuckhtml->load($i[0]);
-							
-							$a =
-								$this->fuckhtml
-								->getElementsByTagName("a");
-							
-							if(count($a) !== 0){
-								
-								$data["author"] =
-									$this->fuckhtml
-									->getTextContent($a[0]);
-							}
-						}
-					}else{
-						
-						// we're inside a small node
-						if(count($i) !== 0){
-							
-							$i =
-								explode(
-									" - ",
-									$this->fuckhtml
-									->getTextContent($i[0])
-								);
-							
-							$data["date"] = strtotime(array_pop($i));
-							$data["author"] = implode(" - ", $i);
-						}
-					}
-					
-					$out["news"][] = $data;
-				}
+							"s",
+							$p
+						)[0]
+					)
+				);
+			
+			if($data["description"] == ""){
+				
+				$data["description"] = null;
 			}
+			
+			// get date from big node
+			$date =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"date",
+					$p
+				);
+			
+			if(count($date) !== 0){
+				
+				$data["date"] =
+					strtotime(
+						$this->fuckhtml
+						->getTextContent(
+							$date[0]
+						)
+					);
+			}
+			
+			// grep date + author
+			$s =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"i",
+					$p
+				)[0];
+			
+			$this->fuckhtml->load($s);
+			
+			$a =
+				$this->fuckhtml
+				->getElementsByTagName("a");
+			
+			if(count($a) !== 0){
+				
+				// parse big node information
+				$data["author"] =
+					$this->fuckhtml
+					->getTextContent(
+						$a[0]["innerHTML"]
+					);
+			}else{
+				
+				// parse smaller nodes
+				$replace =
+					$this->fuckhtml
+					->getElementsByTagName("time")[0];
+				
+				$data["date"] =
+					strtotime(
+						$this->fuckhtml
+						->getTextContent(
+							$replace
+						)
+					);
+				
+				$s["innerHTML"] =
+					str_replace(
+						$replace["outerHTML"],
+						"",
+						$s["innerHTML"]
+					);
+				
+				$data["author"] =
+					preg_replace(
+						'/ &bull; $/',
+						"",
+						$s["innerHTML"]
+					);
+			}
+			
+			$out["news"][] = $data;
 		}
 		
 		return $out;

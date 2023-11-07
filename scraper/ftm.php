@@ -4,8 +4,8 @@ class ftm{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("ftm");
+		include "lib/backend.php";
+		$this->backend = new backend("ftm");
 	}
 	
 	public function getfilters($page){
@@ -13,7 +13,7 @@ class ftm{
 		return [];
 	}
 	
-	private function get($url, $search, $offset){
+	private function get($proxy, $url, $search, $offset){
 		
 		$curlproc = curl_init();
 		
@@ -29,7 +29,7 @@ class ftm{
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
-			["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+			["User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -56,6 +56,8 @@ class ftm{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -70,8 +72,6 @@ class ftm{
 	
 	public function image($get){
 		
-		$search = $get["s"];
-		
 		$out = [
 			"status" => "ok",
 			"npt" => null,
@@ -80,16 +80,28 @@ class ftm{
 		
 		if($get["npt"]){
 			
-			$count = (int)$this->nextpage->get($get["npt"], "images");
+			[$data, $proxy] = $this->backend->get($get["npt"], "images");
+			$data = json_decode($data, true);
+			
+			$count = $data["count"];
+			$search = $data["search"];
 		}else{
 			
+			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
 			$count = 0;
+			$proxy = $this->backend->get_ip();
 		}
 		
 		try{
 			$json =
 				json_decode(
 					$this->get(
+						$proxy,
 						"https://findthatmeme.com/api/v1/search",
 						$search,
 						$count
@@ -134,14 +146,15 @@ class ftm{
 			];
 		}
 		
-		if($count === 50){
-			
-			$out["npt"] =
-				$this->nextpage->store(
-					$count,
-					"images"
-				);
-		}
+		$out["npt"] =
+			$this->backend->store(
+				json_encode([
+					"count" => $count,
+					"search" => $search
+				]),
+				"images",
+				$proxy
+			);
 		
 		return $out;
 	}

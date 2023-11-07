@@ -4,11 +4,11 @@ class imgur{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("imgur");
-		
 		include "lib/fuckhtml.php";
 		$this->fuckhtml = new fuckhtml();
+		
+		include "lib/backend.php";
+		$this->backend = new backend("imgur");
 	}
 	
 	public function getfilters($page){
@@ -57,7 +57,7 @@ class imgur{
 		];
 	}
 	
-	private function get($url, $get = []){
+	private function get($proxy, $url, $get = []){
 		
 		$curlproc = curl_init();
 		
@@ -70,7 +70,7 @@ class imgur{
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
-			["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+			["User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -89,6 +89,8 @@ class imgur{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -105,14 +107,13 @@ class imgur{
 		
 		if($get["npt"]){
 			
-			$filter =
-				json_decode(
-					$this->nextpage->get(
-						$get["npt"],
-						"images"
-					),
-					true
+			[$filter, $proxy] =
+				$this->backend->get(
+					$get["npt"],
+					"images"
 				);
+			
+			$filter = json_decode($filter, true);
 			
 			$search = $filter["s"];
 			unset($filter["s"]);
@@ -134,6 +135,12 @@ class imgur{
 		}else{
 			
 			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			$proxy = $this->backend->get_ip();
 			$sort = $get["sort"];
 			$time = $get["time"];
 			$format = $get["format"];
@@ -165,6 +172,7 @@ class imgur{
 		try{
 			$html =
 				$this->get(
+					$proxy,
 					"https://imgur.com/search/$sort/$time/page/$page",
 					$filter
 				);
@@ -238,9 +246,10 @@ class imgur{
 			$filter["page"] = $page + 1;
 			
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					json_encode($filter),
-					"images"
+					"images",
+					$proxy
 				);
 		}
 		

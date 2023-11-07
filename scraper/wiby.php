@@ -4,8 +4,8 @@ class wiby{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("wiby");
+		include "lib/backend.php";
+		$this->backend = new backend("wiby");
 	}
 	
 	public function getfilters($page){
@@ -36,7 +36,7 @@ class wiby{
 		];
 	}
 	
-	private function get($url, $get = [], $nsfw){
+	private function get($proxy, $url, $get = [], $nsfw){
 		
 		$curlproc = curl_init();
 		
@@ -45,11 +45,13 @@ class wiby{
 			$url .= "?" . $get;
 		}
 		
+		print_r([$proxy, $url]);
+		
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
-			["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/110.0",
+			["User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -69,6 +71,8 @@ class wiby{
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
 		
+		$this->backend->assign_proxy($curlproc, $proxy);
+		
 		$data = curl_exec($curlproc);
 		
 		if(curl_errno($curlproc)){
@@ -84,11 +88,8 @@ class wiby{
 		
 		if($get["npt"]){
 			
-			$q =
-				json_decode(
-					$this->nextpage->get($get["npt"], "web"),
-					true
-				);
+			[$q, $proxy] = $this->backend->get($get["npt"], "web");
+			$q = json_decode($q, true);
 			
 			$nsfw = $q["nsfw"];
 			unset($q["nsfw"]);
@@ -100,6 +101,7 @@ class wiby{
 				throw new Exception("Search term is empty!");
 			}
 			
+			$proxy = $this->backend->get_ip();
 			$date = $get["date"];
 			$nsfw = $get["nsfw"] == "yes" ? "0" : "1";
 			
@@ -150,6 +152,7 @@ class wiby{
 		
 		try{
 			$html = $this->get(
+				$proxy,
 				"https://wiby.me/",
 				$q,
 				$nsfw
@@ -171,13 +174,14 @@ class wiby{
 		}else{
 			
 			$nextpage =
-				$this->nextpage->store(
+				$this->backend->store(
 					json_encode([
 						"q" => $q["q"],
 						"p" => (int)$nextpage[1],
 						"nsfw" => $nsfw
 					]),
-					"web"
+					"web",
+					$proxy
 				);
 		}
 		

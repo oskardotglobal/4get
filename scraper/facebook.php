@@ -9,6 +9,9 @@ class facebook{
 		
 		include "lib/nextpage.php";
 		$this->nextpage = new nextpage("fb");
+
+		include "lib/proxy_pool.php";
+		$this->proxy = new proxy_pool("facebook");
 	}
 	
 	public function getfilters($page){
@@ -104,6 +107,8 @@ class facebook{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->proxy->assign_proxy($curlproc);
 		
 		$data = curl_exec($curlproc);
 		

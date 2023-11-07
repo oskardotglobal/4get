@@ -4,10 +4,8 @@ class sc{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("sc");
-		$this->client_id = "ArYppSEotE3YiXCO4Nsgid2LLqJutiww";
-		$this->user_id = "766585-580597-163310-929698";
+		include "lib/backend.php";
+		$this->backend = new backend("sc");
 	}
 	
 	public function getfilters($page){
@@ -27,7 +25,7 @@ class sc{
 		];
 	}
 	
-	private function get($url, $get = []){
+	private function get($proxy, $url, $get = []){
 		
 		$curlproc = curl_init();
 		
@@ -40,7 +38,7 @@ class sc{
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
-			["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0",
+			["User-Agent: " . config::USER_AGENT,
 			"Accept: application/json, text/javascript, */*; q=0.01",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
@@ -58,6 +56,8 @@ class sc{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+
+		$this->backend->assign_proxy($curlproc, $proxy);
 		
 		$data = curl_exec($curlproc);
 		
@@ -74,7 +74,7 @@ class sc{
 		
 		if($get["npt"]){
 			
-			$params = $this->nextpage->get($get["npt"], "music");
+			[$params, $proxy] = $this->backend->get($get["npt"], "music");
 			$params = json_decode($params, true);
 			
 			$url = $params["url"];
@@ -101,7 +101,13 @@ class sc{
 			// https://api-v2.soundcloud.com/search/playlists_without_albums?q=freddie%20dredd&variant_ids=&facet=genre&user_id=630591-269800-703400-765403&client_id=iMxZgT5mfGstBj8GWJbYMvpzelS8ne0E&limit=20&offset=0&linked_partitioning=1&app_version=1693487844&app_locale=en
 			
 			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
 			$type = $get["type"];
+			$proxy = $this->backend->get_ip();
 			
 			switch($type){
 				
@@ -111,8 +117,8 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "model",
-						"user_id" => $this->user_id,
-						"client_id" => $this->client_id,
+						"user_id" => config::SC_USER_ID,
+						"client_id" => config::SC_CLIENT_TOKEN,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
@@ -127,8 +133,8 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet_genre" => "",
-						"user_id" => $this->user_id,
-						"client_id" => $this->client_id,
+						"user_id" => config::SC_USER_ID,
+						"client_id" => config::SC_CLIENT_TOKEN,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
@@ -143,8 +149,8 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "place",
-						"user_id" => $this->user_id,
-						"client_id" => $this->client_id,
+						"user_id" => config::SC_USER_ID,
+						"client_id" => config::SC_CLIENT_TOKEN,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
@@ -159,8 +165,8 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "genre",
-						"user_id" => $this->user_id,
-						"client_id" => $this->client_id,
+						"user_id" => config::SC_USER_ID,
+						"client_id" => config::SC_CLIENT_TOKEN,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
@@ -175,8 +181,8 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "genre",
-						"user_id" => $this->user_id,
-						"client_id" => $this->client_id,
+						"user_id" => config::SC_USER_ID,
+						"client_id" => config::SC_CLIENT_TOKEN,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
@@ -192,8 +198,8 @@ class sc{
 						"variant_ids" => "",
 						"filter.content_tier" => "SUB_HIGH_TIER",
 						"facet" => "genre",
-						"user_id" => $this->user_id,
-						"client_id" => $this->client_id,
+						"user_id" => config::SC_USER_ID,
+						"client_id" => config::SC_CLIENT_TOKEN,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
@@ -206,7 +212,7 @@ class sc{
 			
 		try{
 			
-			$json = $this->get($url, $params);
+			$json = $this->get($proxy, $url, $params);
 			
 		}catch(Exception $error){
 			
@@ -244,9 +250,10 @@ class sc{
 			$params["url"] = $url; // we will remove this later
 			
 			$out["npt"] =
-				$this->nextpage->store(
+				$this->backend->store(
 					json_encode($params),
-					"music"
+					"music",
+					$proxy
 				);
 		}
 		
@@ -342,7 +349,7 @@ class sc{
 							"endpoint" => "audio_sc",
 							"url" =>
 								$item["media"]["transcodings"][0]["url"] .
-								"?client_id=" . $this->client_id .
+								"?client_id=" . config::SC_CLIENT_TOKEN .
 								"&track_authorization=" .
 								$item["track_authorization"]
 						];

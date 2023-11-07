@@ -4,6 +4,19 @@ class captcha{
 	
 	public function __construct($frontend, $get, $filters, $page, $output){
 		
+		// check if we want captcha
+		if(config::BOT_PROTECTION !== 1){
+			
+			if($output === true){
+				$frontend->loadheader(
+					$get,
+					$filters,
+					$page
+				);
+			}
+			return;
+		}
+		
 		/*
 			Validate cookie, if it exists
 		*/
@@ -46,6 +59,7 @@ class captcha{
 		
 		if($output === false){
 			
+			http_response_code(429); // too many reqs
 			echo json_encode([
 				"status" => "The \"pass\" token in your cookies is missing or has expired!!"
 			]);
@@ -184,15 +198,6 @@ class captcha{
 			}
 		}
 
-		/*
-			Generate random grid data to pass to captcha.php
-		*/
-		$dataset = [
-			["birds", 2263],
-			["fumo_plushies", 1006],
-			["minecraft", 848]
-		];
-
 		// get the positions for the answers
 		// will return between 3 and 6 answer positions
 		$range = range(0, 15);
@@ -216,17 +221,18 @@ class captcha{
 		}
 
 		// choose a dataset
-		$choosen = &$dataset[random_int(0, count($dataset) - 1)];
+		$c = count(config::CAPTCHA_DATASET);
+		$choosen = config::CAPTCHA_DATASET[random_int(0, $c - 1)];
 		$choices = [];
 
-		for($i=0; $i<count($dataset); $i++){
+		for($i=0; $i<$c; $i++){
 			
-			if($dataset[$i][0] == $choosen[0]){
+			if(config::CAPTCHA_DATASET[$i][0] == $choosen[0]){
 				
 				continue;
 			}
 			
-			$choices[] = $dataset[$i];
+			$choices[] = config::CAPTCHA_DATASET[$i];
 		}
 
 		// generate grid data

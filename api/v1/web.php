@@ -1,8 +1,14 @@
 <?php
 
+chdir("../../");
 header("Content-Type: application/json");
 
-chdir("../../");
+include "data/config.php";
+if(config::API_ENABLED === false){
+	
+	echo json_encode(["status" => "The server administrator disabled the API!"]);
+	return;
+}
 
 include "lib/frontend.php";
 $frontend = new frontend();
@@ -21,7 +27,13 @@ new captcha($null, $null, $null, "web", false);
 
 $get = $frontend->parsegetfilters($_GET, $filters);
 
-if(!isset($_GET["extendedsearch"])){
+if(
+	isset($_GET["extendedsearch"]) &&
+	$_GET["extendedsearch"] == "yes"
+){
+	
+	$get["extendedsearch"] = "yes";
+}else{
 	
 	$get["extendedsearch"] = "no";
 }

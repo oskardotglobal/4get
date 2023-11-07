@@ -7,6 +7,7 @@ if(!isset($_GET["s"])){
 	die();
 }
 
+include "data/config.php";
 include "lib/curlproxy.php";
 $proxy = new proxy();
 
