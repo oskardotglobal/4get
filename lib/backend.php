@@ -4,7 +4,6 @@ class backend{
 	public function __construct($scraper){
 		
 		$this->scraper = $scraper;
-		$this->requestid = apcu_inc("real_requests");
 	}
 	
 	/*
@@ -12,6 +11,7 @@ class backend{
 	*/
 	public function get_ip(){
 		
+		$this->requestid = apcu_inc("real_requests");
 		$pool = constant("config::PROXY_" . strtoupper($this->scraper));
 		if($pool === false){
 			
