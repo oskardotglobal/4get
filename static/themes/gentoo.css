@@ -1,0 +1,20 @@
+:root{
+	/* background */
+	--1d2021: #21222d;
+	--282828: #393657;
+	--3c3836: #27273c;
+	--504945: #aa85e1;
+	
+	/* font */
+	--928374: #906be3;
+	--a89984: #9794ac;
+	--bdae93: #cec0f2;
+	--8ec07c: #5db6e1;
+	--ebdbb2: #b194f5;
+	
+	/* code highlighter */
+	--comment: #a0c0a4;
+	--default: #f00;
+	--keyword: #9376e4;
+	--string: #ecd78f;
+}
