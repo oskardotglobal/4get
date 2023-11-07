@@ -437,17 +437,19 @@ class mojeek{
 			}
 			
 		}else{
+			
 			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			$proxy = $this->backend->get_ip();
 			$lang = $get["lang"];
 			$country = $get["country"];
 			$region = $get["region"];
 			$domain = $get["domain"];
 			$focus = $get["focus"];
-			
-			if(strlen($search) === 0){
-				
-				throw new Exception("Search term is empty!");
-			}
 			
 			$params = [
 				"q" => $search,
@@ -487,8 +489,6 @@ class mojeek{
 				
 				$params["si"] = $domain;
 			}
-			
-			$proxy = $this->backend->get_ip();
 			
 			try{
 				$html =
@@ -1119,9 +1119,11 @@ class mojeek{
 				
 				// parse big node information
 				$data["author"] =
-					$this->fuckhtml
-					->getTextContent(
-						$a[0]["innerHTML"]
+					htmlspecialchars_decode(
+						$this->fuckhtml
+						->getTextContent(
+							$a[0]["innerHTML"]
+						)
 					);
 			}else{
 				

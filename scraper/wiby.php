@@ -45,8 +45,6 @@ class wiby{
 			$url .= "?" . $get;
 		}
 		
-		print_r([$proxy, $url]);
-		
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
