@@ -11,7 +11,6 @@ class backend{
 	*/
 	public function get_ip(){
 		
-		$this->requestid = apcu_inc("real_requests");
 		$pool = constant("config::PROXY_" . strtoupper($this->scraper));
 		if($pool === false){
 			
@@ -106,18 +105,18 @@ class backend{
 		$tag = "";
 		$out = openssl_encrypt($payload, "aes-256-gcm", $key, OPENSSL_RAW_DATA, $iv, $tag, "", 16);
 		
-		$key = apcu_inc("key", 1);
+		$requestid = apcu_inc("requestid");
 		
 		apcu_store(
 			$page . "." .
 			$this->scraper .
-			$this->requestid,
+			$requestid,
 			gzdeflate($proxy . "," . $salt.$iv.$out.$tag),
 			900 // cache information for 15 minutes blaze it
 		);
 
 		return 
-			$this->scraper . $this->requestid . "." .
+			$this->scraper . $requestid . "." .
 			rtrim(strtr(base64_encode($password), '+/', '-_'), '=');
 	}
 	
