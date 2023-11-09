@@ -636,6 +636,7 @@ class yandex{
 			
 			throw new Exception("Failed to get JSON");
 		}
+		
 		/*
 		$handle = fopen("scraper/yandex.json", "r");
 		$json = fread($handle, filesize("scraper/yandex.json"));
@@ -656,68 +657,80 @@ class yandex{
 			throw new Exception("Failed to decode JSON");
 		}
 		
-		// get html
-		$html = "";
-		foreach($json["blocks"] as $block){
-			
-			$html .= $block["html"];
-		}
-		
-		$this->fuckhtml->load($html);
-		$div = $this->fuckhtml->getElementsByTagName("div");
-		
 		$out = [
 			"status" => "ok",
 			"npt" => null,
 			"image" => []
 		];
 		
-		// check for next page
-		if(
-			count(
-				$this->fuckhtml
-				->getElementsByClassName(
-					"more more_direction_next",
-					$div
-				)
-			) !== 0
-		){
+		// get html
+		$html = "";
+		foreach($json["blocks"] as $block){
 			
-			$request["nsfw"] = $nsfw;
+			$html .= $block["html"];
 			
-			if(isset($request["p"])){
+			// get next page
+			if(
+				isset($block["params"]["nextPageUrl"]) &&
+				!empty($block["params"]["nextPageUrl"])
+			){
 				
-				$request["p"]++;
-			}else{
+				$request["nsfw"] = $nsfw;
 				
-				$request["p"] = 1;
+				if(isset($request["p"])){
+					
+					$request["p"]++;
+				}else{
+					
+					$request["p"] = 1;
+				}
+				
+				$out["npt"] =
+					$this->backend->store(
+						json_encode($request),
+						"images",
+						$proxy
+					);
 			}
-			
-			$out["npt"] =
-				$this->backend->store(
-					json_encode($request),
-					"images",
-					$proxy
-				);
 		}
 		
+		$this->fuckhtml->load($html);
+		
 		// get search results
+		$data = null;
+		
 		foreach(
 			$this->fuckhtml
 			->getElementsByClassName(
-				"serp-item serp-item_type_search",
-				$div
-			)
-			as $image
+				"Root",
+				"div"
+			) as $div
 		){
 			
-			$image =
-				json_decode(
-					$image
-					["attributes"]
-					["data-bem"],
+			if(isset($div["attributes"]["data-state"])){
+				
+				$tmp = json_decode(
+					$this->fuckhtml
+					->getTextContent(
+						$div["attributes"]["data-state"]
+					),
 					true
-				)["serp-item"];
+				);
+				
+				if(isset($tmp["initialState"]["serpList"])){
+					
+					$data = $tmp;
+					break;
+				}
+			}
+		}
+		
+		if($data === null){
+			
+			throw new Exception("Failed to extract JSON");
+		}
+		
+		foreach($data["initialState"]["serpList"]["items"]["entities"] as $image){
 			
 			$title = [html_entity_decode($image["snippet"]["title"], ENT_QUOTES | ENT_HTML5)];
 			
@@ -738,7 +751,7 @@ class yandex{
 				"url" => htmlspecialchars_decode($image["snippet"]["url"])
 			];
 			
-			foreach($image["dups"] as $dup){
+			foreach($image["viewerData"]["dups"] as $dup){
 				
 				$tmp["source"][]  = [
 					"url" => htmlspecialchars_decode($dup["url"]),
@@ -752,10 +765,10 @@ class yandex{
 					preg_replace(
 						'/^\/\//',
 						"https://",
-						htmlspecialchars_decode($image["thumb"]["url"])
+						htmlspecialchars_decode($image["viewerData"]["thumb"]["url"])
 					),
-				"width" => (int)$image["thumb"]["size"]["width"],
-				"height" => (int)$image["thumb"]["size"]["height"]
+				"width" => (int)$image["viewerData"]["thumb"]["size"]["width"],
+				"height" => (int)$image["viewerData"]["thumb"]["size"]["height"]
 			];
 			
 			$out["image"][] = $tmp;
