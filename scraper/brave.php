@@ -1139,131 +1139,54 @@ class brave{
 				$proxy
 			);
 		
-		$news =
-			$this->fuckhtml
-			->getElementsByClassName(
-				"snippet inline gap-standard",
-				"div"
-			);
+		preg_match(
+			'/const data ?= ?(\[{.*}]);/',
+			$html,
+			$json
+		);
 		
-		foreach($news as $article){
+		if(!isset($json[1])){
 			
-			$data = [
-				"title" => null,
-				"author" => null,
-				"description" => null,
-				"date" => null,
-				"thumb" =>
-					[
-						"url" => null,
-						"ratio" => null
-					],
-				"url" => null
-			];
+			throw new Exception("Failed to grep javascript object");
+		}
+		
+		$json = $this->fuckhtml->parseJsObject($json[1], true);
+		
+		if($json === null){
 			
-			$this->fuckhtml->load($article);
-			$elems =
-				$this->fuckhtml
-				->getElementsByTagName("*");
-			
-			// get title
-			$data["title"] =
-				$this->fuckhtml
-				->getTextContent(
-					$this->fuckhtml
-					->getElementsByClassName(
-						"snippet-title",
-						$elems
-					)
-					[0]
-					["innerHTML"]
-				);
-			
-			// get description
-			$data["description"] =
-				$this->titledots(
-					$this->fuckhtml
-					->getTextContent(
-						$this->fuckhtml
-						->getElementsByClassName(
-							"snippet-description",
-							$elems
-						)
-						[0]
-						["innerHTML"]
-					)
-				);
-			
-			// get date
-			$date =
-				explode(
-					"•",
-					$this->fuckhtml
-					->getTextContent(
-						$this->fuckhtml
-						->getElementsByClassName(
-							"snippet-url",
-							$elems
-						)[0]
-					)
-				);
+			throw new Exception("Failed to parse javascript object");
+		}
+		
+		foreach(
+			$json[1]["data"]["body"]["response"]["news"]["results"]
+			as $news
+		){
 			
 			if(
-				count($date) !== 1 &&
-				trim($date[1]) != ""
+				!isset($news["thumbnail"]["src"]) ||
+				$news["thumbnail"]["src"] == "void 0"
 			){
-				
-				$data["date"] =
-					strtotime(
-						$date[1]
-					);
-			}
-			
-			// get URL
-			$data["url"] =
-				$this->fuckhtml->getTextContent(
-					$this->unshiturl(
-						$this->fuckhtml
-						->getElementsByClassName(
-							"result-header",
-							$elems
-						)
-						[0]
-						["attributes"]
-						["href"]
-					)
-				);
-			
-			// get thumbnail
-			$thumb =
-				$this->fuckhtml
-				->getElementsByTagName(
-					"img"
-				);
-			
-			if(
-				count($thumb) === 2 &&
-				trim(
-					$thumb[1]
-					["attributes"]
-					["src"]
-				) != ""
-			){
-				
-				$data["thumb"] = [
-					"url" =>
-						$this->fuckhtml->getTextContent(
-							$this->unshiturl(
-								$thumb[1]
-								["attributes"]
-								["src"]
-							)
-						),
+								
+				$thumb = [
+					"url" => null,
+					"ratio" => null
+				];
+			}else{
+								
+				$thumb = [
+					"url" => $this->unshiturl($news["thumbnail"]["src"]),
 					"ratio" => "16:9"
 				];
 			}
 			
-			$out["news"][] = $data;
+			$out["news"][] = [
+				"title" => $news["title"],
+				"author" => null,
+				"description" => $news["description"],
+				"date" => !isset($news["age"]) || $news["age"] == "void 0" ? null : strtotime($news["age"]),
+				"thumb" => $thumb,
+				"url" => $news["url"]
+			];
 		}
 		
 		return $out;
