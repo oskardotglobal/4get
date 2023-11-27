@@ -499,6 +499,7 @@ h3,h4,h5,h6{
 	text-align:center;
 	display:block;
 	text-align:left;
+	white-space:nowrap;
 }
 
 .favicon-dropdown img{
@@ -1245,6 +1246,11 @@ table tr a:last-child{
 
 .instances ul{
 	padding-left:20px;
+}
+
+.instances .go-back{
+	margin-top:17px;
+	display:inline-block;
 }
 
 

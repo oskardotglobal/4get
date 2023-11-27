@@ -39,10 +39,12 @@ if(
 }
 
 try{
-	echo json_encode(
-		$scraper->web($get),
-		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-	);
+	
+	echo
+		json_encode(
+			$scraper->web($get),
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+		);
 	
 }catch(Exception $e){
 	

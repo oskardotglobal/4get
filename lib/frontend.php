@@ -25,7 +25,7 @@ class frontend{
 		
 		if($theme != "Dark"){
 			
-			$replacements["style"] = '<link rel="stylesheet" href="/static/themes/' . $theme . '.css?v' . config::VERSION . '">';
+			$replacements["style"] = '<link rel="stylesheet" href="/static/themes/' . rawurlencode($theme) . '.css?v' . config::VERSION . '">';
 		}else{
 			
 			$replacements["style"] = "";
@@ -84,6 +84,8 @@ class frontend{
 		){
 			
 			// bot detected !!
+			apcu_inc("captcha_gen");
+			
 			$this->drawerror(
 				"Tshh, blocked!",
 				'You were blocked from viewing this page. If you wish to scrape data from 4get, please consider running <a href="https://git.lolcat.ca/lolcat/4get" rel="noreferrer nofollow">your own 4get instance</a> or using <a href="/api.txt">the API</a>.',
@@ -889,7 +891,7 @@ class frontend{
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
 						"yandex" => "Yandex",
-						//"google" => "Google",
+						"google" => "Google",
 						"mojeek" => "Mojeek",
 						"marginalia" => "Marginalia",
 						"wiby" => "wiby"
@@ -921,8 +923,8 @@ class frontend{
 						//"fb" => "Facebook videos",
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
-						"yandex" => "Yandex"
-						//"google" => "Google"
+						"yandex" => "Yandex",
+						"google" => "Google"
 					]
 				];
 				break;
@@ -933,7 +935,7 @@ class frontend{
 					"option" => [
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
-						//"google" => "Google",
+						"google" => "Google",
 						"mojeek" => "Mojeek"
 					]
 				];

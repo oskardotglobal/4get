@@ -857,7 +857,9 @@ class brave{
 					// parse ratings
 					if(
 						isset($info["ratings"]) &&
-						$info["ratings"] != "void 0"
+						$info["ratings"] != "void 0" &&
+						is_array($info["ratings"]) &&
+						count($info["ratings"]) !== 0
 					){
 						
 						$description[] = [
@@ -1183,7 +1185,7 @@ class brave{
 				"title" => $news["title"],
 				"author" => null,
 				"description" => $news["description"],
-				"date" => !isset($news["age"]) || $news["age"] == "void 0" ? null : strtotime($news["age"]),
+				"date" => !isset($news["age"]) || $news["age"] == "void 0" || $news["age"] == "null" ? null : strtotime($news["age"]),
 				"thumb" => $thumb,
 				"url" => $news["url"]
 			];

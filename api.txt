@@ -68,8 +68,8 @@
 
 
 + Get the next page of results
-    All API responses come with an array index named "nextpage". To get
-    the next page of results, you must make another API call with &npt.
+    All API responses come with an array index named "npt". To get the
+    next page of results, you must make another API call with &npt.
     
     Example ::
         

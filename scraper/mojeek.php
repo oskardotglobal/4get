@@ -608,7 +608,7 @@ class mojeek{
 						$this->fuckhtml
 						->getTextContent(
 							$this->fuckhtml
-							->getElementsByClassName("i", "p")[1]
+							->getElementsByClassName("i", "p")[0]
 						)
 					);
 				

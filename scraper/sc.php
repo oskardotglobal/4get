@@ -229,7 +229,7 @@ class sc{
 		
 		if($json === null){
 			
-			throw new Exception("Failed to decode JSON");
+			throw new Exception("Failed to decode JSON. Did the keys set in data/config.php expire?");
 		}
 		
 		$out = [

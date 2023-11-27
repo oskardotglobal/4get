@@ -7,6 +7,7 @@ class captcha{
 		// check if we want captcha
 		if(config::BOT_PROTECTION !== 1){
 			
+			apcu_inc("real_requests");
 			if($output === true){
 				$frontend->loadheader(
 					$get,
@@ -45,6 +46,8 @@ class captcha{
 				}else{
 					
 					// the cookie is OK! dont die() and give results
+					apcu_inc("real_requests");
+					
 					if($output === true){
 						$frontend->loadheader(
 							$get,
@@ -175,6 +178,8 @@ class captcha{
 				
 				apcu_inc($key, 1, $stupid, 86400);
 				
+				apcu_inc("real_requests");
+				
 				setcookie(
 					"pass",
 					$key,
@@ -197,7 +202,7 @@ class captcha{
 				$error = "<div class=\"quote\">You were <a href=\"https://www.youtube.com/watch?v=e1d7fkQx2rk\" target=\"_BLANK\" rel=\"noreferrer nofollow\">kicked out of Mensa.</a> Please try again.</div>";
 			}
 		}
-
+		
 		// get the positions for the answers
 		// will return between 3 and 6 answer positions
 		$range = range(0, 15);

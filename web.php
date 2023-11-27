@@ -146,9 +146,17 @@ if(count($results["image"]) !== 0){
 		
 		$right["image"] .=
 			'<a class="image" href="' . htmlspecialchars($image["url"]) . '" rel="noreferrer nofollow" title="' . htmlspecialchars($image["title"]) . '" data-json="' . htmlspecialchars(json_encode($image["source"])) . '" tabindex="-1">' .
-				'<img src="' . $frontend->htmlimage($image["source"][count($image["source"]) - 1]["url"], "square") . '" alt="thumb">' .
-				'<div class="duration">' . $image["source"][0]["width"] . 'x' . $image["source"][0]["height"] . '</div>' .
-			'</a>';
+				'<img src="' . $frontend->htmlimage($image["source"][count($image["source"]) - 1]["url"], "square") . '" alt="thumb">';
+		
+		if(
+			$image["source"][0]["width"] !== null &&
+			$image["source"][0]["height"] !== null
+		){
+			
+			$right["image"] .= '<div class="duration">' . $image["source"][0]["width"] . 'x' . $image["source"][0]["height"] . '</div>';
+		}
+		
+		$right["image"] .= '</a>';
 	}
 	
 	$right["image"] .=

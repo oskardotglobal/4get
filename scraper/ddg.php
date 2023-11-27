@@ -545,8 +545,6 @@ class ddg{
 	
 	public function web($get){
 		
-		$proxy = null;
-		
 		if($get["npt"]){
 			
 			[$jsgrep, $proxy] = $this->backend->get($get["npt"], "web");

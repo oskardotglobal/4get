@@ -5,8 +5,8 @@ header("Access-Control-Allow-Origin: *");
 
 include "data/config.php";
 
-$bot_requests = apcu_fetch("captcha");
 $real_requests = apcu_fetch("real_requests");
+$bot_requests = apcu_fetch("captcha_gen");
 
 echo json_encode(
 	[

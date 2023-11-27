@@ -160,6 +160,16 @@ function number_format(int){
 	return new Intl.NumberFormat().format(int);
 }
 
+window.fetch = (function(fetch) {
+	return function(fn, t){
+		const begin = Date.now();
+		return fetch.apply(this, arguments).then(function(response) {
+			response.ping = Date.now() - begin;
+			return response;
+		});
+	};
+})(window.fetch);
+
 // parse initial server list
 fetch_server(window.location.origin);
 
@@ -187,25 +197,24 @@ async function fetch_server(server){
 	list.push(server);
 	
 	var data = null;
-	var ping = new Date().getTime();
 	
 	try{
 		
-		data = await fetch(
+		var payload = await fetch(
 			server + "/ami4get"
 		);
 		
-		if(data.status !== 200){
+		if(payload.status !== 200){
 			
 			// endpoint is not available
 			errors++;
 			div_failedreqs.textContent = number_format(errors);
-			console.warn(server + ": Invalid HTTP code " + data.status);
+			console.warn(server + ": Invalid HTTP code " + payload.status);
 			return;
 		}
 		
-		data = await data.json();
-		data.server.ping = new Date().getTime() - ping;
+		data = await payload.json();
+		data.server.ping = payload.ping;
 		
 	}catch(error){
 		

@@ -15,7 +15,7 @@ class fuckhtml{
 			
 			if(!isset($html["innerHTML"])){
 				
-				throw new Exception("(load) Supplied array doesn't contain a innerHTML index");
+				throw new Exception("(load) Supplied array doesn't contain an innerHTML index");
 			}
 			$html = $html["innerHTML"];
 		}
@@ -35,6 +35,11 @@ class fuckhtml{
 		$this->strlen = strlen($this->html);
 	}
 	
+	public function getloadedhtml(){
+		
+		return $this->html;
+	}
+	
 	public function getElementsByTagName(string $tagname){
 		
 		$out = [];
@@ -46,7 +51,7 @@ class fuckhtml{
 		
 		if($tagname == "*"){
 			
-			$tagname = '[^\/<>\s]+';
+			$tagname = '[A-Za-z0-9._-]+';
 		}else{
 			
 			$tagname = preg_quote(strtolower($tagname));
@@ -126,7 +131,7 @@ class fuckhtml{
 			}
 		);
 		
-		// computer the indent level for each element
+		// compute the indent level for each element
 		$level = [];
 		$count = count($out);
 		
@@ -314,7 +319,7 @@ class fuckhtml{
 			
 			if(!isset($html["innerHTML"])){
 				
-				throw new Exception("(getTextContent) Supplied array doesn't contain a innerHTML index");
+				throw new Exception("(getTextContent) Supplied array doesn't contain an innerHTML index");
 			}
 			$html = $html["innerHTML"];
 		}
@@ -440,5 +445,28 @@ class fuckhtml{
 		}
 		
 		return json_decode($json_out, true);
+	}
+	
+	public function parseJsString($string){
+		
+		return
+			preg_replace_callback(
+				'/\\\u[A-Fa-f0-9]{4}|\\\x[A-Fa-f0-9]{2}/',
+				function($match){
+					
+					if($match[0][1] == "u"){
+						
+						return json_decode('"' . $match[0] . '"');
+					}else{
+						
+						return mb_convert_encoding(
+							stripcslashes($match[0]),
+							"utf-8",
+							"windows-1252"
+						);
+					}
+				},
+				$string
+			);
 	}
 }

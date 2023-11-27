@@ -5,7 +5,7 @@ class config{
 	// any parameters.
 	
 	// 4get version. Please keep this updated
-	const VERSION = 5;
+	const VERSION = 6;
 	
 	// Will be shown pretty much everywhere.
 	const SERVER_NAME = "4get";
@@ -56,14 +56,22 @@ class config{
 	const INSTANCES = [
 		"https://4get.ca",
 		"https://4get.zzls.xyz",
+		"https://4getus.zzls.xyz",
 		"https://4get.silly.computer",
 		"https://4g.opnxng.com",
-		"https://4get.konakona.moe"
+		"https://4get.konakona.moe",
+		"https://4get.lvkaszus.pl",
+		"https://4g.ggtyler.dev",
+		"https://4get.perennialte.ch",
+		"https://4get.sihj.net",
+		"https://4get.hbubli.cc",
+		"https://4get.plunked.party",
+		"https://4get.seitan-ayoub.lol"
 	];
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/120.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP

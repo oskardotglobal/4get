@@ -117,10 +117,10 @@ $settings = [
 						"value" => "yandex",
 						"text" => "Yandex"
 					],
-					/*[
+					[
 						"value" => "google",
 						"text" => "Google"
-					],*/
+					],
 					[
 						"value" => "mojeek",
 						"text" => "Mojeek"
@@ -192,11 +192,11 @@ $settings = [
 					[
 						"value" => "yandex",
 						"text" => "Yandex"
-					]/*,
+					],
 					[
 						"value" => "google",
 						"text" => "Google"
-					]*/
+					]
 				]
 			],
 			[
@@ -211,10 +211,10 @@ $settings = [
 						"value" => "brave",
 						"text" => "Brave"
 					],
-					/*[
+					[
 						"value" => "google",
 						"text" => "Google"
-					],*/
+					],
 					[
 						"value" => "mojeek",
 						"text" => "Mojeek"
@@ -434,20 +434,33 @@ $left .=
 	'</div>' .
 	'<div class="settings-submit">' .
 		'<input type="submit" value="Update settings!">' .
-		'<a href="../">&lt; Return to front page</a>' .
+		'<a href="../">&lt; Go back</a>' .
 	'</div>' .
 	'</form>';
 
 if(count($_GET) === 0){
-
+	
+	$code = [];
+	foreach($_COOKIE as $key => $value){
+		
+		$code[] = rawurlencode($key) . "=" . rawurlencode($value);
+	}
+	
+	$code = implode("&", $code);
+	
+	if($code != ""){
+		
+		$code = "?" . $code;
+	}
+	
 	echo
 		$frontend->load(
 			"search.html",
 			[
 				"class" => "",
 				"right-left" =>			
-					'<div class="infobox"><h2>Preference link</h2>Follow this link to auto-apply all cookies. Useful if your browser clears out cookies after a browsing session. Following this link will redirect you to the front page, unless no settings are set.<br><br>' .
-					'<a href="settings' . rtrim("?" . str_replace("; ", "&", $code), "?") . '">Bookmark me!</a>' .
+					'<div class="infobox"><h2>Preference link</h2>Following this link will re-apply all cookies configured here and will redirect you to the front page. Useful if your browser clears out cookies after a browsing session.<br><br>' .
+					'<a href="settings' . $code . '">Bookmark me!</a>' .
 					'</div>',
 				"right-right" => "",
 				"left" => $left
