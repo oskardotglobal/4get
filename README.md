@@ -74,7 +74,7 @@ This section is still to-do. You will need to figure shit out for some of the ap
 Login as root.
 
 ```sh
-apt install apache2 certbot php-imagick imagemagick php-curl curl php-apcu git libapache2-mod-php python3-certbot-apache
+apt install php-mbstring apache2 certbot php-imagick imagemagick php-curl curl php-apcu git libapache2-mod-php python3-certbot-apache
 service apache2 start
 a2enmod rewrite
 ```
