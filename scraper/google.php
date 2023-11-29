@@ -1,5 +1,10 @@
 <?php
 
+// todo:
+// aliexpress tracking links
+// enhanced msx notice
+// detect "sorry" page
+
 class google{
 	
 	private const is_class = ".";

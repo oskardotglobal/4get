@@ -1,0 +1,322 @@
+:root{
+	--1d2021: #1d2021;
+	--282828: #282828;
+	--3c3836: #3c3836;
+	--504945: #504945;
+	
+	/* font */
+	--928374: #928374;
+	--a89984: #c9c5bf;
+	--bdae93: #bdae93;
+	--8ec07c: #8ec07c;
+	--ebdbb2: #ebdbb2;
+}
+
+
+
+body{
+	padding:15px 4% 40px;
+}
+
+h1,h2,h3,h4,h5,h6{
+	padding:0;
+	margin:0 0 7px 0;
+	line-height:initial;
+	color:var(--bdae93);
+}
+
+h3,h4,h5,h6{
+	margin-bottom:14px;
+}
+
+/*
+	Web styles
+*/
+
+.searchbox input[type="submit"]{
+	float:right;
+	cursor:pointer;
+	padding:0 10px;
+  border-left: 1px solid var(--504945);
+  background: #723c0b;
+}
+
+
+.searchbox input{
+	all:unset;
+	line-height:36px;
+	box-sizing:border-box;
+	height:36px;
+}
+
+.searchbox:focus-within{
+	border:1px solid #ee8a9c;
+}
+
+.autocomplete{
+	display:none;
+	position:absolute;
+	top:35px;
+	left:-1px;
+	right:-1px;
+	background:var(--282828);
+	border:1px solid var(--504945);
+	border-top:none;
+	border-radius:0 0 2px 2px;
+	z-index:10;
+}
+
+.autocomplete .entry{
+	overflow:hidden;
+	padding:4px 10px;
+	cursor:pointer;
+}
+
+.autocomplete .title{
+	float:left;
+}
+
+.autocomplete .subtext{
+	float:right;
+	font-size:14px;
+	color:var(--928374);
+	margin-left:7px;
+}
+
+/* Tabs */
+
+.tabs{
+	padding-bottom:0px;
+}
+
+.tabs .tab{
+	text-decoration:none;
+	color:#d3d0c1;
+	padding:0px 10px;
+	display:inline-block;
+}
+
+
+.tabs .tab.selected{
+	border-bottom:2px solid #fc92a5;
+}
+
+/* Filters */
+.filters{
+	padding-bottom:12px;
+	padding-top:7px;
+	margin-bottom:7px;
+	background-color:#232525
+}
+
+.filters .filter{
+	display:inline-block;
+	margin-right:7px;
+}
+
+.filters .filter .title{
+	font-size:13px;
+}
+
+.filters .filter input,
+.filters .filter select{
+	all:unset;
+	display:block;
+	border:1px solid var(--504945);
+	border-radius:2px;
+	font-size:14px;
+	padding:0 2px;
+	width:127px;
+	height:22px;
+}
+
+/* infobox */
+.web .infobox{
+	border:1px dashed var(--504945);
+	padding:10px;
+	margin-bottom:17px;
+}
+
+.web .infobox .code{
+	white-space:initial;
+}
+
+.web .infobox ul{
+	padding-left:27px;
+	margin-bottom:0;
+}
+
+.web .infobox a{
+	color:var(--bdae93);
+}
+
+.web .infobox a:hover{
+	text-decoration:underline;
+}
+
+/* text-result */
+
+.web .url .part{
+	font-size:15px;
+	text-decoration:none;
+	color:#90c186;
+}
+
+.web .separator::before{
+	content:"/";
+	padding:0 4px;
+	color:#5ab442;
+	font-size:12px;
+}
+
+
+.web .hover{
+	display:block;
+	text-decoration:none;
+	color:var(--a89984);
+	overflow:hidden;
+	clear:left;
+	padding-top:3px;
+}
+
+.web .text-result .title{
+	font-size:18px;
+	color:#81b5f4;
+	margin-bottom:5px;
+}
+
+.web .text-result a:visited .title{
+	color:#aa77c1 !important;
+}
+
+.theme-white .web .text-result a:visited .title{
+	color:#9760b1 !important;
+}
+
+
+.web .text-result .greentext{
+	font-size:14px;
+	color:var(--bdae93);
+}
+
+
+/* favicon */
+
+
+.favicon-dropdown a{
+	text-decoration:none;
+	color:#d3d0c1;
+	display:block;
+	padding:2px 7px 2px 5px;
+	font-size:13px;
+}
+
+
+.web .favicon img,
+.favicon-dropdown img{
+	margin:3px 7px 0 0;
+	height:16px;
+	font-size:12px;
+	line-height:16px;;
+	display:block;
+	text-align:left;
+}
+
+
+.web .sublinks{
+	padding:17px 10px;
+	font-size:15px;
+	color:var(--#928374);
+}
+
+
+.web .text-result .sublinks:last-child{
+	padding-bottom:0;
+}
+
+
+/* Wikipedia head */
+.wiki-head{
+	padding:5px;
+	background-color: #322f2b
+}
+
+
+/*
+	Images tab
+*/
+
+#images{
+	line-height:15px;
+	overflow:hidden;
+	margin-bottom:10px;
+}
+
+#images .image-wrapper{
+	width:20%;
+	float:left;
+}
+
+
+
+#images .image .title{
+	white-space:nowrap;
+	overflow:hidden;
+	margin-bottom:7px;
+	font-weight:bold;
+    color:var(--bdae93);
+}
+
+
+#popup-status{
+	display:none;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:35px;
+	background:var(--1d2021);
+	border-bottom:1px solid var(--928374);
+}
+
+/*
+	Settings page
+*/
+
+
+.web .settings-submit a{
+	margin-right:17px;
+	color:#bdae93;
+}
+
+
+/*
+	Responsive image
+*/
+@media only screen and (max-width: 1454px){ #images .image-wrapper{ width:25%; } }
+@media only screen and (max-width: 1161px){ #images .image-wrapper{ width:25%; } }
+@media only screen and (max-width: 750px){ #images .image-wrapper{ width:50%; } }
+@media only screen and (max-width: 450px){ #images .image-wrapper{ width:100%; } }
+
+
+/*
+	Responsive design
+*/
+@media only screen and (max-width: 1550px){
+	
+	
+	.web .left,
+	.searchbox{
+		width:60%;
+	}
+
+}
+
+@media only screen and (max-width: 1000px){
+
+}
+
+    .type{
+    color:var(--bdae93);
+    }
+}
