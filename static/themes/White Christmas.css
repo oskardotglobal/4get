@@ -1,5 +1,6 @@
 body{
     background-image:url("/static/misc/christmas-white-bg.png");
+    background:#e7e7e7;
 }
 
 .home::before{
