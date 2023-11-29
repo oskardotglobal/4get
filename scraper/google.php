@@ -599,6 +599,7 @@ class google{
 			
 			$params = [
 				"q" => $search,
+				"hl" => "en",
 				"num" => 20 // get 20 results
 			];
 			
@@ -700,6 +701,7 @@ class google{
 			$params = [
 				"q" => $search,
 				"tbm" => "vid",
+				"hl" => "en",
 				"num" => "20"
 			];
 			
@@ -850,6 +852,7 @@ class google{
 			$params = [
 				"q" => $search,
 				"tbm" => "nws",
+				"hl" => "en",
 				"num" => "20"
 			];
 			

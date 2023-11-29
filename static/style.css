@@ -763,6 +763,7 @@ table tr a:last-child{
 .web .wiki-head table, .about table{
 	margin-top:17px;
 	border:1px dashed var(--504945);
+	background:var(--1d2021);
 }
 
 .web .wiki-head td, .about table td{

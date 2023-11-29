@@ -1,0 +1,91 @@
+body{
+    background-image:url("/static/misc/christmas-dark-bg.png");
+}
+
+.home::before{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-image:url("/static/misc/snow.png");
+    pointer-events:none;
+    z-index:-1;
+    animation:snowfall 12s linear infinite;
+    opacity:.6;
+}
+
+.home{
+    background:#1d2021;
+}
+
+@keyframes snowfall{
+    from{
+        background-position:0% 0px;
+    }
+    
+    to{
+        background-position:0% 600px;
+    }
+}
+
+:root{
+	/* background */
+	--1d2021: #1d2021;
+	--282828: #282828;
+	--3c3836: #3c3836;
+	--504945: #504945;
+	
+	/* font */
+	--928374: #928374;
+	--a89984: #bdae93;
+	--bdae93: #d5c4a1;
+	--8ec07c: #8ec07c;
+	--ebdbb2: #ebdbb2;
+	
+	/* code highlighter */
+	--comment: #9e8e73;
+	--default: #d4be98;
+	--keyword: #d8a657;
+	--string: #7daea7;
+	
+	/* color codes for instance list */
+	--green: #b8bb26;
+	--yellow: #d8a657;
+	--red: #fb4934;
+}
+
+.web .wiki-head table, .about table, .web .info-table, .instances table{
+	background:#1d202170;
+    color:#bdae93;
+}
+
+.web .wiki-head tr:nth-child(odd), .about table tr:nth-child(odd), .web .info-table tr:nth-child(even), .nextpage, .spoiler-button, .instances tbody tr:nth-child(even){
+	background:#28282870;
+    color:#bdae93;
+}
+
+.instances tbody tr:hover{
+	background:#3c383690;
+}
+
+.wiki-head .description{
+    overflow:initial !important;
+}
+
+.wiki-head .photo{
+    position:relative;
+}
+
+.wiki-head .photo::after{
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    background-image:url("/static/misc/christmas-hat.png");
+    background-size:contain;
+    top:-61px;
+    left:-31px;
+    transform:rotate(310deg);
+}
