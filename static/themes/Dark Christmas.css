@@ -30,6 +30,10 @@ body{
     }
 }
 
+.web .answer::after{
+	display:none;
+}
+
 :root{
 	/* background */
 	--1d2021: #1d2021;
