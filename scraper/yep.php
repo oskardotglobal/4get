@@ -261,7 +261,8 @@ class yep{
 			"Connection: keep-alive",
 			"Sec-Fetch-Dest: empty",
 			"Sec-Fetch-Mode: cors",
-			"Sec-Fetch-Site: same-site"]
+			"Sec-Fetch-Site: same-site",
+			"TE: trailers"]
 		);
 		
 		curl_setopt($curlproc, CURLOPT_RETURNTRANSFER, true);
@@ -282,6 +283,212 @@ class yep{
 		curl_close($curlproc);
 		return $data;
 	}
+	
+	
+	
+	public function web($get){
+		
+		$search = $get["s"];
+		if(strlen($search) === 0){
+			
+			throw new Exception("Search term is empty!");
+		}
+		
+		$country = $get["country"];
+		$nsfw = $get["nsfw"];
+		
+		switch($nsfw){
+			
+			case "yes": $nsfw = "off"; break;
+			case "maybe": $nsfw = "moderate"; break;
+			case "no": $nsfw = "strict"; break;
+		}
+		
+		$out = [
+			"status" => "ok",
+			"spelling" => [
+				"type" => "no_correction",
+				"using" => null,
+				"correction" => null
+			],
+			"npt" => null,
+			"answer" => [],
+			"web" => [],
+			"image" => [],
+			"video" => [],
+			"news" => [],
+			"related" => []
+		];
+		
+		try{
+			
+			// https://api.yep.com/fs/2/search?client=web&gl=CA&no_correct=false&q=undefined+variable+javascript&safeSearch=off&type=web
+			$json =
+				json_decode(
+					$this->get(
+						$this->backend->get_ip(),
+						"https://api.yep.com/fs/2/search",
+						[
+							"client" => "web",
+							"gl" => $country == "all" ? $country : strtoupper($country),
+							"limit" => "99999",
+							"no_correct" => "false",
+							"q" => $search,
+							"safeSearch" => $nsfw,
+							"type" => "web"
+						]
+					),
+					true
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to fetch JSON");
+		}
+		
+		//$json = json_decode(file_get_contents("scraper/yep.json"), true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON");
+		}
+		
+		if(isset($json[1]["correction"])){
+			
+			$out["spelling"] = [
+				"type" => "not_many",
+				"using" => $search,
+				"correction" => $json[1]["correction"][1]
+			];
+		}
+		
+		if(isset($json[1]["results"])){
+			foreach($json[1]["results"] as $item){
+				
+				switch(strtolower($item["type"])){
+					
+					case "organic":
+						$sublinks = [];
+						
+						if(isset($item["sitelinks"]["full"])){
+							
+							foreach($item["sitelinks"]["full"] as $link){
+								
+								$sublinks[] = [
+									"title" => $link["title"],
+									"date" => null,
+									"description" =>
+										$this->titledots(
+											strip_tags(
+												html_entity_decode(
+													$link["snippet"]
+												)
+											)
+										),
+									"url" => $link["url"]
+								];
+							}
+						}
+						
+						$out["web"][] = [
+							"title" => $item["title"],
+							"description" =>
+								$this->titledots(
+									strip_tags(
+										html_entity_decode(
+											$item["snippet"]
+										)
+									)
+								),
+							"url" => $item["url"],
+							"date" => strtotime($item["first_seen"]),
+							"type" => "web",
+							"thumb" => [
+								"url" => null,
+								"ratio" => null
+							],
+							"sublink" => $sublinks,
+							"table" => []
+						];
+						break;
+				}
+			}
+		}
+		
+		if(isset($json[1]["featured_news"])){
+			
+			foreach($json[1]["featured_news"] as $news){
+				
+				$out["news"][] = [
+					"title" => $news["title"],
+					"description" =>
+						$this->titledots(
+							strip_tags(
+								html_entity_decode(
+									$news["snippet"]
+								)
+							)
+						),
+					"date" => strtotime($news["first_seen"]),
+					"thumb" =>
+						isset($news["img"]) ?
+						[
+							"url" => $this->unshiturl($news["img"]),
+							"ratio" => "16:9"
+						] :
+						[
+							"url" => null,
+							"ratio" => null
+						],
+					"url" => $news["url"]
+				];
+			}
+		}
+		
+		if(isset($json[1]["featured_images"])){
+			
+			foreach($json[1]["featured_images"] as $image){
+				
+				if(
+					$image["width"] !== 0 &&
+					$image["height"] !== 0
+				){
+					
+					$thumb_width = $image["width"] >= 260 ? 260 : $image["width"];
+					$thumb_height = ceil($image["height"] * ($thumb_width / $image["width"]));
+					
+					$width = $image["width"];
+					$height = $image["height"];
+				}else{
+					
+					$thumb_width = null;
+					$thumb_height = null;
+					$width = null;
+					$height = null;
+				}
+				
+				$out["image"][] = [
+					"title" => $image["title"],
+					"source" => [
+						[
+							"url" => $image["image_id"],
+							"width" => $width,
+							"height" => $height
+						],
+						[
+							"url" => $image["src"],
+							"width" => $thumb_width,
+							"height" => $thumb_height
+						]
+					],
+					"url" => $image["host_page"]
+				];
+			}
+		}
+		
+		return $out;
+	}
+	
+	
 	
 	public function image($get){
 		
@@ -335,44 +542,165 @@ class yep{
 			throw new Exception("Failed to decode JSON");
 		}
 		
-		foreach($json[1]["results"] as $item){
-			
-			if(
-				$item["width"] !== 0 &&
-				$item["height"] !== 0
-			){
+		if(isset($json[1]["results"])){
+			foreach($json[1]["results"] as $item){
 				
-				$thumb_width = $item["width"] >= 260 ? 260 : $item["width"];
-				$thumb_height = ceil($item["height"] * ($thumb_width / $item["width"]));
+				if(
+					$item["width"] !== 0 &&
+					$item["height"] !== 0
+				){
+					
+					$thumb_width = $item["width"] >= 260 ? 260 : $item["width"];
+					$thumb_height = ceil($item["height"] * ($thumb_width / $item["width"]));
+					
+					$width = $item["width"];
+					$height = $item["height"];
+				}else{
+					
+					$thumb_width = null;
+					$thumb_height = null;
+					$width = null;
+					$height = null;
+				}
 				
-				$width = $item["width"];
-				$height = $item["height"];
-			}else{
-				
-				$thumb_width = null;
-				$thumb_height = null;
-				$width = null;
-				$height = null;
-			}
-			
-			$out["image"][] = [
-				"title" => $item["title"],
-				"source" => [
-					[
-						"url" => $item["image_id"],
-						"width" => $width,
-						"height" => $height
+				$out["image"][] = [
+					"title" => $item["title"],
+					"source" => [
+						[
+							"url" => $item["image_id"],
+							"width" => $width,
+							"height" => $height
+						],
+						[
+							"url" => $item["src"],
+							"width" => $thumb_width,
+							"height" => $thumb_height
+						]
 					],
-					[
-						"url" => $item["src"],
-						"width" => $thumb_width,
-						"height" => $thumb_height
-					]
-				],
-				"url" => $item["host_page"]
-			];
+					"url" => $item["host_page"]
+				];
+			}
 		}
 		
 		return $out;
+	}
+	
+	
+	public function news($get){
+		
+		$search = $get["s"];
+		if(strlen($search) === 0){
+			
+			throw new Exception("Search term is empty!");
+		}
+		
+		$country = $get["country"];
+		$nsfw = $get["nsfw"];
+		
+		switch($nsfw){
+			
+			case "yes": $nsfw = "off"; break;
+			case "maybe": $nsfw = "moderate"; break;
+			case "no": $nsfw = "strict"; break;
+		}
+		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"news" => []
+		];
+		
+		try{
+			
+			// https://api.yep.com/fs/2/search?client=web&gl=CA&no_correct=false&q=undefined+variable+javascript&safeSearch=off&type=web
+			$json =
+				json_decode(
+					$this->get(
+						$this->backend->get_ip(),
+						"https://api.yep.com/fs/2/search",
+						[
+							"client" => "web",
+							"gl" => $country == "all" ? $country : strtoupper($country),
+							"limit" => "99999",
+							"no_correct" => "false",
+							"q" => $search,
+							"safeSearch" => $nsfw,
+							"type" => "news"
+						]
+					),
+					true
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to fetch JSON");
+		}
+		
+		//$json = json_decode(file_get_contents("scraper/yep.json"), true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON");
+		}
+		
+		if(isset($json[1]["results"])){
+			foreach($json[1]["results"] as $item){
+				
+				$out["news"][] = [
+					"title" => $item["title"],
+					"author" => null,
+					"description" =>
+						$this->titledots(
+							strip_tags(
+								html_entity_decode(
+									$item["snippet"]
+								)
+							)
+						),
+					"date" => strtotime($item["first_seen"]),
+					"thumb" =>
+						isset($item["img"]) ?
+						[
+							"url" => $this->unshiturl($item["img"]),
+							"ratio" => "16:9"
+						] :
+						[
+							"url" => null,
+							"ratio" => null
+						],
+					"url" => $item["url"]
+				];
+			}
+		}
+		
+		return $out;
+	}
+	
+	
+	private function titledots($title){
+		
+		$substr = substr($title, -4);
+		
+		if(
+			strpos($substr, "...") !== false ||
+			strpos($substr, "…") !== false
+		){
+						
+			return trim(substr($title, 0, -4));
+		}
+		
+		return trim($title);
+	}
+	
+	private function unshiturl($url){
+		
+		$newurl = parse_url($url, PHP_URL_QUERY);
+		parse_str($newurl, $newurl);
+		
+		if(isset($newurl["url"])){
+			
+			return $newurl["url"];
+		}
+		
+		return $url;
 	}
 }

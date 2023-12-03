@@ -122,6 +122,10 @@ $settings = [
 						"text" => "Google"
 					],
 					[
+						"value" => "yep",
+						"text" => "Yep"
+					],
+					[
 						"value" => "mojeek",
 						"text" => "Mojeek"
 					],
@@ -214,6 +218,10 @@ $settings = [
 					[
 						"value" => "google",
 						"text" => "Google"
+					],
+					[
+						"value" => "yep",
+						"text" => "Yep"
 					],
 					[
 						"value" => "mojeek",
