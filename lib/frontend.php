@@ -1332,7 +1332,7 @@ class frontend{
 			return htmlspecialchars($image);
 		}
 		
-		return "/proxy.php?i=" . urlencode($image) . "&s=" . $format;
+		return "/proxy?i=" . urlencode($image) . "&s=" . $format;
 	}
 	
 	public function htmlnextpage($gets, $npt, $page){
