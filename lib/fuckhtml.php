@@ -459,8 +459,6 @@ class fuckhtml{
 			$last_char = $json[$i];
 		}
 		
-		echo "\n\n" . $json_out . "\n\n";
-		
 		return json_decode($json_out, true);
 	}
 	
