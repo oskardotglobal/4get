@@ -367,6 +367,7 @@ class fuckhtml{
 		$bracket = false;
 		$is_close_bracket = false;
 		$escape = false;
+		$lastchar = false;
 		$json_out = null;
 		$last_char = null;
 		
@@ -399,7 +400,21 @@ class fuckhtml{
 					break;
 			}
 			
-			$escape = $json[$i] == "\\" ? true : false;
+			if(
+				$json[$i] == "\\" &&
+				!(
+					$lastchar !== false &&
+					$lastchar . $json[$i] == "\\\\"
+				)
+			){
+				
+				$escape = true;
+			}else{
+				
+				$escape = false;
+			}
+			
+			$lastchar = $json[$i];
 			
 			if(
 				$bracket === false &&
@@ -443,6 +458,8 @@ class fuckhtml{
 			
 			$last_char = $json[$i];
 		}
+		
+		echo "\n\n" . $json_out . "\n\n";
 		
 		return json_decode($json_out, true);
 	}
