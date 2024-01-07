@@ -136,6 +136,10 @@ $settings = [
 					[
 						"value" => "wiby",
 						"text" => "wiby"
+					],
+					[
+						"value" => "curlie",
+						"text" => "Curlie"
 					]
 				]
 			],
@@ -236,6 +240,10 @@ $settings = [
 					[
 						"value" => "sc",
 						"text" => "SoundCloud"
+					],
+					[
+						"value" => "spotify",
+						"text" => "Spotify"
 					]
 				]
 			]
