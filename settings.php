@@ -240,11 +240,11 @@ $settings = [
 					[
 						"value" => "sc",
 						"text" => "SoundCloud"
-					],
-					[
-						"value" => "spotify",
-						"text" => "Spotify"
-					]
+					]//,
+					//[
+					//	"value" => "spotify",
+					//	"text" => "Spotify"
+					//]
 				]
 			]
 		]

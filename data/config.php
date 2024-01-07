@@ -40,9 +40,9 @@ class config{
 	// Eg. data/captcha/birds/1.png up to 2263.png
 	const CAPTCHA_DATASET = [
 		// example:
-		//["birds", 2263],
-		//["fumo_plushies", 1006],
-		//["minecraft", 848]
+		// ["birds", 2263],
+		// ["fumo_plushies", 1006],
+		// ["minecraft", 848]
 	];
 	
 	// List of domains that point to your servers. Include your tor/i2p
@@ -107,8 +107,8 @@ class config{
 	// SOUNDCLOUD
 	// Get these parameters by making a search on soundcloud with network
 	// tab open, then filter URLs using "search?q=". (No need to login)
-	const SC_USER_ID = "119817-879192-49172-644216";
-	const SC_CLIENT_TOKEN = "Hd4akujkPoaPv8SOUw6sqAySNno8EM7b";
+	const SC_USER_ID = "361066-632137-891392-693457";
+	const SC_CLIENT_TOKEN = "nUB9ZvnjRiqKF43CkKf3iu69D8bboyKY";
 	
 	// MARGINALIA
 	// Get an API key by contacting the Marginalia.nu maintainer. The "public" key
