@@ -895,7 +895,8 @@ class frontend{
 						"yep" => "Yep",
 						"mojeek" => "Mojeek",
 						"marginalia" => "Marginalia",
-						"wiby" => "wiby"
+						"wiby" => "wiby",
+						"curlie" => "Curlie"
 					]
 				];
 				break;
@@ -948,6 +949,7 @@ class frontend{
 					"display" => "Scraper",
 					"option" => [
 						"sc" => "SoundCloud"
+						//"spotify" => "Spotify"
 					]
 				];
 				break;
@@ -1022,6 +1024,11 @@ class frontend{
 				$lib = new wiby();
 				break;
 			
+			case "curlie":
+				include "scraper/curlie.php";
+				$lib = new curlie();
+				break;
+			
 			case "yep":
 				include "scraper/yep.php";
 				$lib = new yep();
@@ -1030,6 +1037,11 @@ class frontend{
 			case "sc":
 				include "scraper/sc.php";
 				$lib = new sc();
+				break;
+			
+			case "spotify":
+				include "scraper/spotify.php";
+				$lib = new spotify();
 				break;
 			
 			case "pinterest":
