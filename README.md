@@ -163,13 +163,21 @@ docker run -d -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMI
 replace enviroment variables FOURGET_SERVER_NAME and FOURGET_SERVER_ADMIN_EMAIL with relevant values
 
 if the certificate files are not mounted to /etc/4get/certs the service listens to port 80
+
 the certificate directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
 
+
 ## Install using Docker Compose 
+
 copy `docker-compose.yaml`
 
-create a directory with images named `banners` for example and mount to `/var/www/html/4get/banner`
-to serve custom banners
+to serve custom banners create a directory named `banners` for example with images and mount to `/var/www/html/4get/banner`
+
+to serve captcha images create a directory named `captchas` for example containing subfolders with images and mount to `/var/www/html/4get/data/captcha`
+
+any environment variables prefixed with `FOURGET_` will be added to the generated config
+the entrypoint will automatically set the `CAPTCHA_DATASET` value for you based on directory names and number of files in each
+
 
 ```
 version: "3.7"
@@ -189,9 +197,10 @@ services:
     volumes:
       - /etc/letsencrypt/live/domain.tld:/etc/4get/certs
       - ./banners:/var/www/html/4get/banner
+      - ./captchas:/var/www/html/4get/data/captcha
 ```
 
-Replace relevant values and start with `docker-compose up -d`
+Replace relevant values and start with `docker compose up -d`
 
 ## Install on Caddy
 
