@@ -14,6 +14,10 @@ if [ ! -f /etc/4get/certs/cert.pem ] || [ ! -f /etc/4get/certs/chain.pem ] || [ 
         mv /etc/apache2/httpd.conf_temp /etc/apache2/httpd.conf
 fi
 
+
+php82 ./docker/gen_config.php
+
+
 echo "4get is running"
 exec httpd -DFOREGROUND
 
