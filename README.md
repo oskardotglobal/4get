@@ -176,6 +176,7 @@ to serve custom banners create a directory named `banners` for example with imag
 to serve captcha images create a directory named `captchas` for example containing subfolders with images and mount to `/var/www/html/4get/data/captcha`
 
 any environment variables prefixed with `FOURGET_` will be added to the generated config
+
 the entrypoint will automatically set the `CAPTCHA_DATASET` value for you based on directory names and number of files in each
 
 

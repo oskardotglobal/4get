@@ -8,6 +8,7 @@ services:
     environment:
       - FOURGET_VERSION=6
       - FOURGET_SERVER_NAME=4get.ca
+      - FOURGET_SERVER_ADMIN_EMAIL=you@example.com
 
     ports:
       - "80:80"
@@ -15,5 +16,6 @@ services:
 
     volumes:
       - /etc/letsencrypt/live/domain.tld:/etc/4get/certs
+      # mount custom banners and captcha
       - ./banners:/var/www/html/4get/banner
       - ./captcha:/var/www/html/4get/data/captcha
