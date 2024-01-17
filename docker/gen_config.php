@@ -13,7 +13,7 @@ $fourget_env = array_filter($env, function($v, $k) {
 
 foreach($fourget_env as $key => $val)  {
         $target_key = preg_replace('/^FOURGET_/', '', $key);
-        $config[$target_key] = $val;
+        $config[$target_key] = trim($val, '\'"');
 };
 
 function type_to_string($n) {
