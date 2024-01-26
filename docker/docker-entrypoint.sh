@@ -15,7 +15,7 @@ if [ ! -f /etc/4get/certs/cert.pem ] || [ ! -f /etc/4get/certs/chain.pem ] || [ 
 fi
 
 
-php82 ./docker/gen_config.php
+# php82 ./docker/gen_config.php
 
 
 echo "4get is running"
