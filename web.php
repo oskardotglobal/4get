@@ -260,6 +260,12 @@ if(count($results["answer"]) !== 0){
 	$right["answer"] = "";
 	
 	foreach($results["answer"] as $answer){
+        foreach (config::URL_REWRITES as $regex => $replacement) {
+            if (preg_match($regex, $answer["url"]) === 1) {
+                $answer["url"] = preg_replace($regex, $replacement, $answer["url"]);
+                break;
+            }
+        }
 		
 		$answerlen++;
 		$right["answer"] .=

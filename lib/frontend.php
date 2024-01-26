@@ -127,7 +127,13 @@ class frontend{
 	}
 	
 	public function drawtextresult($site, $greentext = null, $duration = null, $keywords, $tabindex = true, $customhtml = null){
-		
+        foreach (config::URL_REWRITES as $regex => $replacement) {
+            if (preg_match($regex, $site["url"]) === 1) {
+                $site["url"] = preg_replace($regex, $replacement, $site["url"]);
+                break;
+            }
+        }
+
 		$payload =
 			'<div class="text-result">';
 		
