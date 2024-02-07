@@ -305,6 +305,12 @@ I don't know to configure this shit on Apache so here is the NGINX one.
 
 ## Tor setup on NGINX
 
+Important Note: Tor onion addresses are significantly longer than traditional domain names. Before proceeding with Nginx configuration, ensure you increase the `server_names_hash_bucket_size` value in your `nginx.conf` file. This setting in your Nginx configuration controls the internal data structure used to manage multiple server names (hostnames) associated with your web server. Each hostname requires a certain amount of memory within this structure. If the size is insufficient, Nginx will encounter errors.
+
+1. Open your `nginx.conf` file (that is under `/etc/nginx/sites-available/`).
+2. Find the line containing `# server_names_hash_bucket_size 64;`.
+3. Uncomment the line and adjust the value. Start with 64, but if you encounter issues, incrementally increase it (e.g., 128, 256) until it accommodates your configuration.
+
 Open your current 4get NGINX config (that is under `/etc/nginx/sites-available/`) and append this to the end of the file:
 
 ```
