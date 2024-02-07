@@ -307,7 +307,7 @@ I don't know to configure this shit on Apache so here is the NGINX one.
 
 Important Note: Tor onion addresses are significantly longer than traditional domain names. Before proceeding with Nginx configuration, ensure you increase the `server_names_hash_bucket_size` value in your `nginx.conf` file. This setting in your Nginx configuration controls the internal data structure used to manage multiple server names (hostnames) associated with your web server. Each hostname requires a certain amount of memory within this structure. If the size is insufficient, Nginx will encounter errors.
 
-1. Open your `nginx.conf` file (that is under `/etc/nginx/sites-available/`).
+1. Open your `nginx.conf` file (that is under `/etc/nginx/nginx.conf`).
 2. Find the line containing `# server_names_hash_bucket_size 64;`.
 3. Uncomment the line and adjust the value. Start with 64, but if you encounter issues, incrementally increase it (e.g., 128, 256) until it accommodates your configuration.
 
