@@ -152,19 +152,17 @@ Now test the nginx config with `nginx -t`, if it says that everything is good, r
 ## Install using Docker (lol u lazy fuck)
 
 ```
-docker run -d -p 80:80 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" luuul/4get:latest
+docker run -d -p 80:80 -e FOURGET_SERVER_NAME="4get.ca" luuul/4get:latest
 ```
 
 ...Or with SSL:
 ```
-docker run -d -p 443:443 -e FOURGET_SERVER_NAME="4get.ca" -e FOURGET_SERVER_ADMIN_EMAIL="you@example.com" -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs luuul/4get:latest
+docker run -d -p 443:443 -v /etc/letsencrypt/live/domain.tld:/etc/4get/certs -e FOURGET_SERVER_NAME="4get.ca" luuul/4get:latest
 ```
-
-replace enviroment variables FOURGET_SERVER_NAME and FOURGET_SERVER_ADMIN_EMAIL with relevant values
 
 if the certificate files are not mounted to /etc/4get/certs the service listens to port 80
 
-the certificate directory expects files named `cert.pem`, `chain.pem`, `privkey.pem`
+the certificate directory expects files named `fullchain.pem` and `privkey.pem`
 
 
 ## Install using Docker Compose 
@@ -189,7 +187,6 @@ services:
     restart: always
     environment:
       - FOURGET_SERVER_NAME=4get.ca
-      - FOURGET_SERVER_ADMIN_EMAIL="you@example.com"
 
     ports:
       - "80:80"
