@@ -8,7 +8,6 @@ services:
     environment:
       - FOURGET_VERSION=6
       - FOURGET_SERVER_NAME=4get.ca
-      - FOURGET_SERVER_ADMIN_EMAIL=you@example.com
 
     ports:
       - "80:80"
