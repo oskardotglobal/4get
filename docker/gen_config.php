@@ -28,7 +28,7 @@ function type_to_string($n) {
                 return "\"$n\"";
         }
         if ($type === "array") {
-                return json_encode($n);
+                return json_encode($n, JSON_UNESCAPED_SLASHES);
         }
         return $n;
 }
