@@ -177,6 +177,8 @@ any environment variables prefixed with `FOURGET_` will be added to the generate
 
 the entrypoint will automatically set the `CAPTCHA_DATASET` value for you based on directory names and number of files in each
 
+to set `INSTANCES` pass a comma separated string of urls (FOURGET_INSTANCES = "https://4get.ca,https://domain.tld")
+
 
 ```
 version: "3.7"
