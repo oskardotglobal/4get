@@ -25,6 +25,9 @@ function type_to_string($n) {
                 return $n ? 'true' : 'false';
         }
         if ($type === "string") {
+                if(is_numeric($n)) {
+                        return $n;
+                }
                 return "\"$n\"";
         }
         if ($type === "array") {
