@@ -39,6 +39,14 @@ class frontend{
 			$replacements["ac"] = '';
 		}
 		
+		if(
+			isset($replacements["timetaken"]) &&
+			$replacements["timetaken"] !== null
+		){
+			
+			$replacements["timetaken"] = '<div class="timetaken">Took ' . substr(microtime(true) - $replacements["timetaken"], 0, 4) . 's</div>';
+		}
+		
 		$handle = fopen("template/{$template}", "r");
 		$data = fread($handle, filesize("template/{$template}"));
 		fclose($handle);
@@ -68,7 +76,7 @@ class frontend{
 		
 		echo
 			$this->load("header.html", [
-				"title" => trim($get["s"] . " ({$page})"),
+				"title" => trim(htmlspecialchars($get["s"]) . " ({$page})"),
 				"description" => ucfirst($page) . ' search results for &quot;' . htmlspecialchars($get["s"]) . '&quot;',
 				"index" => "no",
 				"search" => htmlspecialchars($get["s"]),
@@ -88,7 +96,7 @@ class frontend{
 			
 			$this->drawerror(
 				"Tshh, blocked!",
-				'You were blocked from viewing this page. If you wish to scrape data from 4get, please consider running <a href="https://git.lolcat.ca/lolcat/4get" rel="noreferrer nofollow">your own 4get instance</a> or using <a href="/api.txt">the API</a>.',
+				'You were blocked from viewing this page. If you wish to scrape data from 4get, please consider running <a href="https://git.lolcat.ca/lolcat/4get" rel="noreferrer nofollow">your own 4get instance</a>.',
 			);
 			die();
 		}
@@ -98,6 +106,7 @@ class frontend{
 		
 		echo
 			$this->load("search.html", [
+				"timetaken" => null,
 				"class" => "",
 				"right-left" => "",
 				"right-right" => "",

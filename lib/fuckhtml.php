@@ -466,19 +466,26 @@ class fuckhtml{
 		
 		return
 			preg_replace_callback(
-				'/\\\u[A-Fa-f0-9]{4}|\\\x[A-Fa-f0-9]{2}/',
+				'/\\\u[A-Fa-f0-9]{4}|\\\x[A-Fa-f0-9]{2}|\\\n|\\\r/',
 				function($match){
 					
-					if($match[0][1] == "u"){
+					switch($match[0][1]){
 						
-						return json_decode('"' . $match[0] . '"');
-					}else{
+						case "u":
+							return json_decode('"' . $match[0] . '"');
+							break;
 						
-						return mb_convert_encoding(
-							stripcslashes($match[0]),
-							"utf-8",
-							"windows-1252"
-						);
+						case "x":
+							return mb_convert_encoding(
+								stripcslashes($match[0]),
+								"utf-8",
+								"windows-1252"
+							);
+							break;
+						
+						default:
+							return " ";
+							break;
 					}
 				},
 				$string

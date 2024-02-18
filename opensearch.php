@@ -5,7 +5,7 @@ include "data/config.php";
 
 $domain =
 	htmlspecialchars(
-		(strpos(strtolower($_SERVER['SERVER_PROTOCOL']), 'https') === false ? 'http' : 'https') .
+		((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on" || $_SERVER["HTTPS"] === 1)) ? "https" : "http") .
 		'://' . $_SERVER["HTTP_HOST"]
 	);
 

@@ -274,7 +274,6 @@ foreach($themes as $theme){
 /*
 	Set cookies
 */
-
 if($_POST){
 
 	$loop = &$_POST;
@@ -473,6 +472,7 @@ if(count($_GET) === 0){
 		$frontend->load(
 			"search.html",
 			[
+				"timetaken" => null,
 				"class" => "",
 				"right-left" =>			
 					'<div class="infobox"><h2>Preference link</h2>Following this link will re-apply all cookies configured here and will redirect you to the front page. Useful if your browser clears out cookies after a browsing session.<br><br>' .

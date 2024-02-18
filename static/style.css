@@ -48,10 +48,35 @@ body{
 	font-size:16px;
 	box-sizing:border-box;
 	font-family:sans-serif;
-	padding:15px 7% 45px;
+	margin:15px 7% 45px;
 	word-wrap:anywhere;
 	line-height:22px;
 	max-width:2000px;
+	position:relative;
+}
+
+.navigation{
+	position:absolute;
+	top:0;
+	right:0;
+	font-size:14px;
+	line-height:40px;
+}
+
+.navigation a{
+	color:var(--bdae93);
+	text-decoration:none;
+}
+
+.navigation a:hover{
+	text-decoration:underline;
+}
+
+.navigation a:not(:last-child)::after{
+	content:"|";
+	padding:0 7px;
+	display:inline-block;
+	color:var(--504945);
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -176,7 +201,6 @@ h3,h4,h5,h6{
 
 /* Filters */
 .filters{
-	padding-bottom:15px;
 	margin-bottom:7px;
 }
 
@@ -201,6 +225,12 @@ h3,h4,h5,h6{
 	padding:0 4px;
 	width:127px;
 	height:24px;
+}
+
+.timetaken{
+	font-size:14px;
+	font-weight:bold;
+	margin-bottom:10px;
 }
 
 
@@ -1288,6 +1318,15 @@ table tr a:last-child{
 }
 
 @media only screen and (max-width: 1000px){
+	form{
+		padding-top:27px;
+	}
+	
+	.navigation{
+		left:0;
+		right:unset;
+		line-height:22px;
+	}
 	
 	.nextpage.img{
 		width:initial;

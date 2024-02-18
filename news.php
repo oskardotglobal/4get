@@ -15,10 +15,11 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 /*
 	Captcha
 */
-include "lib/captcha_gen.php";
-new captcha($frontend, $get, $filters, "news", true);
+include "lib/bot_protection.php";
+new bot_protection($frontend, $get, $filters, "news", true);
 
 $payload = [
+	"timetaken" => microtime(true),
 	"class" => "",
 	"right-left" => "",
 	"right-right" => "",

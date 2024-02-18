@@ -267,20 +267,23 @@
     Each entry under "song" contains a array index called "stream" that
     looks like this ::
     
-        endpoint: audio_sc
+        endpoint: sc
         url: https://api-v2.soundcloud <...>
     
     
-    When the endpoint is "audio_sc", you MUST use 4get's audio_sc
-    endpoint, for example, if you want an audio stream back. Otherwise,
-    you are free to handle the json+m3u8 crap yourself. If the endpoint
-    is equal to "audio", that URL SHOULD return a valid HTTP audio
-    stream, and using the "audio" endpoint becomes optional again.
+    When the endpoint is something else than "linear", you MUST use
+    the specified endpoint. Otherwise, you are free to handle that
+    json+m3u8 crap yourself. If the endpoint is equal to "linear", the
+    URL should return a valid HTTP audio stream. To access the endpoint,
+    you must add the following prefix in your request, like so:
+	
+        https://4get.ca/audio/<endpoint>?s=<url>
 
 
 + /favicon
     Get the favicon for a website. The only parameter is "s", and must
-    include the protocol.
+    include the protocol for fetching in case the favicon is not cached
+    yet.
     
     Example ::
         
@@ -313,14 +316,14 @@
     is set.
 
 
-+ /audio
++ /audio/linear
     Get a proxied audio file. Does not support "Range" headers, as it's
-    only used to proxy small files.
+    only used to proxy small files (hence why it's called linear DUH)
     
     The parameter is "s" for the audio link.
 
 
-+ /audio_sc
++ /audio/sc
     Get a proxied audio file for SoundCloud. Does not support downloads
     trough WGET or CURL, since it returns 30kb~160kb "206 Partial
     Content" parts, due to technical limitations that comes with
@@ -332,6 +335,14 @@
     
     The parameter is "s" for the SoundCloud JSON m3u8 abomination. It
     does not support "normal" SoundCloud URLs at this time.
+
+
++ /audio/spotify
+    Get a proxied Spotify audio file. Accepts a track ID for the "s"
+    parameter. Will only allow you to fetch the 30 second preview since
+    I don't feel like fucking with cookies and accounts every fucking
+    living moment of my life. You must handle the initial 302 redirect
+    to the /audio/linear endpoint.
 
 
 + Appendix

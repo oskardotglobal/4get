@@ -16,7 +16,7 @@ class sc{
 				"option" => [
 					"any" => "Any type",
 					"track" => "Tracks",
-					"people" => "People",
+					"author" => "People",
 					"album" => "Albums",
 					"playlist" => "Playlists",
 					"goplus" => "Go+ Tracks"
@@ -143,7 +143,7 @@ class sc{
 					];
 					break;
 				
-				case "people":
+				case "author":
 					$url = "https://api-v2.soundcloud.com/search/users";
 					$params = [
 						"q" => $search,
@@ -237,7 +237,10 @@ class sc{
 			"npt" => null,
 			"song" => [],
 			"playlist" => [],
-			"author" => []
+			"album" => [],
+			"podcast" => [],
+			"author" => [],
+			"user" => []
 		];
 		
 		/*
@@ -346,7 +349,7 @@ class sc{
 					if(stripos($item["monetization_model"], "TIER") === false){
 						
 						$stream = [
-							"endpoint" => "audio_sc",
+							"endpoint" => "sc",
 							"url" =>
 								$item["media"]["transcodings"][0]["url"] .
 								"?client_id=" . config::SC_CLIENT_TOKEN .

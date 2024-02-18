@@ -15,10 +15,11 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 /*
 	Captcha
 */
-include "lib/captcha_gen.php";
-new captcha($frontend, $get, $filters, "web", true);
+include "lib/bot_protection.php";
+new bot_protection($frontend, $get, $filters, "web", true);
 
 $payload = [
+	"timetaken" => microtime(true),
 	"class" => "",
 	"right-left" => "",
 	"right-right" => "",
@@ -359,7 +360,7 @@ if(count($results["answer"]) !== 0){
 				
 				case "audio":
 					$right["answer"] .=
-						'<audio src="/audio?s=' . urlencode($description["url"]) . '" controls><a href="/audio.php?s=' . urlencode($description["url"]) . '">Listen to the pronunciation audio</a></audio>';
+						'<audio src="/audio/linear?s=' . urlencode($description["url"]) . '" controls><a href="/audio/linear?s=' . urlencode($description["url"]) . '">Listen to the pronunciation audio</a></audio>';
 					break;
 			}
 		}

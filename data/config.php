@@ -5,7 +5,7 @@ class config{
 	// any parameters.
 	
 	// 4get version. Please keep this updated
-	const VERSION = 6;
+	const VERSION = 7;
 	
 	// Will be shown pretty much everywhere.
 	const SERVER_NAME = "4get";
@@ -24,10 +24,10 @@ class config{
 	const API_ENABLED = true;
 	
 	// Bot protection
-	// 4get.ca has been hit with 250k bot reqs every single day for months
+	// 4get.ca has been hit with 500k bot reqs every single day for months
 	// you probably want to enable this if your instance is public...
 	// 0 = disabled
-	// 1 = ask for image captcha (requires image dataset & imagick 6.9.11-60)
+	// 1 = ask for image captcha (requires imagemagick v6 or higher)
 	// @TODO: 2 = invite only (users needs a pass)
 	const BOT_PROTECTION = 0;
 	
@@ -62,20 +62,27 @@ class config{
 		"https://4get.zzls.xyz",
 		"https://4getus.zzls.xyz",
 		"https://4get.silly.computer",
-		"https://4g.opnxng.com",
 		"https://4get.konakona.moe",
 		"https://4get.lvkaszus.pl",
 		"https://4g.ggtyler.dev",
 		"https://4get.perennialte.ch",
-		"https://4get.sihj.net",
+		"https://4get.sijh.net",
 		"https://4get.hbubli.cc",
 		"https://4get.plunked.party",
-		"https://4get.seitan-ayoub.lol"
+		"https://4get.seitan-ayoub.lol",
+		"https://4get.etenie.pl",
+		"https://4get.lunar.icu",
+		"https://4get.dcs0.hu",
+		"https://4get.kizuki.lol",
+		"https://4get.psily.garden",
+		"https://search.milivojevic.in.rs",
+		"https://4get.snine.nl",
+		"https://4get.datura.network"
 	];
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/120.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP
@@ -94,6 +101,8 @@ class config{
 	const PROXY_YT = false; // youtube
 	const PROXY_YEP = false;
 	const PROXY_PINTEREST = false;
+	const PROXY_SEZNAM = false;
+	const PROXY_NAVER = false;
 	const PROXY_FTM = false; // findthatmeme
 	const PROXY_IMGUR = false;
 	const PROXY_YANDEX_W = false; // yandex web
@@ -107,8 +116,8 @@ class config{
 	// SOUNDCLOUD
 	// Get these parameters by making a search on soundcloud with network
 	// tab open, then filter URLs using "search?q=". (No need to login)
-	const SC_USER_ID = "361066-632137-891392-693457";
-	const SC_CLIENT_TOKEN = "nUB9ZvnjRiqKF43CkKf3iu69D8bboyKY";
+	const SC_USER_ID = "59333-426459-717969-168008";
+	const SC_CLIENT_TOKEN = "8BBZpqUP1KSN4W6YB64xog2PX4Dw98b1";
 	
 	// MARGINALIA
 	// Get an API key by contacting the Marginalia.nu maintainer. The "public" key
