@@ -8,7 +8,6 @@ echo
 	$frontend->load(
 		"header_nofilters.html",
 		[
-			"timetaken" => null,
 			"title" => "About",
 			"class" => " class=\"about\""
 		]
@@ -31,6 +30,7 @@ echo
 	$frontend->load(
 		"search.html",
 		[
+			"timetaken" => null,
 			"class" => "",
 			"right-left" => "",
 			"right-right" => "",
