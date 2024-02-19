@@ -203,7 +203,7 @@ class bot_protection{
 					'<form method="POST" enctype="text/plain" autocomplete="off">' .
 						'<div class="captcha-wrapper">' .
 							'<div class="captcha">' .
-								'<img src="captcha.php?v=' . $key . '" alt="Captcha image">' .
+								'<img src="captcha?v=' . $key . '" alt="Captcha image">' .
 								'<div class="captcha-controls">' .
 									'<input type="checkbox" name="c[0]" id="c0">' .
 									'<label for="c0"></label>' .

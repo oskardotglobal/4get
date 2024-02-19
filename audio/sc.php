@@ -6,6 +6,7 @@ class sc_audio{
 	
 	public function __construct(){
 		
+		include "../data/config.php";
 		include "../lib/curlproxy.php";
 		$this->proxy = new proxy();
 		
