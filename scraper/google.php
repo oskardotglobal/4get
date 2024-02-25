@@ -559,7 +559,6 @@ class google{
 		}
 		
 		curl_close($curlproc);
-		echo $data;
 		return $data;
 	}
 	
