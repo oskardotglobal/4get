@@ -178,7 +178,7 @@ $draw = new ImagickDraw();
 $draw->setFontSize(20);
 $draw->setFillColor($theme["fg"]);
 //$draw->setTextAntialias(false);
-$draw->setFont("./data/captcha/font.ttf");
+$draw->setFont("./data/fonts/captcha.ttf");
 
 $text = "Pick " . $picks . " images of " . str_replace("_", " ", $choosen[0]);
 
