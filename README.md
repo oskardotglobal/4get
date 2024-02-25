@@ -69,4 +69,4 @@ https://4get.ca
 Refer to the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/">documentation index</a>!
 
 ## Contact
-Shit breaks all the time but I repair it all the time too! Email me here: will<at>lolcat.ca
+Shit breaks all the time but I repair it all the time too! Email me here: will (at) lolcat.ca
