@@ -559,6 +559,7 @@ class google{
 		}
 		
 		curl_close($curlproc);
+		echo $data;
 		return $data;
 	}
 	
@@ -976,6 +977,11 @@ class google{
 			"news" => [],
 			"related" => []
 		];
+		
+		if($this->detect_sorry($html)){
+			
+			throw new Exception("Google blocked this 4get instance. Please set up a proxy!");
+		}
 		
 		$this->parsejavascript($html);
 		
@@ -2795,7 +2801,10 @@ class google{
 			throw new Exception("Failed to get search page");
 		}
 		
-		$this->fuckhtml->load($html);
+		if($this->detect_sorry($html)){
+			
+			throw new Exception("Google blocked this 4get instance. Please set up a proxy!");
+		}
 		
 		$out = [
 			"status" => "ok",
@@ -3608,5 +3617,23 @@ class google{
 	private function titledots($title){
 		
 		return rtrim($title, ". \t\n\r\0\x0B");
+	}
+	
+	private function detect_sorry($html){
+		
+		$this->fuckhtml->load($html);
+		$detect_sorry =
+			$this->fuckhtml
+			->getElementsByTagName("title");
+		
+		if(
+			isset($detect_sorry[0]) &&
+			$detect_sorry[0]["innerHTML"] == "302 Moved"
+		){
+			
+			return true;
+		}
+		
+		return false;
 	}
 }
