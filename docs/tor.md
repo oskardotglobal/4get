@@ -9,6 +9,6 @@ This guide assumes that there is already a configured webserver sitting on port 
 	HiddenServiceDir /var/lib/tor/4get
 	HiddenServicePort 80 127.0.0.1:80
 	```
-5. Start the tor service using `systemctl start tor`
+5. Start the tor service using `service tor restart`
 6. Wait for a while...
 7. Run `cat /var/lib/tor/4get/hostname`. That is your onion address!
