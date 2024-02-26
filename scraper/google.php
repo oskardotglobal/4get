@@ -538,8 +538,7 @@ class google{
 			$url .= "?" . $get;
 		}
 		
-		//curl_setopt($curlproc, CURLOPT_URL, $url);
-		curl_setopt($curlproc, CURLOPT_URL, "https://ifconfig.co");
+		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER, $headers);
@@ -560,7 +559,6 @@ class google{
 		}
 		
 		curl_close($curlproc);
-		echo $data;
 		return $data;
 	}
 	

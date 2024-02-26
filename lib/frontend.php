@@ -902,6 +902,7 @@ class frontend{
 						"yandex" => "Yandex",
 						"google" => "Google",
 						"yep" => "Yep",
+						"mwmbl" => "Mwmbl",
 						"mojeek" => "Mojeek",
 						"marginalia" => "Marginalia",
 						"wiby" => "wiby",
@@ -1018,6 +1019,11 @@ class frontend{
 				$lib = new facebook();
 				break;*/
 			
+			case "mwmbl":
+				include "scraper/mwmbl.php";
+				$lib = new mwmbl();
+				break;
+				
 			case "mojeek":
 				include "scraper/mojeek.php";
 				$lib = new mojeek();

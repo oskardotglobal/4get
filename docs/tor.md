@@ -12,3 +12,5 @@ This guide assumes that there is already a configured webserver sitting on port 
 5. Restart the tor service using `service tor restart`
 6. Wait for a while...
 7. Run `cat /var/lib/tor/4get/hostname`. That is your onion address!
+
+# Specify your own tor address
