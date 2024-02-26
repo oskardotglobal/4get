@@ -77,7 +77,8 @@ class config{
 		"https://4get.psily.garden",
 		"https://search.milivojevic.in.rs",
 		"https://4get.snine.nl",
-		"https://4get.datura.network"
+		"https://4get.datura.network",
+		"https://4get.neco.lol"
 	];
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
@@ -91,7 +92,7 @@ class config{
 	const PROXY_DDG = false; // duckduckgo
 	const PROXY_BRAVE = false;
 	const PROXY_FB = false; // facebook
-	const PROXY_GOOGLE = "bird2";
+	const PROXY_GOOGLE = false;
 	const PROXY_MARGINALIA = false;
 	const PROXY_MOJEEK = false;
 	const PROXY_SC = false; // soundcloud
