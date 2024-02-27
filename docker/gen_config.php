@@ -68,7 +68,8 @@ continue;
                 $output = $output . "\tconst " . $key . " = " . type_to_string(detect_captcha_dirs()) . ";\n";
         }
         if($key === "INSTANCES") {
-                $output = $output . "\tconst " . $key . " = " . type_to_string(explode(',', $val)) . ";\n";
+                $instances_list = gettype($val) === "string" ? explode(",", $val) : $val;
+                $output = $output . "\tconst " . $key . " = " . type_to_string($instances_list) . ";\n";
         }
 
 }
