@@ -126,6 +126,10 @@ $settings = [
 						"text" => "Yep"
 					],
 					[
+						"value" => "mwmbl",
+						"text" => "Mwmbl"
+					],
+					[
 						"value" => "mojeek",
 						"text" => "Mojeek"
 					],

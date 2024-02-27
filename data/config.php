@@ -77,7 +77,8 @@ class config{
 		"https://4get.psily.garden",
 		"https://search.milivojevic.in.rs",
 		"https://4get.snine.nl",
-		"https://4get.datura.network"
+		"https://4get.datura.network",
+		"https://4get.neco.lol"
 	];
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
@@ -103,6 +104,7 @@ class config{
 	const PROXY_PINTEREST = false;
 	const PROXY_SEZNAM = false;
 	const PROXY_NAVER = false;
+	const PROXY_MWMBL = false;
 	const PROXY_FTM = false; // findthatmeme
 	const PROXY_IMGUR = false;
 	const PROXY_YANDEX_W = false; // yandex web
