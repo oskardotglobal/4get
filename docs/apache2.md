@@ -184,6 +184,13 @@ Head over to `/etc/apache2/conf-enabled/charset.conf` and uncomment `AddDefaultC
 ## other-vhost-access-log.conf
 Since none of our configuration files contains any `CustomLog` directives, all we need to do to disable logging entirely is comment out the `CustomLog` directive located in `/etc/apache2/conf-enabled/other-vhost-access-log.conf`. Only error logs will remain if you configured them.
 
+## Symlink everything
+Now comes the most important part of the setup. Run
+```sh
+ln -s /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.conf
+```
+Otherwise apache2 will ignore our SSL configuration. Handy, huh?
+
 # Setup SSL
 Great, now we've configured the webserver, but we still don't have our security certificate. Let's generate one!
 
