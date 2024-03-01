@@ -30,7 +30,7 @@ class config
         // Redirect Wikipedia to Wikiwand
         "/^https?:\/\/([a-zA-Z0-9\\-_]+)\.(?:m\.)?wikipedia\.org\/wiki\/(.*)$/i" => "https://www.wikiwand.com/$1/$2",
         // Redirect Minecraft Fandom to new official wiki
-        "/^https?:\/\/minecraft.fandom.com/wiki/(.*)$/i" => "https://minecraft.wiki/w/$1",
+        "/^https?:\/\/minecraft.fandom.com\/wiki\/(.*)$/i" => "https://minecraft.wiki/w/$1",
     ];
 
     // Enable the API?
