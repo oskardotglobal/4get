@@ -12,6 +12,8 @@ class config
     // Will be shown pretty much everywhere.
     const SERVER_NAME = "Oskar's 4get";
 
+    const ADMIN_EMAIL = "webmaster@oskar.global";
+
     // Will be shown in <meta> tag on home page
     const SERVER_SHORT_DESCRIPTION = "Faster than SearXNG";
 
