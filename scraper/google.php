@@ -3,7 +3,6 @@
 // todo:
 // aliexpress tracking links
 // enhanced msx notice
-// detect "sorry" page
 
 class google{
 	
@@ -654,6 +653,7 @@ class google{
 				
 				throw new Exception("Failed to get HTML");
 			}
+			//$html = file_get_contents("scraper/google.html");
 		}
 		
 		return $this->parsepage($html, "web", $search, $ip);
@@ -2322,11 +2322,11 @@ class google{
 				->getElementsByClassName(
 					$this->findstyles(
 						[
-							"font-weight" => "bold",
-							"font-size" => "16px",
 							"color" => "#000",
+							"font-size" => "16px",
+							"font-weight" => "bold",
 							"margin" => "0",
-							"padding" => "12px 16px 0 16px"
+							"padding" => "12px 16px 0px 16px"
 						],
 						self::is_class
 					),
@@ -2528,6 +2528,19 @@ class google{
 				->getElementsByTagName("a");
 			
 			$description = [];
+			
+			$pcitems =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"pcitem",
+					"div"
+				);
+			
+			if(count($pcitems) !== 0){
+				
+				// ignore elements with carousels in them
+				continue;
+			}
 			
 			foreach($as as $a){
 				
@@ -3075,27 +3088,38 @@ class google{
 	
 	private function findstyles($rules, $is){
 		
-		ksort($rules);
+		$c = count($rules);
 		
-		foreach($this->computedstyle as $stylename => $styles){
+		foreach($this->computedstyle as $classname => $styles){
 			
-			if($styles == $rules){
+			if($classname[0] != $is){
 				
-				preg_match(
-					'/\\' . $is . '([^ .]+)/',
-					$stylename,
-					$out
-				);
+				// not a class, skip
+				continue;
+			}
+			
+			$i = 0;
+			foreach($styles as $stylename => $stylevalue){
 				
-				if(count($out) === 2){
+				if(
+					isset($rules[$stylename]) &&
+					$rules[$stylename] == $stylevalue
+				){
 					
-					return $out[1];
+					$i++;
+				}else{
+					
+					continue 2;
 				}
+			}
+			
+			if($c === $i){
 				
-				return false;
+				return ltrim($classname, $is);
 			}
 		}
 		
+		// fail, did not find classname.
 		return false;
 	}
 	
@@ -3103,7 +3127,7 @@ class google{
 		
 		// get style tags
 		preg_match_all(
-			'/([^{]+){([^}]+)}/',
+			'/([^{]+){([^}]*)}/',
 			$style,
 			$tags_regex
 		);
@@ -3137,11 +3161,6 @@ class google{
 						trim($value[1]);
 				}
 			}
-		}
-		
-		foreach($tags as &$value){
-			
-			ksort($value);
 		}
 		
 		return $tags;
