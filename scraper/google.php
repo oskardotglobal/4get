@@ -522,6 +522,7 @@ class google{
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
 			"DNT: 1",
+			"Cookie: SOCS=CAESNQgCEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjQwMzE3LjA4X3AwGgJlbiAEGgYIgM7orwY",
 			"Connection: keep-alive",
 			"Upgrade-Insecure-Requests: 1",
 			"Sec-Fetch-Dest: document",
@@ -977,9 +978,9 @@ class google{
 			"related" => []
 		];
 		
-		if($this->detect_sorry($html)){
+		if($error = $this->detect_sorry($html)){
 			
-			throw new Exception("Google blocked this 4get instance. Please set up a proxy!");
+			throw new Exception($error);
 		}
 		
 		$this->parsejavascript($html);
@@ -2813,9 +2814,9 @@ class google{
 			throw new Exception("Failed to get search page");
 		}
 		
-		if($this->detect_sorry($html)){
+		if($error = $this->detect_sorry($html)){
 			
-			throw new Exception("Google blocked this 4get instance. Please set up a proxy!");
+			throw new Exception($error);
 		}
 		
 		$out = [
@@ -3649,7 +3650,30 @@ class google{
 			$detect_sorry[0]["innerHTML"] == "302 Moved"
 		){
 			
-			return true;
+			// may be consent.google.com in europe or /sorry captcha page
+			$url =
+				$this->fuckhtml
+				->getElementsByTagName("a");
+			
+			if(
+				strpos(
+					parse_url(
+						$this->fuckhtml
+						->getTextContent(
+							$url[0]["attributes"]["href"]
+						),
+						PHP_URL_PATH
+					),
+					"/sorry"
+				) === 0
+			){
+				
+				// found /sorry
+				return "Google blocked this 4get instance. Please setup a proxy!";
+			}
+			
+			// found consent.google, should not happen anymore
+			return "Google served a GPDR consent form. This should not happen, please report if you encounter this message";
 		}
 		
 		return false;
