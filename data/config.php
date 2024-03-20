@@ -92,7 +92,7 @@ class config{
 	const PROXY_DDG = false; // duckduckgo
 	const PROXY_BRAVE = false;
 	const PROXY_FB = false; // facebook
-	const PROXY_GOOGLE = "webshare_google";
+	const PROXY_GOOGLE = false;
 	const PROXY_MARGINALIA = false;
 	const PROXY_MOJEEK = false;
 	const PROXY_SC = false; // soundcloud
