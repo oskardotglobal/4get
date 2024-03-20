@@ -16,9 +16,9 @@ $frontend = new frontend();
 /*
 	Captcha
 */
-include "lib/captcha_gen.php";
+include "lib/bot_protection.php";
 $null = null;
-new captcha($null, $null, $null, "images", false);
+new bot_protection($null, $null, $null, "images", false);
 
 [$scraper, $filters] = $frontend->getscraperfilters(
 	"images",

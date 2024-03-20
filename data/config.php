@@ -83,7 +83,7 @@ class config{
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP
@@ -118,8 +118,8 @@ class config{
 	// SOUNDCLOUD
 	// Get these parameters by making a search on soundcloud with network
 	// tab open, then filter URLs using "search?q=". (No need to login)
-	const SC_USER_ID = "59333-426459-717969-168008";
-	const SC_CLIENT_TOKEN = "8BBZpqUP1KSN4W6YB64xog2PX4Dw98b1";
+	const SC_USER_ID = "447501-577662-794348-352629";
+	const SC_CLIENT_TOKEN = "VNc62l3wxDWS0Ol62j5UYNc1gsZ3UXPv";
 	
 	// MARGINALIA
 	// Get an API key by contacting the Marginalia.nu maintainer. The "public" key
