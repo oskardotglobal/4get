@@ -126,6 +126,10 @@ $settings = [
 						"text" => "Yep"
 					],
 					[
+						"value" => "crowdview",
+						"text" => "Crowdview"
+					],
+					[
 						"value" => "mwmbl",
 						"text" => "Mwmbl"
 					],

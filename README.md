@@ -24,6 +24,7 @@ https://4get.ca
 	- Brave
 	- Yandex
 	- Google
+	- Mwmbl
 	- Mojeek
 	- Marginalia
 	- wiby

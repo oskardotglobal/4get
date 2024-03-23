@@ -104,6 +104,7 @@ class config{
 	const PROXY_PINTEREST = false;
 	const PROXY_SEZNAM = false;
 	const PROXY_NAVER = false;
+	const PROXY_CROWDVIEW = false;
 	const PROXY_MWMBL = false;
 	const PROXY_FTM = false; // findthatmeme
 	const PROXY_IMGUR = false;

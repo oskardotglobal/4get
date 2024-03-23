@@ -902,6 +902,7 @@ class frontend{
 						"yandex" => "Yandex",
 						"google" => "Google",
 						"yep" => "Yep",
+						"crowdview" => "Crowdview",
 						"mwmbl" => "Mwmbl",
 						"mojeek" => "Mojeek",
 						"marginalia" => "Marginalia",
@@ -1018,6 +1019,11 @@ class frontend{
 				include "scraper/facebook.php";
 				$lib = new facebook();
 				break;*/
+			
+			case "crowdview":
+				include "scraper/crowdview.php";
+				$lib = new crowdview();
+				break;
 			
 			case "mwmbl":
 				include "scraper/mwmbl.php";
