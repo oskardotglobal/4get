@@ -44,7 +44,7 @@ class frontend{
 			$replacements["timetaken"] !== null
 		){
 			
-			$replacements["timetaken"] = '<div class="timetaken">Took ' . substr(microtime(true) - $replacements["timetaken"], 0, 4) . 's</div>';
+			$replacements["timetaken"] = '<div class="timetaken">Took ' . number_format(microtime(true) - $replacements["timetaken"], 2) . 's</div>';
 		}
 		
 		$handle = fopen("template/{$template}", "r");
@@ -84,29 +84,54 @@ class frontend{
 				"filters" => $this->generatehtmlfilters($filters, $get)
 			]);
 		
+		$headers_raw = getallheaders();
+		$header_keys = [];
+		$user_agent = "";
+		$bad_header = false;
+		
+		foreach($headers_raw as $headerkey => $headervalue){
+			
+			$headerkey = strtolower($headerkey);
+			if($headerkey == "user-agent"){
+				
+				$user_agent = $headervalue;
+				continue;
+			}
+			
+			// check header key
+			if(in_array($headerkey, config::FILTERED_HEADER_KEYS)){
+				
+				$bad_header = true;
+				break;
+			}
+		}
+		
 		if(
 			preg_match(
-				'/bot|wget|curl|python-requests|scrapy|feedfetcher|go-http-client|ruby|universalfeedparser|yahoo\! slurp|spider|rss/i',
-				$_SERVER["HTTP_USER_AGENT"]
-			)
+				config::HEADER_REGEX,
+				$user_agent
+			) ||
+			$bad_header === true
 		){
 			
 			// bot detected !!
 			apcu_inc("captcha_gen");
 			
+			$null = null;
 			$this->drawerror(
 				"Tshh, blocked!",
-				'You were blocked from viewing this page. If you wish to scrape data from 4get, please consider running <a href="https://git.lolcat.ca/lolcat/4get" rel="noreferrer nofollow">your own 4get instance</a>.',
+				'Your browser, IP or IP range has been blocked from this 4get instance. If this is an error, please <a href="/about">contact the administrator</a>.',
+				microtime(true)
 			);
 			die();
 		}
 	}
 	
-	public function drawerror($title, $error){
+	public function drawerror($title, $error, $timetaken){
 		
 		echo
 			$this->load("search.html", [
-				"timetaken" => null,
+				"timetaken" => $timetaken,
 				"class" => "",
 				"right-left" => "",
 				"right-right" => "",
@@ -119,7 +144,7 @@ class frontend{
 		die();
 	}
 	
-	public function drawscrapererror($error, $get, $target){
+	public function drawscrapererror($error, $get, $target, $timetaken){
 		
 		$this->drawerror(
 			"Shit",
@@ -131,7 +156,8 @@ class frontend{
 				'<li>Remove keywords that could cause errors</li>' .
 				'<li><a href="/instances?target=' . $target . "&" . $this->buildquery($get, false) . '">Try your search on another 4get instance</a></li>' .
 			'</ul><br>' .
-			'If the error persists, please <a href="/about">contact the administrator</a>.'
+			'If the error persists, please <a href="/about">contact the administrator</a>.',
+			$timetaken
 		);
 	}
 	
@@ -483,10 +509,6 @@ class frontend{
 						$archives[] = "warosu.org";
 						break;
 					
-					case "cm":
-						$archives[] = "boards.fireden.net";
-						break;
-					
 					case "f":
 						$archives[] = "archive.4plebs.org";
 						break;
@@ -503,12 +525,10 @@ class frontend{
 						break;
 					
 					case "v":
-						$archives[] = "boards.fireden.net";
 						$archives[] = "arch.b4k.co";
 						break;
 					
 					case "vg":
-						$archives[] = "boards.fireden.net";
 						$archives[] = "arch.b4k.co";
 						break;
 					
@@ -579,7 +599,6 @@ class frontend{
 						break;
 					
 					case "sci":
-						$archives[] = "boards.fireden.net";
 						$archives[] = "warosu.org";
 						$archives[] = "eientei.xyz";
 						break;
@@ -614,7 +633,6 @@ class frontend{
 						break;
 					
 					case "ic":
-						$archives[] = "boards.fireden.net";
 						$archives[] = "warosu.org";
 						break;
 					
@@ -741,10 +759,6 @@ class frontend{
 						$archives[] = "desuarchive.org";
 						break;
 					
-					case "y":
-						$archives[] = "boards.fireden.net";
-						break;
-					
 					case "t":
 						$archives[] = "archiveofsins.com";
 						break;
@@ -802,7 +816,7 @@ class frontend{
 		$payload .=
 				'<a href="https://webcache.googleusercontent.com/search?q=cache:' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://google.com" alt="go">Google cache</a>' .
 				'<a href="https://web.archive.org/web/' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://archive.org" alt="ar">Archive.org</a>' .
-				'<a href="https://archive.is/newest/' . htmlspecialchars($link) . '" class="list" target="_BLANK"><img src="/favicon?s=https://archive.is" alt="ar">Archive.is</a>' .
+				'<a href="https://archive.ph/newest/' . htmlspecialchars($link) . '" class="list" target="_BLANK"><img src="/favicon?s=https://archive.is" alt="ar">Archive.is</a>' .
 				'<a href="https://ghostarchive.org/search?term=' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://ghostarchive.org" alt="gh">Ghostarchive</a>' .
 				'<a href="https://www.bing.com/search?q=url%3A' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://bing.com" alt="bi">Bing cache</a>' .
 				'<a href="https://megalodon.jp/?url=' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://megalodon.jp" alt="me">Megalodon</a>' .

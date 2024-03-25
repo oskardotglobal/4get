@@ -654,6 +654,7 @@ class google{
 				
 				throw new Exception("Failed to get HTML");
 			}
+			
 			//$html = file_get_contents("scraper/google.html");
 		}
 		

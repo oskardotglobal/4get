@@ -73,7 +73,7 @@ class fuckhtml{
 			$attributes = [];
 
 			preg_match_all(
-				'/([^\/\s\\=]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s]*))?/',
+				'/([^\/\s\\=]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s]*))?/i',
 				$starting_tags[2][$i][0],
 				$regex_attributes
 			);
@@ -88,7 +88,7 @@ class fuckhtml{
 					continue;
 				}
 				
-				$attributes[$regex_attributes[1][$k]] =
+				$attributes[strtolower($regex_attributes[1][$k])] =
 					trim($regex_attributes[2][$k], "'\" \n\r\t\v\x00");
 			}
 			

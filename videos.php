@@ -31,7 +31,7 @@ try{
 	
 }catch(Exception $error){
 	
-	$frontend->drawscrapererror($error->getMessage(), $get, "videos");
+	$frontend->drawscrapererror($error->getMessage(), $get, "videos", $payload["timetaken"]);
 }
 
 $categories = [

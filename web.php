@@ -31,7 +31,7 @@ try{
 	
 }catch(Exception $error){
 	
-	$frontend->drawscrapererror($error->getMessage(), $get, "web");
+	$frontend->drawscrapererror($error->getMessage(), $get, "web", $payload["timetaken"]);
 }
 
 /*

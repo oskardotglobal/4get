@@ -31,7 +31,7 @@ try{
 	
 }catch(Exception $error){
 	
-	$frontend->drawscrapererror($error->getMessage(), $get, "music");
+	$frontend->drawscrapererror($error->getMessage(), $get, "music", $payload["timetaken"]);
 }
 
 $categories = [

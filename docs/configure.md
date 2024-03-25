@@ -8,6 +8,9 @@ Welcome! This guide assumes that you have a working 4get instance. This will hel
 3. The captcha imagesets are located in `data/captcha/your_image_set/*.png`
 4. The captcha font is located in `data/fonts/captcha.ttf`
 
+## Robots.txt
+Make sure you configure this right to optimize your search engine presence! Head over to `/robots.txt` and change the 4get.ca domain to your own domain.
+
 ## Server listing
 To be listed on https://4get.ca/instances , you must contact *any* of the people in the server list and ask them to add you to their list of instances in their configuration. The instance list is distributed, and I don't have control over it.
 
@@ -32,4 +35,4 @@ If you see spammy entries in your instances list, simply remove the instance fro
 Done! The scraper you chose should now be using the rotating proxies. When asking for the next page of results, it will use the same proxy to avoid detection!
 
 ### Important!
-If you ever test out a `socks5` proxy locally on your machine and find out it works but doesn't on your server, try supplying the `socks5_hostname` protocol instead.
+If you ever test out a `socks5` proxy locally on your machine and find out it works but doesn't on your server, try supplying the `socks5_hostname` protocol instead. Hopefully this tip can save you 3 hours of your life!

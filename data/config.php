@@ -23,17 +23,13 @@ class config{
 	// Enable the API?
 	const API_ENABLED = true;
 	
-	// Bot protection
-	// 4get.ca has been hit with 500k bot reqs every single day for months
-	// you probably want to enable this if your instance is public...
-	// 0 = disabled
-	// 1 = ask for image captcha (requires imagemagick v6 or higher)
-	// @TODO: 2 = invite only (users needs a pass)
-	const BOT_PROTECTION = 0;
+	//
+	// BOT PROTECTION
+	//
 	
-	// Maximal number of searches per captcha key/pass issued. Counter gets
-	// reset on every APCU cache clear (should happen once a day)
-	const MAX_SEARCHES = 100;
+	// 0 = disabled, 1 = ask for image captcha, @TODO: 2 = invite only (users needs a pass)
+	// VERY useful against a targetted attack
+	const BOT_PROTECTION = 0;
 	
 	// if BOT_PROTECTION is set to 1, specify the available datasets here
 	// images should be named from 1.png to X.png, and be 100x100 in size
@@ -44,6 +40,32 @@ class config{
 		// ["fumo_plushies", 1006],
 		// ["minecraft", 848]
 	];
+	
+	// If this regex expression matches on the user agent, it blocks the request
+	// Not useful at all against a targetted attack
+	const HEADER_REGEX = '/bot|wget|curl|python-requests|scrapy|go-http-client|ruby|yahoo|spider/i';
+	
+	// Block clients who present any of the following headers in their request (SPECIFY IN !!lowercase!!)
+	// Eg: ["x-forwarded-for", "x-via", "forwarded-for", "via"];
+	// Useful for blocking *some* proxies used for botting
+	const FILTERED_HEADER_KEYS = [
+		"x-forwarded-for",
+		"x-via",
+		"forwarded-for",
+		"via"
+	];
+	
+	// @TODO: Portscan the user for open proxies before allowing a connection, block user if any are found
+	// Requires the nmap package
+	const NMAP_PROXY_CHECK = false;
+	
+	// @TODO: Make IP blacklist public under /api/v1/blacklist endpoint ?
+	const PUBLIC_IP_BLACKLIST = true;
+	
+	// Maximal number of searches per captcha key/pass issued. Counter gets
+	// reset on every APCU cache clear (should happen once a day).
+	// Only useful when BOT_PROTECTION is NOT set to 0
+	const MAX_SEARCHES = 100;
 	
 	// List of domains that point to your servers. Include your tor/i2p
 	// addresses here! Must be a valid URL. Won't affect links placed on

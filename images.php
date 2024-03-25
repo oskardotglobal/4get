@@ -29,7 +29,7 @@ try{
 	
 }catch(Exception $error){
 	
-	$frontend->drawscrapererror($error->getMessage(), $get, "images");
+	$frontend->drawscrapererror($error->getMessage(), $get, "images", $payload["timetaken"]);
 }
 
 if(count($results["image"]) === 0){
