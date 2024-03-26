@@ -60,7 +60,7 @@ class config{
 		"forwarded",
 		"proxy-connection",
 		"remote-addr",
-		"via",
+		"via"
 	];
 	
 	// @TODO: Portscan the user for open proxies before allowing a connection, block user if any are found
