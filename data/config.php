@@ -50,9 +50,17 @@ class config{
 	// Useful for blocking *some* proxies used for botting
 	const FILTERED_HEADER_KEYS = [
 		"x-forwarded-for",
-		"x-via",
+		"x-cluster-client-ip",
+		"x-client-ip",
+		"x-real-ip",
+		"client-ip",
+		"real-ip",
 		"forwarded-for",
-		"via"
+		"forwarded-for-ip",
+		"forwarded",
+		"proxy-connection",
+		"remote-addr",
+		"via",
 	];
 	
 	// @TODO: Portscan the user for open proxies before allowing a connection, block user if any are found
