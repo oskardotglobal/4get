@@ -32,8 +32,6 @@ class backend{
 		
 		$proxylist = array_values($proxylist);
 		
-		echo $proxy_index_raw % count($proxylist);
-		
 		return $proxylist[$proxy_index_raw % count($proxylist)];
 	}
 	
