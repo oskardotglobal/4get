@@ -1020,7 +1020,15 @@ class google{
 						self::is_class
 					),
 					"div"
-				)[1];
+				);
+			
+			if(!isset($description[1])){
+				
+				throw new Exception("Google returned an unsupported page format (will fix)");
+			}else{
+				
+				$description = $description[1];
+			}
 			
 			// get date (rare)
 			$date =
