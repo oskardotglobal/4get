@@ -142,7 +142,12 @@ class frontend{
 		die();
 	}
 	
-	public function drawscrapererror($error, $get, $target, $timetaken = microtime(true)){
+	public function drawscrapererror($error, $get, $target, $timetaken = null){
+		
+		if($timetaken === null){
+			
+			$timetaken = microtime(true);
+		}
 		
 		$this->drawerror(
 			"Shit",
