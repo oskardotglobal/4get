@@ -125,7 +125,12 @@ class frontend{
 		}
 	}
 	
-	public function drawerror($title, $error, $timetaken){
+	public function drawerror($title, $error, $timetaken = null){
+		
+		if($timetaken === null){
+			
+			$timetaken = microtime(true);
+		}
 		
 		echo
 			$this->load("search.html", [
