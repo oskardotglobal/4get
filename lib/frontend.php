@@ -117,11 +117,9 @@ class frontend{
 			// bot detected !!
 			apcu_inc("captcha_gen");
 			
-			$null = null;
 			$this->drawerror(
 				"Tshh, blocked!",
-				'Your browser, IP or IP range has been blocked from this 4get instance. If this is an error, please <a href="/about">contact the administrator</a>.',
-				microtime(true)
+				'Your browser, IP or IP range has been blocked from this 4get instance. If this is an error, please <a href="/about">contact the administrator</a>.'
 			);
 			die();
 		}
@@ -144,7 +142,7 @@ class frontend{
 		die();
 	}
 	
-	public function drawscrapererror($error, $get, $target, $timetaken){
+	public function drawscrapererror($error, $get, $target, $timetaken = microtime(true)){
 		
 		$this->drawerror(
 			"Shit",
