@@ -2,12 +2,17 @@
 
 When using docker container any environment variables prefixed with `FOURGET_` will be added to the generated config located at `/var/www/html/4get/data/config.php`
 
+When lists of data is expected in [data/config.php](../data/config.php), such as `INSTANCES`, you can pass in a comma separated string via environment variable. 
+
+Example:
+`FOURGET_INSTANCES="https://4get.ca,https://domain.tld"`
+
 #### Special environment variables
 
 | Name              | value                          | Example                              |
 | -                 | -                              | -                                    |
 | FOURGET_PROTO     | "http" or "https"              | "https"                              |
-| FOURGET_INSTANCES | comma separated string of urls | "https://4get.ca,https://domain.tld" |
+
 
 #### Important directories
 
@@ -65,7 +70,7 @@ version: "3.7"
 services:
   fourget:
     image: luuul/4get:latest
-    restart: always
+    restart: unless-stopped
     environment:
       - FOURGET_VERSION=6
       - FOURGET_PROTO=http
@@ -84,7 +89,7 @@ version: "3.7"
 services:
   fourget:
     image: luuul/4get:latest
-    restart: always
+    restart: unless-stopped
     environment:
       - FOURGET_VERSION=6
       - FOURGET_PROTO=https
@@ -110,7 +115,7 @@ version: "3.7"
 services:
   fourget:
     image: luuul/4get:latest
-    restart: always
+    restart: unless-stopped
     environment:
       - FOURGET_VERSION=6
       - FOURGET_PROTO=http
@@ -133,7 +138,7 @@ version: "3.7"
 services:
   fourget:
     image: luuul/4get:latest
-    restart: always
+    restart: unless-stopped
     environment:
       - FOURGET_VERSION=6
       - FOURGET_PROTO=http
