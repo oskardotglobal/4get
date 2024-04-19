@@ -4,7 +4,7 @@ version: "3.7"
 services:
   fourget:
     image: luuul/4get:latest
-    restart: always
+    restart: unless-stopped
     environment:
       - FOURGET_VERSION=6
       - FOURGET_SERVER_NAME=4get.ca
