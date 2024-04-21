@@ -122,6 +122,10 @@ $settings = [
 						"text" => "Google"
 					],
 					[
+						"value" => "qwant",
+						"text" => "Qwant"
+					],
+					[
 						"value" => "yep",
 						"text" => "Yep"
 					],
@@ -172,6 +176,10 @@ $settings = [
 						"text" => "Google"
 					],
 					[
+						"value" => "qwant",
+						"text" => "Qwant"
+					],
+					[
 						"value" => "yep",
 						"text" => "Yep"
 					],
@@ -212,7 +220,11 @@ $settings = [
 					[
 						"value" => "google",
 						"text" => "Google"
-					]
+					],
+					[
+						"value" => "qwant",
+						"text" => "Qwant"
+					],
 				]
 			],
 			[
@@ -230,6 +242,10 @@ $settings = [
 					[
 						"value" => "google",
 						"text" => "Google"
+					],
+					[
+						"value" => "qwant",
+						"text" => "Qwant"
 					],
 					[
 						"value" => "yep",
