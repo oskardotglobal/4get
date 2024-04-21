@@ -923,6 +923,7 @@ class frontend{
 						"brave" => "Brave",
 						"yandex" => "Yandex",
 						"google" => "Google",
+						"qwant" => "Qwant",
 						"yep" => "Yep",
 						"crowdview" => "Crowdview",
 						"mwmbl" => "Mwmbl",
@@ -942,6 +943,7 @@ class frontend{
 						"yandex" => "Yandex",
 						"brave" => "Brave",
 						"google" => "Google",
+						"qwant" => "Qwant",
 						"yep" => "Yep",
 						//"pinterest" => "Pinterest",
 						"imgur" => "Imgur",
@@ -959,7 +961,8 @@ class frontend{
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
 						"yandex" => "Yandex",
-						"google" => "Google"
+						"google" => "Google",
+						"qwant" => "Qwant"
 					]
 				];
 				break;
@@ -971,6 +974,7 @@ class frontend{
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
 						"google" => "Google",
+						"qwant" => "Qwant",
 						"yep" => "Yep",
 						"mojeek" => "Mojeek"
 					]
@@ -1010,98 +1014,8 @@ class frontend{
 			$scraper_out = $first;
 		}
 		
-		switch($scraper_out){
-			
-			case "ddg":
-				include "scraper/ddg.php";
-				$lib = new ddg();
-				break;
-			
-			case "brave":
-				include "scraper/brave.php";
-				$lib = new brave();
-				break;
-			
-			case "yt";
-				include "scraper/youtube.php";
-				$lib = new youtube();
-				break;
-			
-			case "yandex":
-				include "scraper/yandex.php";
-				$lib = new yandex();
-				break;
-			
-			case "google":
-				include "scraper/google.php";
-				$lib = new google();
-				break;
-			/*
-			case "fb":
-				include "scraper/facebook.php";
-				$lib = new facebook();
-				break;*/
-			
-			case "crowdview":
-				include "scraper/crowdview.php";
-				$lib = new crowdview();
-				break;
-			
-			case "mwmbl":
-				include "scraper/mwmbl.php";
-				$lib = new mwmbl();
-				break;
-				
-			case "mojeek":
-				include "scraper/mojeek.php";
-				$lib = new mojeek();
-				break;
-			
-			case "marginalia":
-				include "scraper/marginalia.php";
-				$lib = new marginalia();
-				break;
-			
-			case "wiby":
-				include "scraper/wiby.php";
-				$lib = new wiby();
-				break;
-			
-			case "curlie":
-				include "scraper/curlie.php";
-				$lib = new curlie();
-				break;
-			
-			case "yep":
-				include "scraper/yep.php";
-				$lib = new yep();
-				break;
-			
-			case "sc":
-				include "scraper/sc.php";
-				$lib = new sc();
-				break;
-			
-			case "spotify":
-				include "scraper/spotify.php";
-				$lib = new spotify();
-				break;
-			
-			case "pinterest":
-				include "scraper/pinterest.php";
-				$lib = new pinterest();
-				break;
-			
-			case "imgur":
-				include "scraper/imgur.php";
-				$lib = new imgur();
-				break;
-			
-			case "ftm":
-				include "scraper/ftm.php";
-				$lib = new ftm();
-				break;
-		}
+		include "scraper/$scraper_out.php";
+		$lib = new $scraper_out();
 		
 		// set scraper on $_GET
 		$_GET["scraper"] = $scraper_out;

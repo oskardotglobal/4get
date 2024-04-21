@@ -5,7 +5,7 @@ class config{
 	// any parameters.
 	
 	// 4get version. Please keep this updated
-	const VERSION = 7;
+	const VERSION = 8;
 	
 	// Will be shown pretty much everywhere.
 	const SERVER_NAME = "4get";
@@ -63,13 +63,6 @@ class config{
 		"via"
 	];
 	
-	// @TODO: Portscan the user for open proxies before allowing a connection, block user if any are found
-	// Requires the nmap package
-	const NMAP_PROXY_CHECK = false;
-	
-	// @TODO: Make IP blacklist public under /api/v1/blacklist endpoint ?
-	const PUBLIC_IP_BLACKLIST = true;
-	
 	// Maximal number of searches per captcha key/pass issued. Counter gets
 	// reset on every APCU cache clear (should happen once a day).
 	// Only useful when BOT_PROTECTION is NOT set to 0
@@ -113,7 +106,7 @@ class config{
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP
@@ -123,6 +116,7 @@ class config{
 	const PROXY_BRAVE = false;
 	const PROXY_FB = false; // facebook
 	const PROXY_GOOGLE = false;
+	const PROXY_QWANT = false;
 	const PROXY_MARGINALIA = false;
 	const PROXY_MOJEEK = false;
 	const PROXY_SC = false; // soundcloud
@@ -146,14 +140,8 @@ class config{
 	// Scraper-specific parameters
 	//
 	
-	// SOUNDCLOUD
-	// Get these parameters by making a search on soundcloud with network
-	// tab open, then filter URLs using "search?q=". (No need to login)
-	const SC_USER_ID = "447501-577662-794348-352629";
-	const SC_CLIENT_TOKEN = "VNc62l3wxDWS0Ol62j5UYNc1gsZ3UXPv";
-	
 	// MARGINALIA
-	// Get an API key by contacting the Marginalia.nu maintainer. The "public" key
-	// works but is almost always rate-limited.
-	const MARGINALIA_API_KEY = "public";
+	// Use "null" to default out to HTML scraping OR specify a string to
+	// use the API (Eg: "public"). API has less filters.
+	const MARGINALIA_API_KEY = null;
 }

@@ -11,63 +11,42 @@ https://4get.ca
 
 ## Totally unbiased comparison between alternatives
 
-|                            | 4get                    | searx(ng) | librex      | araa     |
-|----------------------------|-------------------------|-----------|-------------|----------|
-| RAM usage                  | 200-400mb~              | 2GB~      | 200-400mb~  | 2GB~     |
-| Does it suck               | no (debunked by snopes) | yes       | yes         | a little |
-| Does it work               | ye                      | no        | no          | ye       |
-| Did the dev commit suicide | not until my 30s        | idk       | yes         | no       |
+|                            | 4get                    | searx(ng) | librex      | araa      |
+|----------------------------|-------------------------|-----------|-------------|-----------|
+| RAM usage                  | 200-400mb~              | 2GB~      | 200-400mb~  | 2GB~      |
+| Does it suck               | no (debunked by snopes) | yes       | yes         | a little  |
+| Does it work               | ye                      | sometimes | no          | sometimes |
+| Did the dev commit suicide | not until my 30s        | no        | allegedly   | no        |
+
+## Features
+1. Rotating proxies on a per-scraper basis
+2. Search filters, which SearxNG lacks for the most part
+3. Bot protection that *actually* filters out the bots (when configured)
+4. Interface doesn't require javascript
+5. Favicon fetcher with caching support & image proxy
+6. Bunch of other shit
+
+tl;dr the best way to actually browse for shit.
 
 # Supported websites
-1. Web
-	- DuckDuckGo
-	- Brave
-	- Yandex
-	- Google
-	- Mwmbl
-	- Mojeek
-	- Marginalia
-	- wiby
-	- Curlie
 
-2. Images
-	- DuckDuckGo
-	- Yandex
-	- Google
-	- Brave
-	- Yep
-	- Imgur
-	- FindThatMeme
-
-3. Videos
-	- YouTube
-	- DuckDuckgo
-	- Brave
-	- Yandex
-	- Google
-
-4. News
-	- DuckDuckGo
-	- Brave
-	- Google
-	- Mojeek
-
-5. Music
-	- SoundCloud
-
-6. Autocompleter
-	- Brave
-	- DuckDuckGo
-	- Yandex
-	- Google
-	- Qwant
-	- Yep
-	- Marginalia
-	- YouTube
-	- SoundCloud
+| Web        | Images       | Videos     | News       | Music      | Autocompleter |
+|------------|--------------|------------|------------|------------|---------------|
+| DuckDuckGo | DuckDuckGo   | YouTube    | DuckDuckGo | Soundcloud | Brave         |
+| Brave      | Brave        | DuckDuckGo | Brave      |            | DuckDuckGo    |
+| Yandex     | Yandex       | Brave      | Google     |            | Yandex        |
+| Google     | Google       | Yandex     | Qwant      |            | Google        |
+| Qwant      | Qwant        | Google     | Mojeek     |            | Yep           |
+| Yep        | Pinterest    | Qwant      |            |            | Marginalia    |
+| Crowdview  | Yep          |            |            |            | YouTube       |
+| Mwmbl      | Imgur        |            |            |            | Soundcloud    |
+| Mojeek     | FindThatMeme |            |            |            |               |
+| Marginalia |              |            |            |            |               |
+| wiby       |              |            |            |            |               |
+| Curlie     |              |            |            |            |               |
 
 # Installation
-Refer to the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/">documentation index</a>!
+Refer to the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/">documentation index</a>. I recommend following the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">apache2 guide</a>.
 
 ## Contact
-Shit breaks all the time but I repair it all the time too! Email me here: will (at) lolcat.ca
+Shit breaks all the time but I repair it all the time too... Email me here: <b>will (at) lolcat.ca</b> or create an issue.

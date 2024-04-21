@@ -22,10 +22,10 @@ var list = [];
 var pinged_list = [];
 var reqs = 0;
 var errors = 0;
-var sort = 0; // lower ping first
+var sort = 6; // highest version first
 
 // check for instance redirect stuff
-var redir = "";
+var redir = [];
 var target = "/web?";
 new URL(window.location.href)
 	.searchParams
@@ -39,12 +39,16 @@ new URL(window.location.href)
 			}
 			
 			if(key == "npt"){ return; }
-			redir += encodeURIComponent(key) + "=" + encodeURIComponent(value)
+			redir.push(encodeURIComponent(key) + "=" + encodeURIComponent(value))
 		}
 	);
 
-if(redir != ""){
-	redir = target + redir;
+if(redir.length !== 0){
+	
+	redir = target + redir.join("&");
+}else{
+	
+	redir = "";
 }
 
 var quote = document.createElement("div");
@@ -61,14 +65,13 @@ var table = document.createElement("table");
 table.innerHTML =
 	'<thead>' +
 	'<tr>' +
-		'<th><div class="arrow up"></div>Ping</th>' +
 		'<th class="extend">Server</th>' +
 		'<th>Address</th>' +
 		'<th>Bot protection</th>' +
 		'<th title="Amount of legit requests processed since the last APCU cache clear (usually happens at midnight)">Real reqs (?)</th>' +
 		'<th title="Amount of filtered requests processed since the last APCU cache clear (usually happens at midnight)">Bot reqs (?)</th>' +
 		'<th>API</th>' +
-		'<th>Version</th>' +
+		'<th><div class="arrow up"></div>Version</th>' +
 	'</tr>' +
 	'</thead>' +
 	'<tbody></tbody>';
@@ -118,14 +121,13 @@ for(var i=0; i<th.length; i++){
 		
 		switch(div.textContent.toLowerCase()){
 			
-			case "ping": sort = orientation; break;
-			case "server": sort = 2 + orientation; break;
-			case "address": sort = 4 + orientation; break;
-			case "bot protection": sort = 6 + orientation; break;
-			case "real reqs (?)": sort = 8 + orientation; break;
-			case "bot reqs (?)": sort = 10 + orientation; break;
-			case "api": sort = 12 + orientation; break;
-			case "version": sort = 14 + orientation; break;
+			case "server": sort = 0 + orientation; break;
+			case "address": sort = 2 + orientation; break;
+			case "bot protection": sort = 4 + orientation; break;
+			case "real reqs (?)": sort = 6 + orientation; break;
+			case "bot reqs (?)": sort = 8 + orientation; break;
+			case "api": sort = 10 + orientation; break;
+			case "version": sort = 12 + orientation; break;
 		}
 		
 		render_list();
@@ -160,16 +162,6 @@ function number_format(int){
 	return new Intl.NumberFormat().format(int);
 }
 
-window.fetch = (function(fetch) {
-	return function(fn, t){
-		const begin = Date.now();
-		return fetch.apply(this, arguments).then(function(response) {
-			response.ping = Date.now() - begin;
-			return response;
-		});
-	};
-})(window.fetch);
-
 // parse initial server list
 fetch_server(window.location.origin);
 
@@ -188,7 +180,6 @@ async function fetch_server(server){
 		if(list[i] == server){
 			
 			// serber was already fetched
-			console.info("Already checked server: " + server);
 			return;
 		}
 	}
@@ -200,9 +191,7 @@ async function fetch_server(server){
 	
 	try{
 		
-		var payload = await fetch(
-			server + "/ami4get"
-		);
+		var payload = await fetch(server + "/ami4get");
 		
 		if(payload.status !== 200){
 			
@@ -214,7 +203,6 @@ async function fetch_server(server){
 		}
 		
 		data = await payload.json();
-		data.server.ping = payload.ping;
 		
 	}catch(error){
 		
@@ -316,41 +304,36 @@ function render_list(){
 		
 		case 0:
 		case 1:
-			sorted_list = sorta(pinged_list, "ping", filter === true ? false : true);
+			sorted_list = textsort(pinged_list, "name", filter === true ? false : true);
 			break;
 		
 		case 2:
 		case 3:
-			sorted_list = textsort(pinged_list, "name", filter === true ? false : true);
+			sorted_list = textsort(pinged_list, "ip", filter === true ? false : true);
 			break;
 		
 		case 4:
 		case 5:
-			sorted_list = textsort(pinged_list, "ip", filter === true ? false : true);
+			sorted_list = sorta(pinged_list, "bot_protection", filter === true ? false : true);
 			break;
 		
 		case 6:
 		case 7:
-			sorted_list = sorta(pinged_list, "bot_protection", filter === true ? false : true);
+			sorted_list = sorta(pinged_list, "real_requests", filter);
 			break;
 		
 		case 8:
 		case 9:
-			sorted_list = sorta(pinged_list, "real_requests", filter);
+			sorted_list = sorta(pinged_list, "bot_requests", filter);
 			break;
 		
 		case 10:
 		case 11:
-			sorted_list = sorta(pinged_list, "bot_requests", filter);
+			sorted_list = sorta(pinged_list, "api_enabled", filter);
 			break;
 		
 		case 12:
 		case 13:
-			sorted_list = sorta(pinged_list, "api_enabled", filter);
-			break;
-		
-		case 14:
-		case 15:
 			sorted_list = sorta(pinged_list, "version", filter);
 			break;
 	}
@@ -362,32 +345,16 @@ function render_list(){
 		
 		html += '<tr onclick="show_server(' + sorted_list[k].index + ');">';
 		
-		for(var i=0; i<8; i++){
+		for(var i=0; i<7; i++){
 			
 			html += '<td';
 			
 			switch(i){
 				
-				case 0: // server ping
-					if(sorted_list[k].server.ping <= 100){
-						
-						html += '><span style="color:var(--green);">' + sorted_list[k].server.ping + '</span>';
-						break;
-					}
-					
-					if(sorted_list[k].server.ping <= 200){
-						
-						html += '><span style="color:var(--yellow);">' + sorted_list[k].server.ping + '</span>';
-						break;
-					}
-					
-					html += '><span style="color:var(--red);">' + number_format(sorted_list[k].server.ping) + '</span>';
-					break;
-				
 				// server name
-				case 1: html += ' class="extend">' + htmlspecialchars(sorted_list[k].server.name); break;
-				case 2: html += '>' + htmlspecialchars(new URL(sorted_list[k].server.ip).host); break;
-				case 3: // bot protection
+				case 0: html += ' class="extend">' + htmlspecialchars(sorted_list[k].server.name); break;
+				case 1: html += '>' + htmlspecialchars(new URL(sorted_list[k].server.ip).host); break;
+				case 2: // bot protection
 					switch(sorted_list[k].server.bot_protection){
 						
 						case 0:
@@ -407,15 +374,15 @@ function render_list(){
 					}
 					break;
 				
-				case 4: // real reqs
+				case 3: // real reqs
 					html += '>' + number_format(sorted_list[k].server.real_requests);
 					break;
 				
-				case 5: // bot reqs
+				case 4: // bot reqs
 					html += '>' + number_format(sorted_list[k].server.bot_requests);
 					break;
 				
-				case 6: // api enabled
+				case 5: // api enabled
 					
 					if(sorted_list[k].server.api_enabled){
 						
@@ -427,7 +394,7 @@ function render_list(){
 					break;
 				
 				// version
-				case 7: html += ">v" + sorted_list[k].server.version; break;
+				case 6: html += ">v" + sorted_list[k].server.version; break;
 			}
 			
 			html += '</td>';
@@ -435,6 +402,8 @@ function render_list(){
 		
 		html += '</tr>';
 	}
+	
+	console.log(html);
 	
 	tbody.innerHTML = html;
 }

@@ -4,11 +4,8 @@ class pinterest{
 	
 	public function __construct(){
 		
-		include "lib/nextpage.php";
-		$this->nextpage = new nextpage("pinterest");
-
-		include "lib/proxy_pool.php";
-		$this->proxy = new proxy_pool("pinterest");
+		include "lib/backend.php";
+		$this->backend = new backend("pinterest");
 	}
 	
 	public function getfilters($page){
