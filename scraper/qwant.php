@@ -336,6 +336,22 @@ class qwant{
 			throw new Exception("Server returned an error:\n" . $json["data"]["message"][0]);
 		}
 		
+		$out = [
+			"status" => "ok",
+			"spelling" => [
+				"type" => "no_correction",
+				"using" => null,
+				"correction" => null
+			],
+			"npt" => null,
+			"answer" => [],
+			"web" => [],
+			"image" => [],
+			"video" => [],
+			"news" => [],
+			"related" => []
+		];
+		
 		if($json["status"] != "success"){
 			
 			if($json["data"]["error_code"] === 5){
@@ -352,21 +368,6 @@ class qwant{
 		}
 		
 		// data is OK, parse
-		$out = [
-			"status" => "ok",
-			"spelling" => [
-				"type" => "no_correction",
-				"using" => null,
-				"correction" => null
-			],
-			"npt" => null,
-			"answer" => [],
-			"web" => [],
-			"image" => [],
-			"video" => [],
-			"news" => [],
-			"related" => []
-		];
 		
 		// get instant answer
 		if(
