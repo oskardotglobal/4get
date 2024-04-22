@@ -259,6 +259,7 @@ class qwant{
 		}
 		
 		curl_close($curlproc);
+		
 		return $data;
 	}
 	
