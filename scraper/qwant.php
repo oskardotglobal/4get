@@ -659,6 +659,11 @@ class qwant{
 			throw new Exception("Qwant returned an API error");
 		}
 		
+		if(isset($json["data"]["result"]["items"]["mainline"])){
+			
+			throw new Exception("Qwant returned gibberish results");
+		}
+		
 		$out = [
 			"status" => "ok",
 			"npt" => null,
@@ -752,6 +757,11 @@ class qwant{
 		if($json["status"] != "success"){
 			
 			throw new Exception("Qwant returned an API error");
+		}
+		
+		if(isset($json["data"]["result"]["items"]["mainline"])){
+			
+			throw new Exception("Qwant returned gibberish results");
 		}
 		
 		$out = [
@@ -854,6 +864,11 @@ class qwant{
 		if($json["status"] != "success"){
 			
 			throw new Exception("Qwant returned an API error");
+		}
+		
+		if(isset($json["data"]["result"]["items"]["mainline"])){
+			
+			throw new Exception("Qwant returned gibberish results");
 		}
 		
 		$out = [
