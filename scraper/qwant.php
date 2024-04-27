@@ -453,6 +453,8 @@ class qwant{
 			switch($item["type"]){ // ignores ads
 				
 				case "web":
+					
+					$first_iteration = true;
 					foreach($item["items"] as $result){
 						
 						if(isset($result["thumbnailUrl"])){
@@ -483,6 +485,25 @@ class qwant{
 							}
 						}
 						
+						// detect gibberish results
+						if(
+							$first_iteration &&
+							preg_match(
+								"/^" .
+								preg_quote(
+									$this->trimdots(
+										$result["source"]
+									),
+									"/"
+								) .
+								"/",
+								$result["url"]
+							) !== 1
+						){
+							
+							throw new Exception("Qwant returned gibberish results");
+						}
+						
 						$out["web"][] = [
 							"title" => $this->trimdots($result["title"]),
 							"description" => $this->trimdots($result["desc"]),
@@ -493,6 +514,8 @@ class qwant{
 							"sublink" => $sublinks,
 							"table" => []
 						];
+						
+						$first_iteration = false;
 					}
 					break;
 				
