@@ -9,7 +9,7 @@ FOURGET_PROTO="${FOURGET_PROTO#\"}"
 FOURGET_PROTO=`echo $FOURGET_PROTO | awk '{print tolower($0)}'`
 
 
-if [ "$FOURGET_PROTO" = "https" ] || [ -f /etc/4get/certs/fullchain.pem ] || [ -f /etc/4get/certs/privkey.pem ]; then
+if [ "$FOURGET_PROTO" = "https" ]; then
         echo "Using https configuration"
         cp /etc/apache2/https.conf /etc/apache2/httpd.conf
 else
