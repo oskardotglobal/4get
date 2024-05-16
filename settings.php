@@ -130,6 +130,10 @@ $settings = [
 						"text" => "Yep"
 					],
 					[
+						"value" => "greppr",
+						"text" => "Greppr"
+					],
+					[
 						"value" => "crowdview",
 						"text" => "Crowdview"
 					],

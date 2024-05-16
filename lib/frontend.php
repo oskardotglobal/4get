@@ -925,6 +925,7 @@ class frontend{
 						"google" => "Google",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
+						"greppr" => "Greppr",
 						"crowdview" => "Crowdview",
 						"mwmbl" => "Mwmbl",
 						"mojeek" => "Mojeek",

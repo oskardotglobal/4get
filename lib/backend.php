@@ -36,7 +36,7 @@ class backend{
 	}
 	
 	// this function is also called directly on nextpage
-	public function assign_proxy(&$curlproc, $ip){
+	public function assign_proxy(&$curlproc, string $ip){
 		
 		// parse proxy line
 		[
@@ -91,7 +91,7 @@ class backend{
 	/*
 		Next page stuff
 	*/
-	public function store($payload, $page, $proxy){
+	public function store(string $payload, string $page, string $proxy){
 		
 		$key = sodium_crypto_secretbox_keygen();
 		$nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
@@ -120,7 +120,7 @@ class backend{
 			rtrim(strtr(base64_encode($key), '+/', '-_'), '=');
 	}
 	
-	public function get($npt, $page){
+	public function get(string $npt, string $page){
 		
 		$page = $page[0];
 		$explode = explode(".", $npt, 2);

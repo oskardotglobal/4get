@@ -321,11 +321,11 @@ class fuckhtml{
 				
 				throw new Exception("(getTextContent) Supplied array doesn't contain an innerHTML index");
 			}
+			
 			$html = $html["innerHTML"];
 		}
 		
-		$html =
-			preg_split('/\n|<\/?br>/i', $html);
+		$html = preg_split('/\n|<\/?br>/i', $html);
 		
 		$out = "";
 		for($i=0; $i<count($html); $i++){

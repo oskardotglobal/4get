@@ -100,7 +100,7 @@ class autocomplete{
 						$_GET["s"],
 						$json
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 			
@@ -135,7 +135,7 @@ class autocomplete{
 						$_GET["s"],
 						$json
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 			
@@ -154,7 +154,7 @@ class autocomplete{
 						$_GET["s"],
 						$json
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 			
@@ -167,7 +167,7 @@ class autocomplete{
 						$_GET["s"],
 						$json[1] // ensure it contains valid key 0
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 		}
@@ -221,7 +221,7 @@ class autocomplete{
 		
 		echo json_encode(
 			["error" => $error],
-			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 		);
 		die();
 	}
@@ -233,7 +233,7 @@ class autocomplete{
 				$_GET["s"],
 				[]
 			],
-			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 		);
 		die();
 	}

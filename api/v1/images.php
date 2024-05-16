@@ -30,7 +30,7 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 try{
 	echo json_encode(
 		$scraper->image($get),
-		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 	);
 	
 }catch(Exception $e){

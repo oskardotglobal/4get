@@ -36,11 +36,12 @@ tl;dr the best way to actually browse for shit.
 | Brave      | Brave        | DuckDuckGo | Brave      |            | DuckDuckGo    |
 | Yandex     | Yandex       | Brave      | Google     |            | Yandex        |
 | Google     | Google       | Yandex     | Qwant      |            | Google        |
-| Qwant      | Qwant        | Google     | Mojeek     |            | Yep           |
-| Yep        | Pinterest    | Qwant      |            |            | Marginalia    |
-| Crowdview  | Yep          |            |            |            | YouTube       |
-| Mwmbl      | Imgur        |            |            |            | Soundcloud    |
-| Mojeek     | FindThatMeme |            |            |            |               |
+| Qwant      | Qwant        | Google     | Mojeek     |            | Qwant         |
+| Yep        | Yep          | Qwant      |            |            | Yep           |
+| Greppr     | Imgur        |            |            |            | Marginalia    |
+| Crowdview  | FindThatMeme |            |            |            | YouTube       |
+| Mwmbl      |              |            |            |            | Soundcloud    |
+| Mojeek     |              |            |            |            |               |
 | Marginalia |              |            |            |            |               |
 | wiby       |              |            |            |            |               |
 | Curlie     |              |            |            |            |               |

@@ -398,12 +398,17 @@ class sc{
 		
 		if($token === false){
 			
-			$js =
-				$this->get(
-					$proxy,
-					"https://a-v2.sndcdn.com/assets/1-c3e4038d.js",
-					[]
-				);
+			try{
+				$js =
+					$this->get(
+						$proxy,
+						"https://a-v2.sndcdn.com/assets/1-c3e4038d.js",
+						[]
+					);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search token");
+			}
 			
 			preg_match(
 				'/client_id=([^"]+)/',

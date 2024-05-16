@@ -43,7 +43,7 @@ try{
 	echo
 		json_encode(
 			$scraper->web($get),
-			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 		);
 	
 }catch(Exception $e){

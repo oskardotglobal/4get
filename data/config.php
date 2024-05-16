@@ -43,7 +43,7 @@ class config{
 	
 	// If this regex expression matches on the user agent, it blocks the request
 	// Not useful at all against a targetted attack
-	const HEADER_REGEX = '/bot|wget|curl|python-requests|scrapy|go-http-client|ruby|yahoo|spider/i';
+	const HEADER_REGEX = '/bot|wget|curl|python-requests|scrapy|go-http-client|ruby|yahoo|spider|qwant/i';
 	
 	// Block clients who present any of the following headers in their request (SPECIFY IN !!lowercase!!)
 	// Eg: ["x-forwarded-for", "x-via", "forwarded-for", "via"];
@@ -128,6 +128,7 @@ class config{
 	const PROXY_PINTEREST = false;
 	const PROXY_SEZNAM = false;
 	const PROXY_NAVER = false;
+	const PROXY_GREPPR = false;
 	const PROXY_CROWDVIEW = false;
 	const PROXY_MWMBL = false;
 	const PROXY_FTM = false; // findthatmeme
