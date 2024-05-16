@@ -199,7 +199,7 @@ class greppr{
 				throw new Exception("Failed to get a new search token");
 			}
 			
-			$this->get($get, false);
+			return $this->web($get, false);
 		}
 		
 		// refresh the token with new data (this also triggers fuckhtml load)
