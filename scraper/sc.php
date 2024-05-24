@@ -396,8 +396,6 @@ class sc{
 		
 		$token = apcu_fetch("sc_token");
 		
-		echo $token;
-		
 		if($token === false){
 			
 			try{
