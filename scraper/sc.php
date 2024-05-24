@@ -230,7 +230,7 @@ class sc{
 			}
 			
 			// token might've expired, get a new one and re-try search
-			get_token($proxy);
+			$this->get_token($proxy);
 			return $this->music($get, true);
 		}
 		
@@ -396,13 +396,15 @@ class sc{
 		
 		$token = apcu_fetch("sc_token");
 		
+		echo $token;
+		
 		if($token === false){
 			
 			try{
 				$js =
 					$this->get(
 						$proxy,
-						"https://a-v2.sndcdn.com/assets/1-c3e4038d.js",
+						"https://a-v2.sndcdn.com/assets/0-a901c1e0.js",
 						[]
 					);
 			}catch(Exception $error){
