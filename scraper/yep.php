@@ -270,9 +270,6 @@ class yep{
 			"TE: trailers"]
 		);
 		
-		// http3 bypass
-		curl_setopt($curlproc, CURLOPT_HTTP_VERSION, 30);
-		
 		curl_setopt($curlproc, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
@@ -700,7 +697,7 @@ class yep{
 			) !== 0
 		){
 			
-			throw new Exception("Blocked by Cloudflare");
+			throw new Exception("Blocked by Cloudflare. Please follow curl-impersonate installation instructions");
 		}
 	}
 	
