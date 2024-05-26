@@ -218,6 +218,7 @@ h3,h4,h5,h6{
 .filters .filter input,
 .filters .filter select{
 	all:unset;
+	user-select:none;
 	display:block;
 	border:1px solid var(--504945);
 	border-radius:2px;
