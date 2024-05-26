@@ -59,10 +59,10 @@ class config{
 	// Eg: ["x-forwarded-for", "x-via", "forwarded-for", "via"];
 	// Useful for blocking *some* proxies used for botting
 	const FILTERED_HEADER_KEYS = [
-		"x-forwarded-for",
+		# "x-forwarded-for",
 		"x-cluster-client-ip",
 		"x-client-ip",
-		"x-real-ip",
+		# "x-real-ip",
 		"client-ip",
 		"real-ip",
 		"forwarded-for",
