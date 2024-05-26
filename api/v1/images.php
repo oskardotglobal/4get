@@ -16,9 +16,9 @@ $frontend = new frontend();
 /*
 	Captcha
 */
-include "lib/captcha_gen.php";
+include "lib/bot_protection.php";
 $null = null;
-new captcha($null, $null, $null, "images", false);
+new bot_protection($null, $null, $null, "images", false);
 
 [$scraper, $filters] = $frontend->getscraperfilters(
 	"images",
@@ -30,7 +30,7 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 try{
 	echo json_encode(
 		$scraper->image($get),
-		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 	);
 	
 }catch(Exception $e){

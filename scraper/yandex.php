@@ -644,17 +644,17 @@ class yandex{
 		
 		$json = json_decode($json, true);
 		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON");
+		}
+		
 		if(
 			isset($json["type"]) &&
 			$json["type"] == "captcha"
 		){
 			
 			throw new Exception("Yandex blocked this 4get instance. Please try again in ~7 minutes.");
-		}
-		
-		if($json === null){
-			
-			throw new Exception("Failed to decode JSON");
 		}
 		
 		$out = [

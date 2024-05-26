@@ -15,10 +15,11 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 /*
 	Captcha
 */
-include "lib/captcha_gen.php";
-new captcha($frontend, $get, $filters, "music", true);
+include "lib/bot_protection.php";
+new bot_protection($frontend, $get, $filters, "music", true);
 
 $payload = [
+	"timetaken" => microtime(true),
 	"class" => "",
 	"right-left" => "",
 	"right-right" => "",
@@ -30,13 +31,16 @@ try{
 	
 }catch(Exception $error){
 	
-	$frontend->drawscrapererror($error->getMessage(), $get, "music");
+	$frontend->drawscrapererror($error->getMessage(), $get, "music", $payload["timetaken"]);
 }
 
 $categories = [
 	"song" => "",
 	"author" => "",
-	"playlist" => ""
+	"playlist" => "",
+	"album" => "",
+	"podcast" => "",
+	"user" => ""
 ];
 
 /*
@@ -48,13 +52,25 @@ if(count($results["song"]) !== 0){
 	
 	$main = "song";
 	
-}elseif(count($results["author"]) !== 0){
+}elseif(count($results["album"]) !== 0){
 	
-	$main = "author";
+	$main = "album";
 	
 }elseif(count($results["playlist"]) !== 0){
 	
 	$main = "playlist";
+	
+}elseif(count($results["podcast"]) !== 0){
+	
+	$main = "podcast";
+
+}elseif(count($results["author"]) !== 0){
+	
+	$main = "author";
+		
+}elseif(count($results["user"]) !== 0){
+	
+	$main = "user";
 	
 }else{
 	
@@ -133,12 +149,15 @@ foreach($categories as $name => $data){
 		$customhtml = null;
 		
 		if(
-			$name == "song" &&
+			(
+				$name == "song" ||
+				$name == "podcast"
+			) &&
 			$item["stream"]["endpoint"] !== null
 		){
 			
 			$customhtml =
-				'<audio src="' . $item["stream"]["endpoint"] . '?s=' . urlencode($item["stream"]["url"]) . '" controls autostart="false" preload="none">';
+				'<audio src="/audio/' . $item["stream"]["endpoint"] . '?s=' . urlencode($item["stream"]["url"]) . '" controls autostart="false" preload="none">';
 		}
 		
 		$categories[$name] .= $frontend->drawtextresult($item, $greentext, $duration, $get["s"], $tabindex, $customhtml);
@@ -177,18 +196,8 @@ foreach($categories as $name => $value){
 			'<div class="answer-title">' .
 				'<a class="answer-title" href="?s=' . urlencode($get["s"]);
 	
-	switch($name){
-		
-		case "playlist":
-			$payload[$write] .=
-				'&type=playlist"><h2>Playlists</h2></a>';
-			break;
-		
-		case "author":
-			$payload[$write] .=
-				'&type=people"><h2>Authors</h2></a>';
-			break;
-	}
+	$payload[$write] .=
+		'&type=' . $name . '"><h2>' . ucfirst($name) . 's</h2></a>';
 	
 	$payload[$write] .=
 			'</div>' .

@@ -16,9 +16,9 @@ $frontend = new frontend();
 /*
 	Captcha
 */
-include "lib/captcha_gen.php";
+include "lib/bot_protection.php";
 $null = null;
-new captcha($null, $null, $null, "videos", false);
+new bot_protection($null, $null, $null, "videos", false);
 
 [$scraper, $filters] = $frontend->getscraperfilters(
 	"videos",
@@ -30,7 +30,7 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 try{
 	echo json_encode(
 		$scraper->video($get),
-		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 	);
 	
 }catch(Exception $e){

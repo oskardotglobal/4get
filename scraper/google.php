@@ -3,7 +3,6 @@
 // todo:
 // aliexpress tracking links
 // enhanced msx notice
-// detect "sorry" page
 
 class google{
 	
@@ -523,6 +522,7 @@ class google{
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
 			"DNT: 1",
+			"Cookie: SOCS=CAESNQgCEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjQwMzE3LjA4X3AwGgJlbiAEGgYIgM7orwY",
 			"Connection: keep-alive",
 			"Upgrade-Insecure-Requests: 1",
 			"Sec-Fetch-Dest: document",
@@ -654,6 +654,8 @@ class google{
 				
 				throw new Exception("Failed to get HTML");
 			}
+			
+			//$html = file_get_contents("scraper/google.html");
 		}
 		
 		return $this->parsepage($html, "web", $search, $ip);
@@ -977,6 +979,11 @@ class google{
 			"related" => []
 		];
 		
+		if($error = $this->detect_sorry($html)){
+			
+			throw new Exception($error);
+		}
+		
 		$this->parsejavascript($html);
 		
 		//
@@ -1013,7 +1020,15 @@ class google{
 						self::is_class
 					),
 					"div"
-				)[1];
+				);
+			
+			if(!isset($description[1])){
+				
+				throw new Exception("Google returned an unsupported page format (will fix)");
+			}else{
+				
+				$description = $description[1];
+			}
 			
 			// get date (rare)
 			$date =
@@ -2317,11 +2332,11 @@ class google{
 				->getElementsByClassName(
 					$this->findstyles(
 						[
-							"font-weight" => "bold",
-							"font-size" => "16px",
 							"color" => "#000",
+							"font-size" => "16px",
+							"font-weight" => "bold",
 							"margin" => "0",
-							"padding" => "12px 16px 0 16px"
+							"padding" => "12px 16px 0px 16px"
 						],
 						self::is_class
 					),
@@ -2523,6 +2538,19 @@ class google{
 				->getElementsByTagName("a");
 			
 			$description = [];
+			
+			$pcitems =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"pcitem",
+					"div"
+				);
+			
+			if(count($pcitems) !== 0){
+				
+				// ignore elements with carousels in them
+				continue;
+			}
 			
 			foreach($as as $a){
 				
@@ -2795,7 +2823,10 @@ class google{
 			throw new Exception("Failed to get search page");
 		}
 		
-		$this->fuckhtml->load($html);
+		if($error = $this->detect_sorry($html)){
+			
+			throw new Exception($error);
+		}
 		
 		$out = [
 			"status" => "ok",
@@ -3067,27 +3098,38 @@ class google{
 	
 	private function findstyles($rules, $is){
 		
-		ksort($rules);
+		$c = count($rules);
 		
-		foreach($this->computedstyle as $stylename => $styles){
+		foreach($this->computedstyle as $classname => $styles){
 			
-			if($styles == $rules){
+			if($classname[0] != $is){
 				
-				preg_match(
-					'/\\' . $is . '([^ .]+)/',
-					$stylename,
-					$out
-				);
+				// not a class, skip
+				continue;
+			}
+			
+			$i = 0;
+			foreach($styles as $stylename => $stylevalue){
 				
-				if(count($out) === 2){
+				if(
+					isset($rules[$stylename]) &&
+					$rules[$stylename] == $stylevalue
+				){
 					
-					return $out[1];
+					$i++;
+				}else{
+					
+					continue 2;
 				}
+			}
+			
+			if($c === $i){
 				
-				return false;
+				return ltrim($classname, $is);
 			}
 		}
 		
+		// fail, did not find classname.
 		return false;
 	}
 	
@@ -3095,7 +3137,7 @@ class google{
 		
 		// get style tags
 		preg_match_all(
-			'/([^{]+){([^}]+)}/',
+			'/([^{]+){([^}]*)}/',
 			$style,
 			$tags_regex
 		);
@@ -3129,11 +3171,6 @@ class google{
 						trim($value[1]);
 				}
 			}
-		}
-		
-		foreach($tags as &$value){
-			
-			ksort($value);
 		}
 		
 		return $tags;
@@ -3608,5 +3645,46 @@ class google{
 	private function titledots($title){
 		
 		return rtrim($title, ". \t\n\r\0\x0B");
+	}
+	
+	private function detect_sorry($html){
+		
+		$this->fuckhtml->load($html);
+		$detect_sorry =
+			$this->fuckhtml
+			->getElementsByTagName("title");
+		
+		if(
+			isset($detect_sorry[0]) &&
+			$detect_sorry[0]["innerHTML"] == "302 Moved"
+		){
+			
+			// may be consent.google.com in europe or /sorry captcha page
+			$url =
+				$this->fuckhtml
+				->getElementsByTagName("a");
+			
+			if(
+				strpos(
+					parse_url(
+						$this->fuckhtml
+						->getTextContent(
+							$url[0]["attributes"]["href"]
+						),
+						PHP_URL_PATH
+					),
+					"/sorry"
+				) === 0
+			){
+				
+				// found /sorry
+				return "Google blocked this 4get instance. Please setup a proxy!";
+			}
+			
+			// found consent.google, should not happen anymore
+			return "Google served a GPDR consent form. This should not happen, please report if you encounter this message";
+		}
+		
+		return false;
 	}
 }

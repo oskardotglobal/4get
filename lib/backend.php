@@ -36,7 +36,7 @@ class backend{
 	}
 	
 	// this function is also called directly on nextpage
-	public function assign_proxy(&$curlproc, $ip){
+	public function assign_proxy(&$curlproc, string $ip){
 		
 		// parse proxy line
 		[
@@ -91,36 +91,36 @@ class backend{
 	/*
 		Next page stuff
 	*/
-	public function store($payload, $page, $proxy){
+	public function store(string $payload, string $page, string $proxy){
 		
-		$page = $page[0];
-		$password = random_bytes(256); // 2048 bit
-		$salt = random_bytes(16);
-		$key = hash_pbkdf2("sha512", $password, $salt, 20000, 32, true);
-		$iv =
-			random_bytes(
-				openssl_cipher_iv_length("aes-256-gcm")
-			);
-		
-		$tag = "";
-		$out = openssl_encrypt($payload, "aes-256-gcm", $key, OPENSSL_RAW_DATA, $iv, $tag, "", 16);
+		$key = sodium_crypto_secretbox_keygen();
+		$nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 		
 		$requestid = apcu_inc("requestid");
 		
 		apcu_store(
-			$page . "." .
-			$this->scraper .
+			$page[0] . "." . // first letter of page name
+			$this->scraper . // scraper name
 			$requestid,
-			gzdeflate($proxy . "," . $salt.$iv.$out.$tag),
-			900 // cache information for 15 minutes blaze it
+			[
+				$nonce,
+				$proxy,
+				// compress and encrypt
+				sodium_crypto_secretbox(
+					gzdeflate($payload),
+					$nonce,
+					$key
+				)
+			],
+			900 // cache information for 15 minutes
 		);
 
 		return 
 			$this->scraper . $requestid . "." .
-			rtrim(strtr(base64_encode($password), '+/', '-_'), '=');
+			rtrim(strtr(base64_encode($key), '+/', '-_'), '=');
 	}
 	
-	public function get($npt, $page){
+	public function get(string $npt, string $page){
 		
 		$page = $page[0];
 		$explode = explode(".", $npt, 2);
@@ -137,7 +137,7 @@ class backend{
 		
 		if($payload === false){
 			
-			throw new Exception("The nextPageToken is invalid or has expired!");
+			throw new Exception("The next page token is invalid or has expired!");
 		}
 		
 		$key =
@@ -150,47 +150,27 @@ class backend{
 				)
 			);
 		
-		$payload = gzinflate($payload);
-		
-		// get proxy
-		[
-			$proxy,
-			$payload
-		] = explode(",", $payload, 2);
-		
-		$key =
-			hash_pbkdf2(
-				"sha512",
-				$key,
-				substr($payload, 0, 16), // salt
-				20000,
-				32,
-				true
-			);
-		$ivlen = openssl_cipher_iv_length("aes-256-gcm");
-		
-		$payload =
-			openssl_decrypt(
-				substr(
-					$payload,
-					16 + $ivlen,
-					-16
-				),
-				"aes-256-gcm",
-				$key,
-				OPENSSL_RAW_DATA,
-				substr($payload, 16, $ivlen),
-				substr($payload, -16)
+		// decrypt and decompress data
+		$payload[2] =
+			gzinflate(
+				sodium_crypto_secretbox_open(
+					$payload[2], // data
+					$payload[0], // nonce
+					$key
+				)
 			);
 		
-		if($payload === false){
+		if($payload[2] === false){
 			
-			throw new Exception("The nextPageToken is invalid or has expired!");
+			throw new Exception("The next page token is invalid or has expired!");
 		}
 		
-		// remove the key after using
+		// remove the key after using successfully
 		apcu_delete($apcu);
 		
-		return [$payload, $proxy];
+		return [
+			$payload[2], // data
+			$payload[1] // proxy
+		];
 	}
 }

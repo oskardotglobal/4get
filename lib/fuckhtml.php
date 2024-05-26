@@ -73,7 +73,7 @@ class fuckhtml{
 			$attributes = [];
 
 			preg_match_all(
-				'/([^\/\s\\=]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s]*))?/',
+				'/([^\/\s\\=]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s]*))?/i',
 				$starting_tags[2][$i][0],
 				$regex_attributes
 			);
@@ -88,7 +88,7 @@ class fuckhtml{
 					continue;
 				}
 				
-				$attributes[$regex_attributes[1][$k]] =
+				$attributes[strtolower($regex_attributes[1][$k])] =
 					trim($regex_attributes[2][$k], "'\" \n\r\t\v\x00");
 			}
 			
@@ -321,11 +321,11 @@ class fuckhtml{
 				
 				throw new Exception("(getTextContent) Supplied array doesn't contain an innerHTML index");
 			}
+			
 			$html = $html["innerHTML"];
 		}
 		
-		$html =
-			preg_split('/\n|<\/?br>/i', $html);
+		$html = preg_split('/\n|<\/?br>/i', $html);
 		
 		$out = "";
 		for($i=0; $i<count($html); $i++){
@@ -466,19 +466,26 @@ class fuckhtml{
 		
 		return
 			preg_replace_callback(
-				'/\\\u[A-Fa-f0-9]{4}|\\\x[A-Fa-f0-9]{2}/',
+				'/\\\u[A-Fa-f0-9]{4}|\\\x[A-Fa-f0-9]{2}|\\\n|\\\r/',
 				function($match){
 					
-					if($match[0][1] == "u"){
+					switch($match[0][1]){
 						
-						return json_decode('"' . $match[0] . '"');
-					}else{
+						case "u":
+							return json_decode('"' . $match[0] . '"');
+							break;
 						
-						return mb_convert_encoding(
-							stripcslashes($match[0]),
-							"utf-8",
-							"windows-1252"
-						);
+						case "x":
+							return mb_convert_encoding(
+								stripcslashes($match[0]),
+								"utf-8",
+								"windows-1252"
+							);
+							break;
+						
+						default:
+							return " ";
+							break;
 					}
 				},
 				$string

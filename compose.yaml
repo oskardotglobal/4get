@@ -7,8 +7,11 @@ networks:
 services:
   app:
     build: .
-    container_name: fourget
+    container_name: fourgor
     restart: always
+    environment:
+      - FOURGET_VERSION=8
+      - FOURGET_SERVER_NAME=search.oskar.global
     networks:
       - traefik
     labels:
@@ -32,7 +35,7 @@ services:
       - "traefik.http.middlewares.fourget-headers.headers.customresponseheaders.Cache-Control=no-cache, no-store"
       - "traefik.http.middlewares.fourget-headers.headers.customresponseheaders.Pragma=no-cache"
       - "traefik.http.routers.fourget.middlewares=fourget-headers@docker,gzip@file"
-    # volumes:
-      # mount custom banners and captcha
-      # - ./banners:/var/www/html/4get/banner
-      #- ./captcha:/var/www/html/4get/data/captcha
+  # mount custom banners and captcha
+  # volumes:
+  #   - ./banners:/var/www/html/4get/banner
+  #   - ./captcha:/var/www/html/4get/data/captcha

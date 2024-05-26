@@ -4,7 +4,7 @@
 //header("Content-Type: application/json");
 //echo json_encode($yt->video("minecraft", null, "today", "any", "any", "live", "relevance"));
 
-class youtube{
+class yt{
 	
 	public function __construct(){
 		

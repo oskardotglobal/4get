@@ -1,13 +1,13 @@
 <?php
 
-include "data/config.php";
 new sc_audio();
 
 class sc_audio{
 	
 	public function __construct(){
 		
-		include "lib/curlproxy.php";
+		include "../data/config.php";
+		include "../lib/curlproxy.php";
 		$this->proxy = new proxy();
 		
 		if(isset($_GET["u"])){
@@ -210,7 +210,7 @@ class sc_audio{
 		
 		$streampos = implode(",", $streampos);
 		
-		header("Location: audio_sc?u=" . urlencode($lineout) . "&r=$streampos");
+		header("Location: /audio/sc?u=" . urlencode($lineout) . "&r=$streampos");
 		header("Accept-Ranges: bytes");
 	}
 	

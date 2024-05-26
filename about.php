@@ -30,6 +30,7 @@ echo
 	$frontend->load(
 		"search.html",
 		[
+			"timetaken" => null,
 			"class" => "",
 			"right-left" => "",
 			"right-right" => "",

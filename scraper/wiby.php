@@ -209,7 +209,7 @@ class wiby{
 			
 			$out["web"][] = [
 				"title" => $this->unescapehtml(trim($links[2][$i])),
-				"description" => $this->unescapehtml(trim(strip_tags($links[3][$i]))),
+				"description" => $this->unescapehtml(trim(strip_tags($links[3][$i]), ".\n\r ")),
 				"url" => trim($links[1][$i]),
 				"date" => null,
 				"type" => "web",

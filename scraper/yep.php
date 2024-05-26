@@ -6,6 +6,9 @@ class yep{
 		
 		include "lib/backend.php";
 		$this->backend = new backend("yep");
+		
+		include "lib/fuckhtml.php";
+		$this->fuckhtml = new fuckhtml();
 	}
 	
 	public function getfilters($page){
@@ -254,8 +257,10 @@ class yep{
 			["User-Agent: " . config::USER_AGENT,
 			"Accept: */*",
 			"Accept-Language: en-US,en;q=0.5",
-			"Accept-Encoding: gzip",
+			"Accept-Encoding: gzip, deflate, br, zstd",
+			"Connection: keep-alive",
 			"DNT: 1",
+			"Priority: u=1",
 			"Origin: https://yep.com",
 			"Referer: https://yep.com/",
 			"Connection: keep-alive",
@@ -324,27 +329,27 @@ class yep{
 			
 			// https://api.yep.com/fs/2/search?client=web&gl=CA&no_correct=false&q=undefined+variable+javascript&safeSearch=off&type=web
 			$json =
-				json_decode(
-					$this->get(
-						$this->backend->get_ip(),
-						"https://api.yep.com/fs/2/search",
-						[
-							"client" => "web",
-							"gl" => $country == "all" ? $country : strtoupper($country),
-							"limit" => "99999",
-							"no_correct" => "false",
-							"q" => $search,
-							"safeSearch" => $nsfw,
-							"type" => "web"
-						]
-					),
-					true
+				$this->get(
+					$this->backend->get_ip(),
+					"https://api.yep.com/fs/2/search",
+					[
+						"client" => "web",
+						"gl" => $country == "all" ? $country : strtoupper($country),
+						"limit" => "99999",
+						"no_correct" => "false",
+						"q" => $search,
+						"safeSearch" => $nsfw,
+						"type" => "web"
+					]
 				);
 		}catch(Exception $error){
 			
 			throw new Exception("Failed to fetch JSON");
 		}
 		
+		$this->detect_cf($json);
+		
+		$json = json_decode($json, true);
 		//$json = json_decode(file_get_contents("scraper/yep.json"), true);
 		
 		if($json === null){
@@ -517,25 +522,26 @@ class yep{
 		try{
 			
 			$json =
-				json_decode(
-					$this->get(
-						$this->backend->get_ip(), // no nextpage!
-						"https://api.yep.com/fs/2/search",
-						[
-							"client" => "web",
-							"gl" => $country == "all" ? $country : strtoupper($country),
-							"no_correct" => "false",
-							"q" => $search,
-							"safeSearch" => $nsfw,
-							"type" => "images"
-						]
-					),
-					true
+				$this->get(
+					$this->backend->get_ip(), // no nextpage!
+					"https://api.yep.com/fs/2/search",
+					[
+						"client" => "web",
+						"gl" => $country == "all" ? $country : strtoupper($country),
+						"no_correct" => "false",
+						"q" => $search,
+						"safeSearch" => $nsfw,
+						"type" => "images"
+					]
 				);
 		}catch(Exception $error){
 			
 			throw new Exception("Failed to fetch JSON");
 		}
+		
+		$this->detect_cf($json);
+		
+		$json = json_decode($json, true);
 		
 		if($json === null){
 			
@@ -614,27 +620,27 @@ class yep{
 			
 			// https://api.yep.com/fs/2/search?client=web&gl=CA&no_correct=false&q=undefined+variable+javascript&safeSearch=off&type=web
 			$json =
-				json_decode(
-					$this->get(
-						$this->backend->get_ip(),
-						"https://api.yep.com/fs/2/search",
-						[
-							"client" => "web",
-							"gl" => $country == "all" ? $country : strtoupper($country),
-							"limit" => "99999",
-							"no_correct" => "false",
-							"q" => $search,
-							"safeSearch" => $nsfw,
-							"type" => "news"
-						]
-					),
-					true
+				$this->get(
+					$this->backend->get_ip(),
+					"https://api.yep.com/fs/2/search",
+					[
+						"client" => "web",
+						"gl" => $country == "all" ? $country : strtoupper($country),
+						"limit" => "99999",
+						"no_correct" => "false",
+						"q" => $search,
+						"safeSearch" => $nsfw,
+						"type" => "news"
+					]
 				);
 		}catch(Exception $error){
 			
 			throw new Exception("Failed to fetch JSON");
 		}
 		
+		$this->detect_cf($json);
+		
+		$json = json_decode($json, true);
 		//$json = json_decode(file_get_contents("scraper/yep.json"), true);
 		
 		if($json === null){
@@ -673,6 +679,26 @@ class yep{
 		}
 		
 		return $out;
+	}
+	
+	
+	private function detect_cf($payload){
+		
+		// detect cloudflare page
+		$this->fuckhtml->load($payload);
+		
+		if(
+			count(
+				$this->fuckhtml
+				->getElementsByClassName(
+					"cf-wrapper",
+					"div"
+				)
+			) !== 0
+		){
+			
+			throw new Exception("Blocked by Cloudflare. Please follow curl-impersonate installation instructions");
+		}
 	}
 	
 	

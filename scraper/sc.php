@@ -16,7 +16,7 @@ class sc{
 				"option" => [
 					"any" => "Any type",
 					"track" => "Tracks",
-					"people" => "People",
+					"author" => "People",
 					"album" => "Albums",
 					"playlist" => "Playlists",
 					"goplus" => "Go+ Tracks"
@@ -70,7 +70,7 @@ class sc{
 		return $data;
 	}
 	
-	public function music($get){
+	public function music($get, $last_attempt = false){
 		
 		if($get["npt"]){
 			
@@ -108,6 +108,7 @@ class sc{
 			
 			$type = $get["type"];
 			$proxy = $this->backend->get_ip();
+			$token = $this->get_token($proxy);
 			
 			switch($type){
 				
@@ -117,12 +118,11 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "model",
-						"user_id" => config::SC_USER_ID,
-						"client_id" => config::SC_CLIENT_TOKEN,
+						"client_id" => $token,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1696577813,
+						"app_version" => 1713542117,
 						"app_locale" => "en"
 					];
 					break;
@@ -133,28 +133,26 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet_genre" => "",
-						"user_id" => config::SC_USER_ID,
-						"client_id" => config::SC_CLIENT_TOKEN,
+						"client_id" => $token,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1696577813,
+						"app_version" => 1713542117,
 						"app_locale" => "en"
 					];
 					break;
 				
-				case "people":
+				case "author":
 					$url = "https://api-v2.soundcloud.com/search/users";
 					$params = [
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "place",
-						"user_id" => config::SC_USER_ID,
-						"client_id" => config::SC_CLIENT_TOKEN,
+						"client_id" => $token,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1696577813,
+						"app_version" => 1713542117,
 						"app_locale" => "en"
 					];
 					break;
@@ -165,12 +163,11 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "genre",
-						"user_id" => config::SC_USER_ID,
-						"client_id" => config::SC_CLIENT_TOKEN,
+						"client_id" => $token,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1696577813,
+						"app_version" => 1713542117,
 						"app_locale" => "en"
 					];
 					break;
@@ -181,12 +178,11 @@ class sc{
 						"q" => $search,
 						"variant_ids" => "",
 						"facet" => "genre",
-						"user_id" => config::SC_USER_ID,
-						"client_id" => config::SC_CLIENT_TOKEN,
+						"client_id" => $token,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1696577813,
+						"app_version" => 1713542117,
 						"app_locale" => "en"
 					];
 					break;
@@ -198,12 +194,11 @@ class sc{
 						"variant_ids" => "",
 						"filter.content_tier" => "SUB_HIGH_TIER",
 						"facet" => "genre",
-						"user_id" => config::SC_USER_ID,
-						"client_id" => config::SC_CLIENT_TOKEN,
+						"client_id" => $token,
 						"limit" => 20,
 						"offset" => 0,
 						"linked_partitioning" => 1,
-						"app_version" => 1696577813,
+						"app_version" => 1713542117,
 						"app_locale" => "en"
 					];
 					break;
@@ -229,7 +224,14 @@ class sc{
 		
 		if($json === null){
 			
-			throw new Exception("Failed to decode JSON. Did the keys set in data/config.php expire?");
+			if($last_attempt === true){
+				
+				throw new Exception("Fetched an invalid token (please report!!)");
+			}
+			
+			// token might've expired, get a new one and re-try search
+			$this->get_token($proxy);
+			return $this->music($get, true);
 		}
 		
 		$out = [
@@ -237,7 +239,10 @@ class sc{
 			"npt" => null,
 			"song" => [],
 			"playlist" => [],
-			"author" => []
+			"album" => [],
+			"podcast" => [],
+			"author" => [],
+			"user" => []
 		];
 		
 		/*
@@ -346,10 +351,10 @@ class sc{
 					if(stripos($item["monetization_model"], "TIER") === false){
 						
 						$stream = [
-							"endpoint" => "audio_sc",
+							"endpoint" => "sc",
 							"url" =>
 								$item["media"]["transcodings"][0]["url"] .
-								"?client_id=" . config::SC_CLIENT_TOKEN .
+								"?client_id=" . $token .
 								"&track_authorization=" .
 								$item["track_authorization"]
 						];
@@ -385,6 +390,42 @@ class sc{
 		}
 		
 		return $out;
+	}
+	
+	public function get_token($proxy){
+		
+		$token = apcu_fetch("sc_token");
+		
+		if($token === false){
+			
+			try{
+				$js =
+					$this->get(
+						$proxy,
+						"https://a-v2.sndcdn.com/assets/0-a901c1e0.js",
+						[]
+					);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search token");
+			}
+			
+			preg_match(
+				'/client_id=([^"]+)/',
+				$js,
+				$token
+			);
+			
+			if(!isset($token[1])){
+				
+				throw new Exception("Failed to get search token");
+			}
+			
+			apcu_store("sc_token", $token[1]);
+			return $token[1];
+		}
+		
+		return $token;
 	}
 	
 	private function limitstrlen($text){

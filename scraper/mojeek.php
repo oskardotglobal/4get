@@ -602,20 +602,23 @@ class mojeek{
 						);
 				}
 				
-				$data["date"] =
-					explode(
-						" - ",
-						$this->fuckhtml
-						->getTextContent(
-							$this->fuckhtml
-							->getElementsByClassName("i", "p")[0]
-						)
+				$date =
+					$this->fuckhtml
+					->getElementsByClassName(
+						"mdate",
+						"span"
 					);
 				
-				$data["date"] =
-					strtotime(
-						$data["date"][count($data["date"]) - 1]
-					);
+				if(count($date) !== 0){
+										
+					$data["date"] =
+						strtotime(
+							$this->fuckhtml
+							->getTextContent(
+								$date[0]
+							)
+						);
+				}
 				
 				$out["web"][] = $data;
 			}

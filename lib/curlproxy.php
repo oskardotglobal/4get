@@ -290,30 +290,24 @@ class proxy{
 				
 				if(isset($headers["content-type"])){
 					
-					if($headers["content-type"] == "text/html"){
+					if(stripos($headers["content-type"], "text/html") !== false){
 						
-						throw new Exception("Server returned an html document instead of image");
+						throw new Exception("Server returned html");
 					}
 					
-					$tmp = explode(";", $headers["content-type"]);
-				
-					for($i=0; $i<count($tmp); $i++){
+					if(
+						preg_match(
+							'/image\/([^ ]+)/i',
+							$headers["content-type"],
+							$match
+						)
+					){
 						
-						if(
-							preg_match(
-								'/^image\/([^ ]+)/i',
-								$tmp[$i],
-								$match
-							)
-						){
+						$format = strtolower($match[1]);
+						
+						if(substr(strtolower($format), 0, 2) == "x-"){
 							
-							$format = strtolower($match[1]);
-							
-							if(substr($format, 0, 2) == "x-"){
-								
-								$format = substr($format, 2);
-							}
-							break;
+							$format = substr($format, 2);
 						}
 					}
 				}
@@ -351,6 +345,8 @@ class proxy{
 	
 	private function stream($url, $referer, $format){
 		
+		$this->clientcache();
+		
 		$this->url = $url;
 		$this->format = $format;
 		
@@ -359,8 +355,6 @@ class proxy{
 			
 			throw new Exception("Invalid URL");
 		}
-		
-		$this->clientcache();
 		
 		$curl = curl_init();
 		
@@ -490,16 +484,31 @@ class proxy{
 					// get content type
 					if(isset($this->headers["content-type"])){
 						
-						$filetype = explode("/", $this->headers["content-type"]);
+						$octet_check = stripos($this->headers["content-type"], "octet-stream");
 						
-						if(strtolower($filetype[0]) != $this->format){
+						if(
+							stripos($this->headers["content-type"], $this->format) === false &&
+							$octet_check === false
+						){
 							
-							throw new Exception("Resource is not an {$this->format} (Found {$filetype[0]} instead)");
+							throw new Exception("Resource reported invalid Content-Type");
 						}
 						
 					}else{
 						
 						throw new Exception("Resource is not an {$this->format} (no Content-Type)");
+					}
+					
+					$filetype = explode("/", $this->headers["content-type"]);
+					
+					if(!isset($filetype[1])){
+						
+						throw new Exception("Malformed Content-Type header");
+					}
+					
+					if($octet_check !== false){
+						
+						$filetype[1] = "jpeg";
 					}
 					
 					header("Content-Type: {$this->format}/{$filetype[1]}");
@@ -541,7 +550,7 @@ class proxy{
 			
 			if(isset($filename[1])){
 				
-				header("Content-Disposition: filename=" . $filename[1] . "." . $filetype);
+				header("Content-Disposition: filename=\"" . trim($filename[1], "\"'") . "." . $filetype . "\"");
 				return;
 			}
 		}
@@ -552,7 +561,7 @@ class proxy{
 		if($filename === null){
 			
 			// everything failed! rename file to domain name
-			header("Content-Disposition: filename=" . parse_url($url, PHP_URL_HOST) . "." . $filetype);
+			header("Content-Disposition: filename=\"" . parse_url($url, PHP_URL_HOST) . "." . $filetype . "\"");
 			return;
 		}
 		
@@ -569,7 +578,7 @@ class proxy{
 		
 		$filename = implode(".", $filename);
 		
-		header("Content-Disposition: inline; filename=" . $filename . "." . $filetype);
+		header("Content-Disposition: inline; filename=\"" . $filename . "." . $filetype . "\"");
 		return;
 	}
 	

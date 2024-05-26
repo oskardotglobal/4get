@@ -24,13 +24,36 @@ try{
 	}
 	
 	// bing request, ask bing to resize and stream to browser
+	$image = parse_url($_GET["i"]);
+	
 	if(
+		isset($image["host"]) &&
 		preg_match(
-			'/bing.net$/',
-			parse_url($_GET["i"], PHP_URL_HOST)
+			'/^[A-z0-9.]*bing\.(net|com)$/i',
+			$image["host"]
 		)
 	){
 		
+		if(
+			!isset($image["query"]) ||
+			!isset($image["path"]) ||
+			$image["path"] != "/th"
+		){
+			
+			header("X-Error: Invalid bing image path");
+			$proxy->do404();
+			die();
+		}
+		
+		parse_str($image["query"], $str);
+		
+		if(!isset($str["id"])){
+			
+			header("X-Error: Missing bing ID");
+			$proxy->do404();
+			die();
+		}
+			
 		switch($_GET["s"]){
 			
 			case "portrait": $req = "&w=50&h=90&p=0&qlt=90"; break;
@@ -40,7 +63,7 @@ try{
 			case "cover": $req = "&w=207&h=270&p=0&qlt=90"; break;
 		}
 		
-		$proxy->stream_linear_image($_GET["i"] . $req, "https://bing.net");
+		$proxy->stream_linear_image("https://" . $image["host"] . "/th?id=" . urlencode($str["id"]) . $req, "https://www.bing.com");
 		die();
 	}
 	

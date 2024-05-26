@@ -18,7 +18,7 @@ class autocomplete{
 			"yep" => "https://api.yep.com/ac/?query={searchTerms}",
 			"marginalia" => "https://search.marginalia.nu/suggest/?partial={searchTerms}",
 			"yt" => "https://suggestqueries-clients6.youtube.com/complete/search?client=youtube&q={searchTerms}",
-			"sc" => "https://api-v2.soundcloud.com/search/queries?q={searchTerms}&client_id=" . config::SC_CLIENT_TOKEN . "&limit=10&offset=0&linked_partitioning=1&app_version=1693487844&app_locale=en"
+			"sc" => ""
 		];
 		
 		/*
@@ -37,14 +37,6 @@ class autocomplete{
 		if(strlen($_GET["s"]) > 500){
 			
 			$this->do404("Search(s) exceeds the 500 char length");
-		}
-		
-		if(
-			isset($_GET["scraper"]) &&
-			is_string($_GET["scraper"]) === false
-		){
-			
-			$_GET["scraper"] = "brave"; // default option
 		}
 		
 		/*
@@ -77,7 +69,6 @@ class autocomplete{
 		}
 		
 		// return results
-		
 		switch($scraper){
 			
 			case "google":
@@ -109,13 +100,22 @@ class autocomplete{
 						$_GET["s"],
 						$json
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 			
 			case "sc":
 				// soundcloud
-				$js = $this->get($this->scrapers[$scraper], $_GET["s"]);
+				chdir("../../");
+				include "scraper/sc.php";
+				$sc = new sc();
+				
+				$token = $sc->get_token("raw_ip::::");
+				
+				$js = $this->get(
+					"https://api-v2.soundcloud.com/search/queries?q={searchTerms}&client_id=" . $token . "&limit=10&offset=0&linked_partitioning=1&app_version=1693487844&app_locale=en",
+					$_GET["s"]
+				);
 				
 				$js = json_decode($js, true);
 				
@@ -135,7 +135,7 @@ class autocomplete{
 						$_GET["s"],
 						$json
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 			
@@ -154,7 +154,7 @@ class autocomplete{
 						$_GET["s"],
 						$json
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 			
@@ -167,7 +167,7 @@ class autocomplete{
 						$_GET["s"],
 						$json[1] // ensure it contains valid key 0
 					],
-					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+					JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 				);
 				break;
 		}
@@ -221,7 +221,7 @@ class autocomplete{
 		
 		echo json_encode(
 			["error" => $error],
-			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 		);
 		die();
 	}
@@ -233,7 +233,7 @@ class autocomplete{
 				$_GET["s"],
 				[]
 			],
-			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_IGNORE
 		);
 		die();
 	}

@@ -1,6 +1,6 @@
 <?php
 
-class captcha{
+class bot_protection{
 	
 	public function __construct($frontend, $get, $filters, $page, $output){
 		
@@ -26,7 +26,7 @@ class captcha{
 			if(
 				// check if key is not malformed
 				preg_match(
-					'/^c[0-9]+\.[A-Za-z0-9]{20}$/',
+					'/^k[0-9]+\.[A-Za-z0-9_]{20}$/',
 					$_COOKIE["pass"]
 				) &&
 				// does key exist
@@ -39,7 +39,7 @@ class captcha{
 				// we start counting from 1
 				// when it has been incremented to 102, it has reached
 				// 100 reqs
-				if($inc >= 102){
+				if($inc >= config::MAX_SEARCHES + 2){
 					
 					// reached limit, delete and give captcha
 					apcu_delete($_COOKIE["pass"]);
@@ -62,7 +62,7 @@ class captcha{
 		
 		if($output === false){
 			
-			http_response_code(429); // too many reqs
+			http_response_code(401); // forbidden
 			echo json_encode([
 				"status" => "The \"pass\" token in your cookies is missing or has expired!!"
 			]);
@@ -104,10 +104,13 @@ class captcha{
 				!isset($regex[0][1])
 			){
 				
-				// check if its k
+				// check if its the v key
 				if(
-					$line[0] == "k" &&
-					strpos($line[1], "c.") === 0
+					$line[0] == "v" &&
+					preg_match(
+						'/^c[0-9]+\.[A-Za-z0-9_]{20}$/',
+						$line[1]
+					)
 				){
 					
 					$key = apcu_fetch($line[1]);
@@ -129,27 +132,21 @@ class captcha{
 			
 			$answers[] = $regex;
 		}
-
+		
 		if(
 			!$invalid &&
-			$key !== false
+			$key !== false // has captcha been gen'd?
 		){
-			$check = $key[1];
+			$check = count($key);
 			
 			// validate answer
-			for($i=0; $i<count($key[0]); $i++){
+			for($i=0; $i<count($answers); $i++){
 				
-				if(!in_array($i, $answers)){
-					
-					continue;
-				}
-				
-				if($key[0][$i][0] == $key[2]){
+				if(in_array($answers[$i], $key)){
 					
 					$check--;
 				}else{
 					
-					// got a wrong answer
 					$check = -1;
 					break;
 				}
@@ -160,21 +157,8 @@ class captcha{
 				// we passed the captcha
 				// set cookie
 				$inc = apcu_inc("cookie");
-				$chars =
-					array_merge(
-						range("A", "Z"),
-						range("a", "z"),
-						range(0, 9)
-					);
 				
-				$c = count($chars) - 1;
-				
-				$key = "c" . $inc . ".";
-				
-				for($i=0; $i<20; $i++){
-					
-					$key .= $chars[random_int(0, $c)];
-				}
+				$key = "k" . $inc . "." . $this->randomchars();
 				
 				apcu_inc($key, 1, $stupid, 86400);
 				
@@ -203,84 +187,23 @@ class captcha{
 			}
 		}
 		
-		// get the positions for the answers
-		// will return between 3 and 6 answer positions
-		$range = range(0, 15);
-		$answer_pos = [];
-
-		array_splice($range, 0, 1);
-
-		for($i=0; $i<random_int(3, 6); $i++){
-			
-			$answer_pos_tmp =
-				array_splice(
-					$range,
-					random_int(
-						0,
-						14 - $i
-					),
-					1
-				);
-			
-			$answer_pos[] = $answer_pos_tmp[0];
-		}
-
-		// choose a dataset
-		$c = count(config::CAPTCHA_DATASET);
-		$choosen = config::CAPTCHA_DATASET[random_int(0, $c - 1)];
-		$choices = [];
-
-		for($i=0; $i<$c; $i++){
-			
-			if(config::CAPTCHA_DATASET[$i][0] == $choosen[0]){
-				
-				continue;
-			}
-			
-			$choices[] = config::CAPTCHA_DATASET[$i];
-		}
-
-		// generate grid data
-		$grid = [];
-
-		for($i=0; $i<16; $i++){
-			
-			if(in_array($i, $answer_pos)){
-				
-				$grid[] = $choosen;
-			}else{
-				
-				$grid[] = $choices[random_int(0, count($choices) - 1)];
-			}
-		}
-
-		$key = "c." . apcu_inc("captcha_gen", 1) . "." . random_int(0, 100000000);
-
-		apcu_store(
-			$key,
-			[
-				$grid,
-				count($answer_pos),
-				$choosen[0],
-				false // has captcha been generated?
-			],
-			120 // we give user 2 minutes to get captcha, in case of network error
-		);
+		$key = "c" . apcu_inc("captcha_gen", 1) . "." . $this->randomchars();
 		
 		$payload = [
+			"timetaken" => microtime(true),
 			"class" => "",
 			"right-left" => "",
 			"right-right" => "",
 			"left" =>
 				'<div class="infobox">' .
 					'<h1>IQ test</h1>' .
-					'Due to getting hit with 20,000 bot requests per day, I had to put this up. Sorry.<br><br>' .
-					'Solving this captcha will allow you to make 100 searches today. I will add a way for legit users to bypass the captcha later. Sorry /g/tards!!' .
+					'IQ test has been enabled due to bot abuse on the network.<br>' .
+					'Solving this IQ test will let you make 100 searches today. I will add an invite system to bypass this soon...' .
 					$error .
 					'<form method="POST" enctype="text/plain" autocomplete="off">' .
 						'<div class="captcha-wrapper">' .
 							'<div class="captcha">' .
-								'<img src="captcha?k=' . $key . '" alt="Captcha image">' .
+								'<img src="captcha?v=' . $key . '" alt="Captcha image">' .
 								'<div class="captcha-controls">' .
 									'<input type="checkbox" name="c[0]" id="c0">' .
 									'<label for="c0"></label>' .
@@ -317,13 +240,12 @@ class captcha{
 								'</div>' .
 							'</div>' .
 						'</div>' .
-						'<input type="hidden" name="k" value="' . $key . '">' .
+						'<input type="hidden" name="v" value="' . $key . '">' .
 						'<input type="submit" value="Check IQ" class="captcha-submit">' .
 					'</form>' .
 				'</div>'
 		];
 		
-		http_response_code(429); // too many reqs
 		$frontend->loadheader(
 			$get,
 			$filters,
@@ -332,5 +254,28 @@ class captcha{
 		
 		echo $frontend->load("search.html", $payload);
 		die();
+	}
+	
+	private function randomchars(){
+		
+		$chars =
+			array_merge(
+				range("A", "Z"),
+				range("a", "z"),
+				range(0, 9)
+			);
+		
+		$chars[] = "_";
+		
+		$c = count($chars) - 1;
+		
+		$key = "";
+		
+		for($i=0; $i<20; $i++){
+			
+			$key .= $chars[random_int(0, $c)];
+		}
+		
+		return $key;
 	}
 }

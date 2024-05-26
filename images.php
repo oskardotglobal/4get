@@ -15,10 +15,11 @@ $get = $frontend->parsegetfilters($_GET, $filters);
 /*
 	Captcha
 */
-include "lib/captcha_gen.php";
-new captcha($frontend, $get, $filters, "images", true);
+include "lib/bot_protection.php";
+new bot_protection($frontend, $get, $filters, "images", true);
 
 $payload = [
+	"timetaken" => microtime(true),
 	"images" => "",
 	"nextpage" => ""
 ];
@@ -28,7 +29,7 @@ try{
 	
 }catch(Exception $error){
 	
-	$frontend->drawscrapererror($error->getMessage(), $get, "images");
+	$frontend->drawscrapererror($error->getMessage(), $get, "images", $payload["timetaken"]);
 }
 
 if(count($results["image"]) === 0){

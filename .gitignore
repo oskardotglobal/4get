@@ -29,3 +29,4 @@ data/captcha/minecraft/
 banner/*
 !banner/*default*
 >>>>>>> 77293818cd213ec0ad07c573d298fff9cd5b357d
+scraper/curlie.html
