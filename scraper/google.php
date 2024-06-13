@@ -1,13 +1,8 @@
 <?php
 
-// todo:
-// aliexpress tracking links
-// enhanced msx notice
+// @TODO check for consent.google.com page, if need be
 
 class google{
-	
-	private const is_class = ".";
-	private const is_id = "#";
 	
 	public function __construct(){
 		
@@ -21,7 +16,7 @@ class google{
 	public function getfilters($page){
 		
 		$base = [
-			"country" => [ // gl=<country>
+			"country" => [ // gl=<country> (image: cr=countryAF)
 				"display" => "Country",
 				"option" => [
 					"any" => "Instance's country",
@@ -272,47 +267,6 @@ class google{
 					"yes" => "Yes", // safe=active
 					"no" => "No" // safe=off
 				]
-			],
-			"lang" => [ // lr=<lang> (prefix lang with "lang_")
-				"display" => "Language",
-				"option" => [
-					"any" => "Any language",
-					"ar" => "Arabic",
-					"bg" => "Bulgarian",
-					"ca" => "Catalan",
-					"cs" => "Czech",
-					"da" => "Danish",
-					"de" => "German",
-					"el" => "Greek",
-					"en" => "English",
-					"es" => "Spanish",
-					"et" => "Estonian",
-					"fi" => "Finnish",
-					"fr" => "French",
-					"hr" => "Croatian",
-					"hu" => "Hungarian",
-					"id" => "Indonesian",
-					"is" => "Icelandic",
-					"it" => "Italian",
-					"iw" => "Hebrew",
-					"ja" => "Japanese",
-					"ko" => "Korean",
-					"lt" => "Lithuanian",
-					"lv" => "Latvian",
-					"nl" => "Dutch",
-					"no" => "Norwegian",
-					"pl" => "Polish",
-					"pt" => "Portuguese",
-					"ro" => "Romanian",
-					"ru" => "Russian",
-					"sk" => "Slovak",
-					"sl" => "Slovenian",
-					"sr" => "Serbian",
-					"sv" => "Swedish",
-					"tr" => "Turkish",
-					"zh-CN" => "Chinese (Simplified)",
-					"zh-TW" => "Chinese (Traditional)"
-				]
 			]
 		];
 		
@@ -322,13 +276,61 @@ class google{
 				return array_merge(
 					$base,
 					[
-						"newer" => [ // &sort=review-date:r:20090301:20090430
+						"lang" => [ // lr=<lang> (prefix lang with "lang_")
+							"display" => "Language",
+							"option" => [
+								"any" => "Any language",
+								"ar" => "Arabic",
+								"bg" => "Bulgarian",
+								"ca" => "Catalan",
+								"cs" => "Czech",
+								"da" => "Danish",
+								"de" => "German",
+								"el" => "Greek",
+								"en" => "English",
+								"es" => "Spanish",
+								"et" => "Estonian",
+								"fi" => "Finnish",
+								"fr" => "French",
+								"hr" => "Croatian",
+								"hu" => "Hungarian",
+								"id" => "Indonesian",
+								"is" => "Icelandic",
+								"it" => "Italian",
+								"iw" => "Hebrew",
+								"ja" => "Japanese",
+								"ko" => "Korean",
+								"lt" => "Lithuanian",
+								"lv" => "Latvian",
+								"nl" => "Dutch",
+								"no" => "Norwegian",
+								"pl" => "Polish",
+								"pt" => "Portuguese",
+								"ro" => "Romanian",
+								"ru" => "Russian",
+								"sk" => "Slovak",
+								"sl" => "Slovenian",
+								"sr" => "Serbian",
+								"sv" => "Swedish",
+								"tr" => "Turkish",
+								"zh-CN" => "Chinese (Simplified)",
+								"zh-TW" => "Chinese (Traditional)"
+							]
+						],
+						"newer" => [ // tbs
 							"display" => "Newer than",
 							"option" => "_DATE"
 						],
 						"older" => [
 							"display" => "Older than",
 							"option" => "_DATE"
+						],
+						"spellcheck" => [
+							"display" => "Spellcheck",
+							"option" => [
+								"yes" => "Yes",
+								"no" => "No"
+							]
 						]
 					]
 				);
@@ -338,7 +340,7 @@ class google{
 				return array_merge(
 					$base,
 					[
-						"time" => [ // tbs=qrd:<size>
+						"time" => [ // tbs=qdr:<time>
 							"display" => "Time posted",
 							"option" => [
 								"any" => "Any time",
@@ -348,19 +350,16 @@ class google{
 								"y" => "Past year"
 							]
 						],
-						"size" => [
+						"size" => [ // imgsz
 							"display" => "Size",
 							"option" => [
-								// tbs=isz:<size>
 								"any" => "Any size",
 								"l" => "Large",
 								"m" => "Medium",
 								"i" => "Icon",
-								// from here
-								// tbz:lt,islt:<size>
 								"qsvga" => "Larger than 400x300",
 								"vga" => "Larger than 640x480",
-								"qsvga" => "Larger than 800x600",
+								"svga" => "Larger than 800x600",
 								"xga" => "Larger than 1024x768",
 								"2mp" => "Larger than 2MP",
 								"4mp" => "Larger than 4MP",
@@ -374,24 +373,24 @@ class google{
 								"70mp" => "Larger than 70MP"
 							]
 						],
-						"ratio" => [ // tbs=iar:<size>
+						"ratio" => [ // imgar
 							"display" => "Aspect ratio",
 							"option" => [
 								"any" => "Any ratio",
-								"t" => "Tall",
+								"t|xt" => "Tall",
 								"s" => "Square",
 								"w" => "Wide",
 								"xw" => "Panoramic"
 							]
 						],
-						"color" => [ // tbs=ic:<color>
+						"color" => [ // imgc
 							"display" => "Color",
 							"option" => [
 								"any" => "Any color",
 								"color" => "Full color",
-								"gray" => "Black & white",
+								"bnw" => "Black & white",
 								"trans" => "Transparent",
-								// from there, its ic:specific,isc:<color>
+								// from here, imgcolor
 								"red" => "Red",
 								"orange" => "Orange",
 								"yellow" => "Yellow",
@@ -410,14 +409,12 @@ class google{
 							"display" => "Type",
 							"option" => [
 								"any" => "Any type",
-								"face" => "Faces",
 								"clipart" => "Clip Art",
 								"lineart" => "Line Drawing",
-								"stock" => "Stock",
 								"animated" => "Animated"
 							]
 						],
-						"format" => [ // tbs=ift:<format>
+						"format" => [ // as_filetype
 							"display" => "Format",
 							"option" => [
 								"any" => "Any format",
@@ -431,7 +428,7 @@ class google{
 								"craw" => "RAW"
 							]
 						],
-						"rights" => [ // tbs=il:<rights>
+						"rights" => [ // tbs=sur:<rights>
 							"display" => "Usage rights",
 							"option" => [
 								"any" => "Any license",
@@ -447,16 +444,13 @@ class google{
 				return array_merge(
 					$base,
 					[
-						"time" => [
-							"display" => "Time posted",
-							"option" => [ // tbs=qdr
-								"any" => "Any time",
-								"h" => "Past hour",
-								"d" => "Past 24 hours",
-								"w" => "Past week",
-								"m" => "Past month",
-								"y" => "Past year"
-							]
+						"newer" => [ // tbs
+							"display" => "Newer than",
+							"option" => "_DATE"
+						],
+						"older" => [
+							"display" => "Older than",
+							"option" => "_DATE"
 						],
 						"duration" => [
 							"display" => "Duration",
@@ -489,17 +483,13 @@ class google{
 				return array_merge(
 					$base,
 					[
-						"time" => [
-							"display" => "Time posted",
-							"option" => [ // tbs=qdr
-								"any" => "Any time",
-								"h" => "Past hour",
-								"d" => "Past 24 hours",
-								"w" => "Past week",
-								"m" => "Past month",
-								"y" => "Past year",
-								"a" => "Archives" // tbs=ar:1
-							]
+						"newer" => [ // tbs
+							"display" => "Newer than",
+							"option" => "_DATE"
+						],
+						"older" => [
+							"display" => "Older than",
+							"option" => "_DATE"
 						],
 						"sort" => [
 							"display" => "Sort",
@@ -517,18 +507,20 @@ class google{
 	private function get($proxy, $url, $get = []){
 		
 		$headers = [
-			"User-Agent: Mozilla/5.0 (Linux; U; Android 2.3.3; pt-pt; LG-P500h-parrot Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 MMS/LG-Android-MMS-V1.0/1.2",
+			"User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
 			"DNT: 1",
-			"Cookie: SOCS=CAESNQgCEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjQwMzE3LjA4X3AwGgJlbiAEGgYIgM7orwY",
+			//"Cookie: SOCS=CAESNQgCEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjQwMzE3LjA4X3AwGgJlbiAEGgYIgM7orwY",
 			"Connection: keep-alive",
 			"Upgrade-Insecure-Requests: 1",
 			"Sec-Fetch-Dest: document",
 			"Sec-Fetch-Mode: navigate",
 			"Sec-Fetch-Site: none",
-			"Sec-Fetch-User: ?1"
+			"Sec-Fetch-User: ?1",
+			"Priority: u=1",
+			"TE: trailers"
 		];
 		
 		$curlproc = curl_init();
@@ -543,11 +535,17 @@ class google{
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER, $headers);
 		
+		// use http2
+		curl_setopt($curlproc, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+		
 		curl_setopt($curlproc, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
+		
+		// follow redirects
+		curl_setopt($curlproc, CURLOPT_FOLLOWLOCATION, true);
 
 		$this->backend->assign_proxy($curlproc, $proxy);
 		
@@ -564,35 +562,3281 @@ class google{
 	
 	
 	
+	
+	private function parsepage($html, $pagetype, $search, $proxy, $params){
+		
+		$out = [
+			"status" => "ok",
+			"spelling" => [
+				"type" => "no_correction",
+				"using" => null,
+				"correction" => null
+			],
+			"npt" => null,
+			"answer" => [],
+			"web" => [],
+			"image" => [],
+			"video" => [],
+			"news" => [],
+			"related" => []
+		];
+		
+		$this->fuckhtml->load($html);
+		
+		$this->detect_sorry();
+		
+		// parse all <style> tags
+		$this->parsestyles();
+		
+		// get javascript images
+		$this->scrape_dimg($html);
+		
+		// get html blobs
+		preg_match_all(
+			'/function\(\){window\.jsl\.dh\(\'([^\']+?)\',\'(.+?[^\'])\'\);/',
+			$html,
+			$blobs
+		);
+		
+		$this->blobs = [];
+		if(isset($blobs[1])){
+			
+			for($i=0; $i<count($blobs[1]); $i++){
+				
+				$this->blobs[$blobs[1][$i]] =
+					$this->fuckhtml
+					->parseJsString(
+						$blobs[2][$i]
+					);
+			}
+		}
+		
+		$this->scrape_imagearr($html);
+		
+		//
+		// load result column
+		//
+		$result_div =
+			$this->fuckhtml
+			->getElementById(
+				"center_col",
+				"div"
+			);
+		
+		if($result_div === false){
+			
+			throw new Exception("Failed to grep result div");
+		}
+		
+		$this->fuckhtml->load($result_div);
+		
+		//
+		// Get word corrections
+		//
+		$correction =
+			$this->fuckhtml
+			->getElementById(
+				"fprs",
+				"p"
+			);
+		
+		if($correction){
+			
+			$this->fuckhtml->load($correction);
+			
+			$a =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"a"
+				);
+					
+			$using =
+				$this->fuckhtml
+				->getElementById(
+					"fprsl",
+					$a
+				);
+			
+			if($using){
+				
+				$using =
+					$this->fuckhtml
+					->getTextContent(
+						$using
+					);
+				
+				$spans =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"span"
+					);
+				
+				$type_span =
+					$this->fuckhtml
+					->getTextContent(
+						$spans[0]
+					);
+				
+				$type = "not_many";
+				
+				if(
+					stripos(
+						$type_span,
+						"Showing results for"
+					) !== false
+				){
+					
+					$type = "including";
+				}
+				
+				$correction =
+					$this->fuckhtml
+					->getTextContent(
+						$a[count($a) - 1]
+					);
+				
+				$out["spelling"] = [
+					"type" => $type,
+					"using" => $using,
+					"correction" => $correction
+				];
+			}
+			
+			// reset
+			$this->fuckhtml->load($result_div);
+		}
+		
+		//
+		// get notices
+		//
+		$botstuff =
+			$this->fuckhtml
+			->getElementById(
+				"botstuff"
+			);
+		
+		// important for later
+		$last_page = false;
+		
+		if($botstuff){
+			
+			$this->fuckhtml->load($botstuff);
+			
+			$cards =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"line-height" => "normal"
+						]
+					),
+					"div"
+				);
+			
+			foreach($cards as $card){
+				
+				$this->fuckhtml->load($card);
+				
+				$h2 =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"h2"
+					);
+				
+				if(count($h2) !== 0){
+					
+					$title =
+						$this->fuckhtml
+						->getTextContent(
+							$h2[0]
+						);
+					
+					$card["innerHTML"] =
+						str_replace(
+							$h2[0]["outerHTML"],
+							"",
+							$card["innerHTML"]
+						);
+				}else{
+					
+					$title = "Notice";
+				}
+				
+				$description = [];
+				
+				$as =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"a"
+					);
+				
+				if(count($as) !== 0){
+					
+					$first = true;
+					
+					foreach($as as $a){
+						
+						$text_link =
+							$this->fuckhtml
+							->getTextContent(
+								$a
+							);
+						
+						if(stripos($text_link, "repeat the search") !== false){
+							
+							$last_page = true;
+							break 2;
+						}
+						
+						$parts =
+							explode(
+								$a["outerHTML"],
+								$card["innerHTML"],
+								2
+							);
+						
+						$card["innerHTML"] = $parts[1];
+						
+						$value =
+							preg_replace(
+								'/ +/',
+								" ",
+								$this->fuckhtml
+								->getTextContent(
+									$parts[0],
+									false,
+									false
+								)
+							);
+						
+						if(strlen(trim($value)) !== 0){
+														
+							$description[] = [
+								"type" => "text",
+								"value" => $value
+							];
+							
+							if($first){
+								
+								$description[0]["value"] =
+									ltrim($description[0]["value"]);
+							}
+						}
+						
+						$first = false;
+						
+						$description[] = [
+							"type" => "link",
+							"url" =>
+								$this->fuckhtml
+								->getTextContent(
+									$a["attributes"]
+									["href"]
+								),
+							"value" => $text_link
+						];
+					}
+					
+					$text =
+						$this->fuckhtml
+						->getTextContent(
+							$card["innerHTML"],
+							false,
+							false
+						);
+					
+					if(strlen(trim($text)) !== 0){
+						
+						$description[] = [
+							"type" => "text",
+							"value" =>
+								rtrim(
+									$text
+								)
+						];
+					}
+					
+				}else{
+					
+					// @TODO: Check if this ever gets populated without giving me garbage
+					/*
+					$text =
+						$this->fuckhtml
+						->getTextContent(
+							$card
+						);
+					
+					if($text != ""){
+						$description[] = [
+							"type" => "text",
+							"value" => $text
+						];
+					}*/
+				}
+				
+				if(count($description) !== 0){
+					
+					$out["answer"][] = [
+						"title" => $title,
+						"description" => $description,
+						"url" => null,
+						"thumb" => null,
+						"table" => [],
+						"sublink" => []
+					];
+				}
+			}
+			
+			// reset
+			$this->fuckhtml->load($html);
+		}
+		
+		//
+		// get "Related Searches" and "People also search for"
+		//
+		$relateds =
+			array_merge(
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"align-items" => "center",
+							"background-color" => "#28292a",
+							"border-radius" => "100px",
+							"box-sizing" => "border-box",
+							"display" => "flex",
+							"max-height" => "none",
+							"min-height" => "48px",
+							"padding-left" => "17px",
+							"padding-right" => "17px",
+							"position" => "relative"
+						]
+					) . " " .
+					$this->getstyle(
+						[
+							"margin-left" => "8px",
+							"margin-right" => "8px"
+						]
+					),
+					"a"
+				),
+				$this->fuckhtml
+				->getElementsByClassName(
+					"wyccme",
+					"div"
+				)
+			);
+		
+		foreach($relateds as $related){
+			
+			$text =
+				$this->fuckhtml
+				->getTextContent(
+					$related
+				);
+			
+			if($text == "More results"){ continue; }
+			
+			$out["related"][] = $text;
+		}
+		
+		//
+		// Get text results
+		//
+		$results =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"g",
+				"div"
+			);
+		
+		$this->skip_next = false;
+		
+		foreach($results as $result){
+			
+			if($this->skip_next){
+				
+				$this->skip_next = false;
+				continue;
+			}
+			
+			$this->fuckhtml->load($result);
+			
+			$web = [
+				"title" => null,
+				"description" => null,
+				"url" => null,
+				"date" => null,
+				"type" => "web",
+				"thumb" => [
+					"url" => null,
+					"ratio" => null
+				],
+				"sublink" => [],
+				"table" => []
+			];
+			
+			// Detect presence of sublinks
+			$g =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"g",
+					"div"
+				);
+			
+			$sublinks = [];
+			if(count($g) > 0){
+				
+				$table =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"table"
+					);
+				
+				if(count($table) !== 0){
+					
+					// found some sublinks!
+					
+					$this->fuckhtml->load($table[0]);
+					
+					$tds =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"td"
+						);
+					
+					foreach($tds as $td){
+						
+						$this->fuckhtml->load($td);
+						
+						$a =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"a"
+							);
+						
+						if(
+							count($a) === 0 ||
+							(
+								isset($a[0]["attributes"]["class"]) &&
+								$a[0]["attributes"]["class"] == "fl"
+							)
+						){
+							
+							continue;
+						}
+						
+						$td["innerHTML"] =
+							str_replace(
+								$a[0]["outerHTML"],
+								"",
+								$td["innerHTML"]
+							);
+						
+						$web["sublink"][] = [
+							"title" =>
+								$this->titledots(
+									$this->fuckhtml
+									->getTextContent(
+										$a[0]
+									)
+								),
+							"description" =>
+								html_entity_decode(
+									$this->titledots(
+										$this->fuckhtml
+										->getTextContent(
+											$td
+										)
+									)
+								),
+							"url" =>
+								$this->unshiturl(
+									$a[0]
+									["attributes"]
+									["href"]
+								),
+							"date" => null
+						];
+					}
+					
+					// reset
+					$this->fuckhtml->load($result);
+				}
+								
+				// skip on next iteration
+				$this->skip_next = true;
+			}
+			
+			// get title
+			$h3 =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"h3"
+				);
+			
+			if(count($h3) === 0){
+				
+				continue;
+			}
+			
+			$web["title"] =
+				$this->titledots(
+					$this->fuckhtml
+					->getTextContent(
+						$h3[0]
+					)
+				);
+			
+			// get url
+			$as =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"a"
+				);
+			
+			$web["url"] =
+				$this->unshiturl(
+					$as[0]
+					["attributes"]
+					["href"]
+				);
+			
+			if(
+				!preg_match(
+					'/^http/',
+					$web["url"]
+				)
+			){
+				
+				// skip if invalid url is found
+				continue;
+			}
+			
+			//
+			// probe for twitter carousel
+			//
+			$carousel =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"g-scrolling-carousel"
+				);
+			
+			if(count($carousel) !== 0){
+				
+				$this->fuckhtml->load($carousel[0]);
+				
+				$items =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"g-inner-card"
+					);
+				
+				$has_thumbnail = false;
+				
+				foreach($items as $item){
+					
+					$this->fuckhtml->load($item);
+					
+					if($has_thumbnail === false){
+						
+						// get thumbnail
+						$thumb =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"img"
+							);
+						
+						if(
+							count($thumb) !== 0 &&
+							isset($thumb[0]["attributes"]["id"])
+						){
+							
+							$web["thumb"] = [
+								"url" =>
+									$this->getdimg(
+										$thumb[0]["attributes"]["id"]
+									),
+								"ratio" => "16:9"
+							];
+							
+							$has_thumbnail = true;
+						}
+						
+						// or else, try getting a thumbnail from next container
+					}
+					
+					// cache div
+					$div =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"div"
+						);
+					
+					// get link
+					$links =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"a"
+						);
+					
+					// get description of carousel sublink
+					$description =
+						$this->fuckhtml
+						->getElementsByAttributeValue(
+							"role",
+							"heading",
+							$div
+						);
+					
+					if(count($description) !== 0){
+						
+						$description =
+							$this->titledots(
+								$this->fuckhtml
+								->getTextContent(
+									$description[0]
+								)
+							);
+					}else{
+						
+						$description = null;
+					}
+					
+					$bottom =
+						$this->fuckhtml
+						->getElementsByAttributeValue(
+							"style",
+							"z-index:2",
+							$div
+						);
+					
+					$title = null;
+					$date = null;
+					if(count($bottom) !== 0){
+						
+						$this->fuckhtml->load($bottom[0]);
+						
+						$spans =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"span"
+							);
+						
+						$title =
+							$this->fuckhtml
+							->getTextContent(
+								$spans[0]
+							);
+						
+						$date =
+							strtotime(
+								$this->fuckhtml
+								->getTextContent(
+									$spans[count($spans) - 1]
+								)
+							);
+					}
+					
+					$web["sublink"][] = [
+						"title" => $title,
+						"description" => $description,
+						"url" =>
+							$this->unshiturl(
+								$links[0]
+								["attributes"]
+								["href"]
+							),
+						"date" => $date
+					];
+				}
+				
+				$out["web"][] = $web;
+				continue;
+			}
+			
+			//
+			// get viewcount, time posted and follower count from <cite> tag
+			//
+			$cite =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"cite"
+				);
+			
+			if(count($cite) !== 0){
+				
+				$this->fuckhtml->load($cite[0]);
+				
+				$spans =
+					$this->fuckhtml
+					->getElementsByTagName("span");
+				
+				if(count($spans) === 0){
+					
+					$cites =
+						explode(
+							"·",
+							$this->fuckhtml
+							->getTextContent(
+								$cite[0]
+							)
+						);
+					
+					foreach($cites as $cite){
+						
+						$cite = trim($cite);
+						
+						if(
+							preg_match(
+								'/(.+) (views|followers|likes)$/',
+								$cite,
+								$match
+							)
+						){
+							
+							$web["table"][ucfirst($match[2])] =
+								$match[1];
+						}elseif(
+							preg_match(
+								'/ago$/',
+								$cite
+							)
+						){
+							
+							$web["date"] =
+								strtotime($cite);
+						}
+					}
+				}
+				
+				// reset
+				$this->fuckhtml->load($result);
+			}
+			
+			//
+			// attempt to fetch description cleanly
+			//
+			$description =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"style",
+					"-webkit-line-clamp:2"
+				);
+			
+			if(count($description) !== 0){
+				
+				$web["description"] =
+					$this->titledots(
+						$this->fuckhtml
+						->getTextContent(
+							$description[0]
+						)
+					);
+			}else{
+				
+				// use ANOTHER method where the description is a header of the result
+				$description =
+					$this->fuckhtml
+					->getElementsByAttributeValue(
+						"data-attrid",
+						"wa:/description"
+					);
+				
+				if(count($description) !== 0){
+					
+					// get date off that shit
+					$date =
+						$this->fuckhtml
+						->getElementsByClassName(
+							$this->getstyle(
+								[
+									"font-size" => "12px",
+									"line-height" => "1.34",
+									"display" => "inline-block",
+									"font-family" => "Google Sans,arial,sans-serif",
+									"padding-right" => "0",
+									"white-space" => "nowrap"
+								]
+							),
+							"span"
+						);
+					
+					if(count($date) !== 0){
+						
+						$description[0]["innerHTML"] =
+							str_replace(
+								$date[0]["outerHTML"],
+								"",
+								$description[0]["innerHTML"]
+							);
+						
+						$web["date"] =
+							strtotime(
+								$this->fuckhtml
+								->getTextContent(
+									$date[0]
+								)
+							);
+					}
+					
+					$web["description"] =
+						$this->fuckhtml
+						->getTextContent(
+							$description[0]
+						);
+				}else{
+					
+					// Yes.. You guessed it, use ANOTHER method to get descriptions
+					// off youtube containers
+					$description =
+						$this->fuckhtml
+						->getElementsByClassName(
+							$this->getstyle(
+								[
+									"-webkit-box-orient" => "vertical",
+									"display" => "-webkit-box",
+									"font-size" => "14px",
+									"-webkit-line-clamp" => "2",
+									"line-height" => "22px",
+									"overflow" => "hidden",
+									"word-break" => "break-word",
+									"color" => "#bdc1c6"
+								]
+							),
+							"div"
+						);
+					
+					if(count($description) !== 0){
+						
+						// check for video duration
+						$duration =
+							$this->fuckhtml
+							->getElementsByClassName(
+								$this->getstyle(
+									[
+										"border-radius" => "10px",
+										"font-family" => "arial,sans-serif-medium,sans-serif",
+										"font-size" => "12px",
+										"line-height" => "16px",
+										"padding-block" => "2px",
+										"padding-inline" => "8px"
+									]
+								),
+								"div"
+							);
+						
+						if(count($duration) !== 0){
+							
+							$web["table"]["Duration"] =
+								$this->fuckhtml
+								->getTextContent(
+									$duration[0]
+								);
+							
+							// remove duration from description
+							$description[0]["innerHTML"] =
+								str_replace(
+									$duration[0]["outerHTML"],
+									"",
+									$description[0]["innerHTML"]
+								);
+						}
+						
+						$web["description"] =
+							$this->titledots(
+								html_entity_decode(
+									$this->fuckhtml
+									->getTextContent(
+										$description[0]
+									)
+								)
+							);
+						
+						// get author + time posted
+						$info =
+							$this->fuckhtml
+							->getElementsByClassName(
+								$this->getstyle(
+									[
+										"color" => "var(" . $this->getcolorvar("#70757a") . ")",
+										"font-size" => "14px",
+										"line-height" => "20px",
+										"margin-top" => "12px"
+									]
+								),
+								"div"
+							);
+						
+						if(count($info) !== 0){
+							
+							$info =
+								explode(
+									"·",
+									$this->fuckhtml
+									->getTextContent(
+										$info[0]
+									)
+								);
+							
+							switch(count($info)){
+								
+								case 3:
+									$web["table"]["Author"] = trim($info[1]);
+									$web["date"] = strtotime(trim($info[2]));
+									break;
+								
+								case 2:
+									$web["date"] = strtotime(trim($info[1]));
+									break;
+							}
+						}
+					}
+				}
+			}
+			
+			//
+			// get categories of content within the search result
+			//
+			$cats =
+				$this->fuckhtml
+				->getElementsByAttributeName(
+					"data-sncf",
+					"div"
+				);
+			
+			foreach($cats as $cat){
+				
+				$this->fuckhtml->load($cat);
+				
+				// detect image category
+				$images =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"img"
+					);
+				
+				if(count($images) !== 0){
+					
+					foreach($images as $image){
+						
+						if(isset($image["attributes"]["id"])){
+							// we found an image
+							
+							if(isset($image["attributes"]["width"])){
+								
+								$width = (int)$image["attributes"]["width"];
+								
+								if($width == 110){
+									
+									$ratio = "1:1";
+								}elseif($width > 110){
+									
+									$ratio = "16:9";
+								}else{
+									
+									$ratio = "9:16";
+								}
+							}else{
+								
+								$ratio = "1:1";
+							}
+							
+							$web["thumb"] = [
+								"url" => $this->getdimg($image["attributes"]["id"]),
+								"ratio" => $ratio
+							];
+							
+							continue 2;
+						}
+					}
+				}
+				
+				// Detect rating
+				$spans_unfiltered =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"span"
+					);
+				
+				$spans =
+					$this->fuckhtml
+					->getElementsByAttributeName(
+						"aria-label",
+						$spans_unfiltered
+					);
+				
+				foreach($spans as $span){
+					
+					if(
+						preg_match(
+							'/^Rated/',
+							$span["attributes"]["aria-label"]
+						)
+					){
+						
+						// found rating
+						// scrape rating
+						preg_match(
+							'/([0-9.]+).*([0-9.]+)/',
+							$span["attributes"]["aria-label"],
+							$rating
+						);
+						
+						if(isset($rating[1])){
+							
+							$web["table"]["Rating"] =
+								$rating[1] . "/" . $rating[2];
+						}
+						
+						$has_seen_reviews = 0;
+						foreach($spans_unfiltered as $span_unfiltered){
+							
+							if(
+								preg_match(
+									'/([0-9,.]+) +([A-z]+)$/',
+									$this->fuckhtml
+									->getTextContent(
+										$span_unfiltered
+									),
+									$votes
+								)
+							){
+								
+								$has_seen_reviews++;
+								$web["table"][ucfirst($votes[2])] = $votes[1];
+								continue;
+							}
+							
+							$text =
+								$this->fuckhtml
+								->getTextContent(
+									$span_unfiltered
+								);
+							
+							if(
+								$text == "&nbsp;&nbsp;&nbsp;" ||
+								$text == ""
+							){
+								
+								break;
+							}
+							
+							switch($has_seen_reviews){
+								
+								case 1:
+									// scrape price
+									$web["table"]["Price"] = $text;
+									$has_seen_reviews++;
+									break;
+								
+								case 2:
+									// scrape platform
+									$web["table"]["Platform"] = $text;
+									$has_seen_reviews++;
+									break;
+								
+								case 3:
+									// Scrape type
+									$web["table"]["Medium"] = $text;
+									break;
+							}
+						}
+						
+						continue 2;
+					}
+				}
+				
+				// check if its a table of small sublinks
+				$table =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->getstyle(
+							[
+								"display" => "table",
+								"white-space" => "nowrap",
+								"margin" => "5px 0",
+								"line-height" => "1.58",
+								"color" => "var(" . $this->getcolorvar("#70757a") . ")"
+							]
+						),
+						"div"
+					);
+				
+				if(count($table) !== 0){
+					
+					$this->fuckhtml->load($table[0]);
+					
+					$rows =
+						$this->fuckhtml
+						->getElementsByClassName(
+							$this->getstyle(
+								[
+									"display" => "flex",
+									"white-space" => "normal"
+								]
+							),
+							"div"
+						);
+					
+					foreach($rows as $row){
+						
+						$this->fuckhtml->load($row);
+						
+						$sublink = [
+							"title" => null,
+							"description" => null,
+							"url" => null,
+							"date" => null
+						];
+						
+						$link =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"a"
+							)[0];
+						
+						$sublink["title"] =
+							$this->titledots(
+								$this->fuckhtml
+								->getTextContent(
+									$link
+								)
+							);
+						
+						$sublink["url"] =
+							$this->unshiturl(
+								$link
+								["attributes"]
+								["href"]
+							);
+						
+						$row["innerHTML"] =
+							str_replace(
+								$link["outerHTML"],
+								"",
+								$row["innerHTML"]
+							);
+						
+						$this->fuckhtml->load($row);
+						
+						$spans =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"span"
+							);
+						
+						foreach($spans as $span){
+							
+							$text =
+								$this->fuckhtml
+								->getTextContent(
+									$span
+								);
+							
+							if(
+								preg_match(
+									'/answers?$/',
+									$text
+								)
+							){
+								
+								$sublink["description"] =
+									$text;
+								
+								continue;
+							}
+							
+							$time = strtotime($text);
+							
+							if($time !== false){
+								
+								$sublink["date"] = $time;
+							}
+						}
+						
+						$web["sublink"][] = $sublink;
+					}
+					
+					// reset
+					$this->fuckhtml->load($cat);
+					continue;
+				}
+				
+				// check if its an answer header
+				$answer_header =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->getstyle(
+							[
+								"overflow" => "hidden",
+								"text-overflow" => "ellipsis"
+							]
+						),
+						"span"
+					);
+				
+				if(count($answer_header) !== 0){
+					
+					$link =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"a"
+						);
+					
+					$cat["innerHTML"] =
+						str_replace(
+							$link[0]["outerHTML"],
+							"",
+							$cat["innerHTML"]
+						);
+					
+					$web["sublink"][] = [
+						"title" =>
+							$this->fuckhtml
+							->getTextContent(
+								$link[0]
+							),
+						"description" =>
+							$this->titledots(
+								trim(
+									str_replace(
+										"\xc2\xa0",
+										" ",
+										html_entity_decode(
+											$this->fuckhtml
+											->getTextContent(
+												$cat
+											)
+										)
+									),
+									" ·"
+								)
+							),
+						"url" =>
+							$this->fuckhtml
+							->getTextContent(
+								$link[0]
+								["attributes"]
+								["href"]
+							),
+						"date" => null
+					];
+					
+					continue;
+				}
+				
+				// check if its list of small sublinks
+				$urls =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"a"
+					);
+				
+				if(count($urls) !== 0){
+					
+					// found small links
+					foreach($urls as $url){
+						
+						$target =
+							$this->fuckhtml
+							->getTextContent(
+								$url
+								["attributes"]
+								["href"]
+							);
+						
+						if(
+							!preg_match(
+								'/^http/',
+								$target
+							)
+						){
+							
+							continue;
+						}
+						
+						$web["sublink"][] = [
+							"title" =>
+								$this->titledots(
+									$this->fuckhtml
+									->getTextContent(
+										$url
+									)
+								),
+							"description" => null,
+							"url" => $target,
+							"date" => null
+						];
+					}
+					
+					continue;
+				}
+				
+				// we probed everything, assume this is the description
+				// if we didn't find one cleanly previously
+				if($web["description"] === null){
+					$web["description"] =
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$cat
+							)
+						);
+				}
+			}
+			
+			// check if description contains date
+			$description = explode("—", $web["description"], 2);
+			
+			if(
+				count($description) === 2 &&
+				strlen($description[0]) <= 20
+			){
+				
+				$date = strtotime($description[0]);
+				
+				if($date !== false){
+					
+					$web["date"] = $date;
+					$web["description"] = ltrim($description[1]);
+				}
+			}
+			
+			// fetch youtube thumbnail
+			$thumbnail =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"border-radius" => "8px",
+							"height" => "fit-content",
+							"justify-content" => "center",
+							"margin-right" => "20px",
+							"margin-top" => "4px",
+							"position" => "relative",
+							"width" => "fit-content"
+						]
+					),
+					"div"
+				);
+			
+			if(count($thumbnail) !== 0){
+				
+				// load thumbnail container
+				$this->fuckhtml->load($thumbnail[0]);
+				
+				$image =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"img"
+					);
+				
+				if(
+					count($image) !== 0 &&
+					isset($image[0]["attributes"]["id"])
+				){
+					
+					$web["thumb"] =	[
+						"url" =>
+							$this->unshit_thumb(
+								$this->getdimg(
+									$image[0]["attributes"]["id"]
+								)
+							),
+						"ratio" => "16:9"
+					];
+				}
+				
+				// reset
+				$this->fuckhtml->load($result);
+			}
+			
+			$out["web"][] = $web;
+		}
+		
+		// reset
+		$this->fuckhtml->load($result_div);
+		
+		//
+		// Get instant answers
+		//
+		$answer_containers =
+			$this->fuckhtml
+			->getElementsByClassName(
+				$this->getstyle(
+					[
+						"padding-left" => "0px",
+						"padding-right" => "0px"
+					]
+				),
+				"div"
+			);
+		
+		$date_class =
+			$this->getstyle(
+				[
+					"font-size" => "12px",
+					"line-height" => "1.34",
+					"display" => "inline-block",
+					"font-family" => "Google Sans,arial,sans-serif",
+					"padding-right" => "0",
+					"white-space" => "nowrap"
+				]
+			);
+		
+		foreach($answer_containers as $container){
+			
+			$this->fuckhtml->load($container);
+			
+			$web = [
+				"title" => null,
+				"description" => null,
+				"url" => null,
+				"date" => null,
+				"type" => "web",
+				"thumb" => [
+					"url" => null,
+					"ratio" => null
+				],
+				"sublink" => [],
+				"table" => []
+			];
+			
+			$answers =
+				$this->fuckhtml
+				->getElementsByAttributeName(
+					"aria-controls",
+					"div"
+				);
+			
+			$item_insert_pos = 1;
+			foreach($answers as $answer){
+				
+				$out["related"][] =
+					$this->fuckhtml
+					->getTextContent(
+						$answer
+					);
+				
+				if(
+					isset(
+						$this->blobs[
+							$answer
+							["attributes"]
+							["aria-controls"]
+						]
+					)
+				){
+					
+					$this->fuckhtml->load(
+						$this->blobs[
+							$answer
+							["attributes"]
+							["aria-controls"]
+						]
+					);
+					
+					$divs =
+						$this->fuckhtml
+						->getElementsByAttributeName(
+							"id",
+							"div"
+						);
+					
+					foreach($divs as $div){
+						
+						if(
+							!isset(
+								$this->blobs[
+									$div
+									["attributes"]
+									["id"]
+								]
+							)
+						){
+							
+							continue;
+						}
+						
+						$this->fuckhtml->load(
+							$this->blobs[
+								$div
+								["attributes"]
+								["id"]
+							]
+						);
+						
+						// get url
+						$as =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"a"
+							);
+						
+						if(count($as) !== 0){
+							
+							$web["url"] =
+								$this->unshiturl(
+									$as[0]["attributes"]["href"]
+								);
+							
+							// skip entries that redirect to a search
+							if(
+								!preg_match(
+									'/^http/',
+									$web["url"]
+								)
+							){
+								
+								continue 3;
+							}
+						}
+						
+						// get title
+						$h3 =
+							$this->fuckhtml
+							->getElementsByTagName(
+								"h3"
+							);
+						
+						if(count($h3) !== 0){
+							
+							$web["title"] =
+								$this->titledots(
+									$this->fuckhtml
+									->getTextContent(
+										$h3[0]
+									)
+								);
+						}
+						
+						$description =
+							$this->fuckhtml
+							->getElementsByAttributeValue(
+								"data-attrid",
+								"wa:/description",
+								"div"
+							);
+						
+						if(count($description) !== 0){
+							
+							// check for date
+							$this->fuckhtml->load($description[0]);
+							
+							$date =
+								$this->fuckhtml
+								->getElementsByClassName(
+									$date_class,
+									"span"
+								);
+							
+							if(count($date) !== 0){
+								
+								$description[0]["innerHTML"] =
+									str_replace(
+										$date[0]["outerHTML"],
+										"",
+										$description[0]["innerHTML"]
+									);
+								
+								$web["date"] =
+									strtotime(
+										$this->fuckhtml
+										->getTextContent(
+											$date[0]
+										)
+									);
+							}
+							
+							$web["description"] =
+								ltrim(
+									$this->fuckhtml
+									->getTextContent(
+										$description[0]
+									),
+									": "
+								);
+						}
+					}
+					
+					foreach($out["web"] as $item){
+						
+						if($item["url"] == $web["url"]){
+							
+							continue 2;
+						}
+					}
+					
+					array_splice($out["web"], $item_insert_pos, 0, [$web]);
+					$item_insert_pos++;
+				}
+			}
+		}
+		
+		// reset
+		$this->fuckhtml->load($result_div);
+		
+		//
+		// Scrape word definition
+		//
+		$definition_container =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"lr_container",
+				"div"
+			);
+		
+		if(count($definition_container) !== 0){
+			
+			$this->fuckhtml->load($definition_container[0]);
+			
+			// get header
+			$header =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"data-attrid",
+					"EntryHeader",
+					"div"
+				);
+			
+			if(count($header) !== 0){
+				
+				$description = [];
+				
+				$this->fuckhtml->load($header[0]);
+				
+				$title_div =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->getstyle(
+							[
+								"font-family" => "Google Sans,arial,sans-serif",
+								"font-size" => "28px",
+								"line-height" => "36px"
+							]
+						)
+					);
+				
+				if(count($title_div) !== 0){
+					
+					$title =
+						$this->fuckhtml
+						->getTextContent(
+							$title_div[0]
+						);
+				}else{
+					
+					$title = "Word definition";
+				}
+				
+				$subtext_div =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->getstyle(
+							[
+								"font-family" => "arial,sans-serif",
+								"font-size" => "14px",
+								"line-height" => "22px"
+							]
+						),
+						"span"
+					);
+				
+				if(count($subtext_div) !== 0){
+					
+					$description[] = [
+						"type" => "quote",
+						"value" =>
+							$this->fuckhtml
+							->getTextContent(
+								$subtext_div[0]
+							)
+					];
+				}
+				
+				// get audio
+				$audio =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"audio"
+					);
+				
+				if(count($audio) !== 0){
+					
+					$this->fuckhtml->load($audio[0]);
+					
+					$source =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"source"
+						);
+					
+					if(count($source) !== 0){
+						
+						$description[] = [
+							"type" => "audio",
+							"url" =>
+								preg_replace(
+									'/^\/\//',
+									"https://",
+									$this->fuckhtml
+									->getTextContent(
+										$source[0]
+										["attributes"]
+										["src"]
+									)
+								)
+						];
+					}
+					
+				}
+				
+				// remove header to avoid confusion
+				$definition_container[0]["innerHTML"] =
+					str_replace(
+						$header[0]["outerHTML"],
+						"",
+						$definition_container[0]["innerHTML"]
+					);
+				
+				// reset
+				$this->fuckhtml->load($definition_container[0]);
+				
+				$vmods =
+					$this->fuckhtml
+					->getElementsByClassName(
+						"vmod",
+						"div"
+					);
+				
+				foreach($vmods as $category){
+					
+					if(
+						!isset(
+							$category
+							["attributes"]
+							["data-topic"]
+						) ||
+						$category
+						["attributes"]
+						["class"] != "vmod"
+					){
+						
+						continue;
+					}
+					
+					$this->fuckhtml->load($category);
+					
+					// get category type
+					$type =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"i"
+						);
+					
+					if(count($type) !== 0){
+						
+						$description[] = [
+							"type" => "title",
+							"value" =>
+								$this->fuckhtml
+								->getTextContent(
+									$type[0]
+								)
+						];
+					}
+					
+					// get heading text
+					$headings =
+						$this->fuckhtml
+						->getElementsByClassName(
+							"xpdxpnd",
+							"div"
+						);
+					
+					foreach($headings as $heading){
+						
+						$description[] = [
+							"type" => "quote",
+							"value" =>
+								$this->fuckhtml
+								->getTextContent(
+									$heading
+								)
+						];
+					}
+					
+					$definitions =
+						$this->fuckhtml
+						->getElementsByAttributeValue(
+							"data-attrid",
+							"SenseDefinition",
+							"div"
+						);
+					
+					$i = 1;
+					$text = [];
+					
+					foreach($definitions as $definition){
+						
+						$text[] =
+							$i . ". " .
+							$this->fuckhtml
+							->getTextContent(
+								$definition
+							);
+						
+						$i++;
+					}
+					
+					if(count($text) !== 0){
+						
+						$description[] = [
+							"type" => "text",
+							"value" =>
+								implode("\n", $text)
+						];
+					}
+				}
+				
+				$out["answer"][] = [
+					"title" => $title,
+					"description" => $description,
+					"url" => null,
+					"thumb" => null,
+					"table" => [],
+					"sublink" => []
+				];
+			}
+			
+			// reset
+			$this->fuckhtml->load($result_div);
+		}
+		
+		//
+		// scrape elements with a g-section-with-header
+		// includes: images, news carousels
+		//
+		
+		$g_sections =
+			$this->fuckhtml
+			->getElementsByTagName(
+				"g-section-with-header"
+			);
+		
+		if(count($g_sections) !== 0){
+			foreach($g_sections as $g_section){
+				
+				// parse elements with a g-section-with-header
+				$this->fuckhtml->load($g_section);
+				
+				$div_title =
+					$this->fuckhtml
+					->getElementsByClassName(
+						"a-no-hover-decoration",
+						"a"
+					);
+				
+				if(count($div_title) !== 0){
+					
+					// title detected, skip
+					continue;
+				}
+					
+				// no title detected: detect news container
+				$news =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->getstyle(
+							[
+								"outline-offset" => "-1px",
+								"display" => "flex",
+								"flex-direction" => "column",
+								"flex-grow" => "1"
+							]
+						)
+					);
+				
+				foreach($news as $new){
+					
+					$this->fuckhtml->load($new);
+					
+					$image =
+						$this->fuckhtml
+						->getElementsByAttributeName(
+							"id",
+							"img"
+						);
+					
+					if(
+						count($image) !== 0 &&
+						!(
+							isset($image[0]["attributes"]["style"]) &&
+							strpos(
+								$image[0]["attributes"]["style"],
+								"height:18px"
+							) !== false
+						)
+					){
+						
+						$thumb = [
+							"url" =>
+								$this->getdimg(
+									$image[0]
+									["attributes"]
+									["id"]
+								),
+							"ratio" => "1:1"
+						];
+					}
+					
+					$title =
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$this->fuckhtml
+								->getElementsByAttributeValue(
+									"role",
+									"heading",
+									"div"
+								)[0]
+							)
+						);
+					
+					$date_div =
+						$this->fuckhtml
+						->getElementsByAttributeName(
+							"style",
+							"div"
+						);
+					
+					if(count($date_div) !== 0){
+						
+						foreach($date_div as $div){
+							
+							if(
+								strpos(
+									$div["attributes"]["style"],
+									"bottom:"
+								) !== false
+							){
+								$date =
+									strtotime(
+										$this->fuckhtml
+										->getTextContent(
+											$div
+										)
+									);
+								
+								break;
+							}
+						}
+					}else{
+						
+						$date = null;
+					}
+					
+					$out["news"][] = [
+						"title" => $title,
+						"description" => null,
+						"date" => $date,
+						"thumb" => $thumb,
+						"url" =>
+							$this->fuckhtml
+							->getTextContent(
+								$new
+								["attributes"]
+								["href"]
+							)
+					];
+				}
+			}
+			
+			// reset
+			$this->fuckhtml->load($result_div);
+		}
+		
+		//
+		// Parse images (carousel, left hand-side)
+		//
+		$image_carousels =
+			$this->fuckhtml
+			->getElementsByAttributeValue(
+				"id",
+				"media_result_group",
+				"div"
+			);
+		
+		if(count($image_carousels) !== 0){
+			
+			foreach($image_carousels as $image_carousel){
+				
+				$this->fuckhtml->load($image_carousel);
+				
+				// get related searches in image carousel
+				$relateds =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->getstyle(
+							[
+								"display" => "inline-block",
+								"margin-right" => "6px",
+								"outline" => "none",
+								"padding" => "6px 0"
+							],
+							"a"
+						)
+					);
+				
+				foreach($relateds as $related){
+					
+					$text =
+						$this->fuckhtml
+						->getTextContent(
+							$related
+						);
+					
+					if($text != ""){
+						
+						$out["related"][] = $text;
+					}
+				}
+				
+				$div =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"div"
+					);
+				
+				// get loaded images
+				$images =
+					$this->fuckhtml
+					->getElementsByClassName(
+						"ivg-i",
+						$div
+					);
+				
+				foreach($images as $image){
+					
+					$this->fuckhtml->load($image);
+					
+					$img_tags =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"img"
+						);
+					
+					if(
+						!isset($image["attributes"]["data-docid"]) ||
+						!isset($this->image_arr[$image["attributes"]["data-docid"]])
+					){
+						
+						continue;
+					}
+					
+					// search for the right image tag
+					$image_tag = false;
+					foreach($img_tags as $img){
+						
+						if(
+							isset(
+								$img
+								["attributes"]
+								["alt"]
+							) &&
+							trim(
+								$img
+								["attributes"]
+								["alt"]
+							) != ""
+						){
+							
+							$image_tag = $img;
+							break;
+						}
+					}
+					
+					if($image_tag === false){
+						
+						continue;
+					}
+					
+					$out["image"][] = [
+						"title" =>
+							$this->titledots(
+								$this->fuckhtml
+								->getTextContent(
+									$image_tag
+									["attributes"]
+									["alt"]
+								)
+							),
+						"source" =>
+							$this->image_arr[
+								$image
+								["attributes"]
+								["data-docid"]
+							],
+						"url" =>
+							$this->fuckhtml
+							->getTextContent(
+								$image
+								["attributes"]
+								["data-lpage"]
+							)
+					];
+				}
+				
+				// get unloaded javascript images
+				$images_js_sel =
+					$this->fuckhtml
+					->getElementsByAttributeName(
+						"id",
+						$div
+					);
+				
+				$loaded = [];
+				
+				foreach($images_js_sel as $sel){
+					
+					if(
+						!isset($this->blobs[$sel["attributes"]["id"]]) ||
+						in_array((string)$sel["attributes"]["id"], $loaded, true)
+					){
+						
+						// not an unloaded javascript image
+						continue;
+					}
+					
+					$loaded[] = $sel["attributes"]["id"];
+					
+					// get yet another javascript component
+					$this->fuckhtml->load($this->blobs[$sel["attributes"]["id"]]);
+					
+					// get js node: contains title & url
+					$js_node =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"div"
+						)[0];
+					
+					if(!isset($this->blobs[$js_node["attributes"]["id"]])){
+						
+						// did not find refer id
+						continue;
+					}
+					
+					// load second javascript component
+					$this->fuckhtml->load($this->blobs[$js_node["attributes"]["id"]]);
+					
+					// get title from image alt text.
+					// data-src from this image is cropped, ignore it..
+					$img =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"img"
+						)[0];
+					
+					$out["image"][] = [
+						"title" =>
+							$this->fuckhtml
+							->getTextContent(
+								$img["attributes"]["alt"]
+							),
+						"source" =>
+							$this->image_arr[
+								$js_node["attributes"]["data-docid"]
+							],
+						"url" =>
+							$this->fuckhtml
+							->getTextContent(
+								$js_node["attributes"]["data-lpage"]
+							)
+					];
+				}
+			}
+			
+			// reset
+			$this->fuckhtml->load($result_div);
+		}
+		
+		//
+		// Parse videos
+		//
+		$this->fuckhtml->load($result_div);
+		
+		$videos =
+			$this->fuckhtml
+			->getElementsByAttributeName(
+				"data-vid",
+				"div"
+			);
+		
+		foreach($videos as $video){
+			
+			$this->fuckhtml->load($video);
+			
+			// get url
+			$url =
+				$this->fuckhtml
+				->getTextContent(
+					$video
+					["attributes"]
+					["data-surl"]
+				);
+			
+			foreach($out["web"] as $link){
+				
+				if($link["url"] == $url){
+					
+					// ignore if we already have the video in $out["web"]
+					continue 2;
+				}
+			}
+			
+			// get thumbnail
+			$image =
+				$this->fuckhtml
+				->getElementsByAttributeName(
+					"id",
+					"img"
+				);
+			
+			if(count($image) !== 0){
+				
+				$thumb = [
+					"url" => $this->getdimg($image[0]["attributes"]["id"]),
+					"ratio" => "16:9"
+				];
+			}else{
+				
+				$thumb = [
+					"url" => null,
+					"ratio" => null
+				];
+			}
+			
+			// get title
+			$title =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"font-family" => "arial,sans-serif",
+							"font-size" => "16px",
+							"font-weight" => "400",
+							"line-height" => "24px"
+						]
+					),
+					"div"
+				);
+			
+			if(count($title) === 0){
+				
+				// ?? no title
+				continue;
+			}
+			
+			$title =
+				$this->titledots(
+					$this->fuckhtml
+					->getTextContent(
+						$title[0]
+					)
+				);
+			
+			// get duration
+			$duration_div =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"border-radius" => "10px",
+							"font-family" => "arial,sans-serif-medium,sans-serif",
+							"font-size" => "12px",
+							"line-height" => "16px",
+							"padding-block" => "2px",
+							"padding-inline" => "8px"
+						]
+					),
+					"div"
+				);
+			
+			if(count($duration_div) !== 0){
+				
+				$duration =
+					$this->hms2int(
+						$this->fuckhtml
+						->getTextContent(
+							$duration_div[0]
+						)
+					);
+			}else{
+				
+				// check if its a livestream
+				$duration =
+					$this->fuckhtml
+					->getElementsByClassName(
+						$this->getstyle(
+							[
+								"background-color" => "#d93025",
+								"border-radius" => "10px",
+								"color" => "#fff",
+								"font-family" => "arial,sans-serif-medium,sans-serif",
+								"font-size" => "12px",
+								"line-height" => "16px",
+								"padding-block" => "2px",
+								"padding-inline" => "8px"
+							]
+						),
+						"span"
+					);
+				
+				if(count($duration) !== 0){
+					
+					$duration = "_LIVE";
+				}else{
+					
+					$duration = null;
+				}
+			}
+			
+			// get date
+			$date_div =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"color" => "var(" . $this->getcolorvar("#70757a") . ")",
+							"font-size" => "14px"
+						]
+					),
+					"div"
+				);
+			
+			if(count($date_div) !== 0){
+				
+				$date = strtotime(
+					$this->fuckhtml
+					->getTextContent(
+						$date_div[0]
+					)
+				);
+				
+				if($date === false){
+					
+					// failed to parse date
+					$date = null;
+				}
+			}else{
+				
+				$date = null;
+			}
+			
+			$out["video"][] = [
+				"title" => $title,
+				"description" => null,
+				"date" => $date,
+				"duration" => $duration,
+				"views" => null,
+				"thumb" => $thumb,
+				"url" => $url
+			];
+		}
+		
+		//
+		// Parse featured results (which contain images, fuck the rest desu)
+		//
+		$this->fuckhtml->load($html);
+		$top =
+			$this->fuckhtml
+			->getElementsByAttributeValue(
+				"aria-label",
+				"Featured results",
+				"div"
+			);
+		
+		if(count($top) !== 0){
+			
+			$this->fuckhtml->load($top[0]);
+			
+			// get images
+			$grid =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"border-radius" => "20px",
+							"display" => "grid",
+							"grid-gap" => "2px",
+							"grid-template-rows" => "repeat(2,minmax(0,1fr))",
+							"overflow" => "hidden",
+							"bottom" => "0",
+							"left" => "0",
+							"right" => "0",
+							"top" => "0",
+							"position" => "absolute",
+						]
+					),
+					"div"
+				);
+			
+			if(count($grid) !== 0){
+				
+				// we found image grid
+				$this->fuckhtml->load($grid[0]);
+				
+				$images_div =
+					$this->fuckhtml
+					->getElementsByAttributeName(
+						"data-attrid",
+						"div"
+					);
+				
+				foreach($images_div as $image_div){
+					
+					$this->fuckhtml->load($image_div);
+					
+					$image =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"img"
+						);
+					
+					if(
+						count($image) === 0 ||
+						!isset($image_div["attributes"]["data-docid"]) ||
+						!isset($this->image_arr[$image_div["attributes"]["data-docid"]])
+					){
+						
+						// ?? no image, continue
+						continue;
+					}
+					
+					$out["image"][] = [
+						"title" =>
+							$this->titledots(
+								$this->fuckhtml
+								->getTextContent(
+									$image[0]["attributes"]["alt"]
+								)
+							),
+						"source" =>
+							$this->image_arr[
+								$image_div["attributes"]["data-docid"]
+							],
+						"url" =>
+							$this->fuckhtml
+							->getTextContent(
+								$image_div["attributes"]["data-lpage"]
+							)
+					];
+				}
+			}
+		}
+		
+		
+		//
+		// craft $npt token
+		//
+		if(
+			$last_page === false &&
+			count($out["web"]) !== 0
+		){
+			if(!isset($params["start"])){
+				
+				$params["start"] = 20;
+			}else{
+				
+				$params["start"] += 20;
+			}
+			
+			$out["npt"] =
+				$this->backend
+				->store(
+					json_encode($params),
+					$pagetype,
+					$proxy
+				);
+		}
+		
+		
+		//
+		// Parse right handside
+		//
+		$this->fuckhtml->load($html);
+		
+		$rhs =
+			$this->fuckhtml
+			->getElementById(
+				"rhs"
+			);
+		
+		if($rhs === null){
+			
+			return $out;
+		}
+		
+		$this->fuckhtml->load($rhs);
+		
+		// get images gallery
+		$image_gallery =
+			$this->fuckhtml
+			->getElementsByAttributeValue(
+				"data-rc",
+				"ivg-i",
+				"div"
+			);
+		
+		if(count($image_gallery) !== 0){
+			
+			$this->fuckhtml->load($image_gallery[0]);
+			
+			// get images
+			$images_div =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"ivg-i",
+					"div"
+				);
+			
+			foreach($images_div as $image_div){
+				
+				$this->fuckhtml->load($image_div);
+				
+				$image =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"img"
+					);
+				
+				if(
+					count($image) === 0 ||
+					!isset(
+						$this->image_arr[
+							$image_div
+							["attributes"]
+							["data-docid"]
+						]
+					)
+				){
+					
+					continue;
+				}
+				
+				foreach($out["image"] as $existing_image){
+					
+					// might already exist
+					if(
+						$existing_image["source"][1]["url"] ==
+						$this->image_arr[
+							$image_div
+							["attributes"]
+							["data-docid"]
+						][1]["url"]
+					){
+						
+						continue 2;
+					}
+				}
+				
+				$out["image"][] = [
+					"title" =>
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$image[0]
+								["attributes"]
+								["alt"]
+							)
+						),
+					"source" =>
+						$this->image_arr[
+							$image_div
+							["attributes"]
+							["data-docid"]
+						],
+					"url" =>
+						$this->fuckhtml
+						->getTextContent(
+							$image_div
+							["attributes"]
+							["data-lpage"]
+						)
+				];
+			}
+			
+			// reset
+			$this->fuckhtml->load($rhs);
+		}
+		
+		// get header container
+		$header =
+			$this->fuckhtml
+			->getElementsByClassName(
+				$this->getstyle(
+					[
+						"padding" => "0 0 16px 20px",
+						"display" => "flex"
+					]
+				),
+				"div"
+			);
+		
+		// stop parsing wikipedia heads if there isn't a header
+		$description = [];
+		$title = "About";
+		
+		if(count($header) !== 0){
+			
+			$this->fuckhtml->load($header[0]);
+			
+			$title_tag =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"data-attrid",
+					"title",
+					"div"
+				);
+			
+			if(count($title_tag) !== 0){
+				$title =
+					$this->fuckhtml
+					->getTextContent(
+						$title_tag[0]
+					);
+				
+				$header[0]["innerHTML"] =
+					str_replace(
+						$title_tag[0]["outerHTML"],
+						"",
+						$header[0]["innerHTML"]
+					);
+				
+				// if header still contains text, add it as a subtitle in description
+				$subtitle =
+					$this->fuckhtml
+					->getTextContent(
+						$header[0]
+					);
+				
+				if(strlen($subtitle) !== 0){
+					
+					$description[] = [
+						"type" => "quote",
+						"value" => $subtitle
+					];
+				}
+			}
+			
+			// reset
+			$this->fuckhtml->load($rhs);
+		}
+		
+		// get description elements
+		$url = null;
+		
+		$text =
+			$this->fuckhtml
+			->getElementsByAttributeValue(
+				"data-attrid",
+				"description",
+				"div"
+			);
+		
+		if(count($text) !== 0){
+			
+			$this->fuckhtml->load($text[0]);
+			
+			$a =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"a"
+				);
+			
+			if(count($a) !== 0){
+				// get link and remove it from description
+				
+				$a = $a[count($a) - 1];
+				
+				$text[0]["innerHTML"] =
+					str_replace(
+						$a["outerHTML"],
+						"",
+						$text[0]["innerHTML"]
+					);
+				
+				$url =
+					$this->fuckhtml
+					->getTextContent(
+						$a
+						["attributes"]
+						["href"]
+					);
+			}
+			
+			$description[] = [
+				"type" => "text",
+				"value" =>
+					html_entity_decode(
+						preg_replace(
+							'/^Description/',
+							"",
+							$this->fuckhtml
+							->getTextContent(
+								$text[0]
+							)
+						)
+					)
+			];
+			
+			// reset
+			$this->fuckhtml->load($rhs);
+		}
+		
+		// get reviews (google play, steam, etc)
+		$review_container =
+			$this->fuckhtml
+			->getElementsByClassName(
+				$this->getstyle(
+					[
+						"align-items" => "start",
+						"display" => "flex"
+					]
+				),
+				"div"
+			);
+		
+		if(count($review_container) !== 0){
+			
+			$this->fuckhtml->load($review_container[0]);
+			
+			$as =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"a"
+				);
+			
+			if(count($as) !== 0){
+				
+				$description[] = [
+					"type" => "title",
+					"value" => "Ratings"
+				];
+				
+				foreach($as as $a){
+					
+					$this->fuckhtml->load($a);
+					
+					$spans =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"span"
+						);
+					
+					if(count($spans) >= 2){
+						
+						$value =
+							trim(
+								$this->fuckhtml
+								->getTextContent(
+									$spans[1]
+								),
+								"· "
+							);
+						
+						if(
+							$value == "" &&
+							isset($spans[2])
+						){
+							
+							$value =
+								$this->fuckhtml
+								->getTextContent(
+									$spans[2]
+								);
+						}
+						
+						$description[] = [
+							"type" => "link",
+							"url" =>
+								$this->fuckhtml
+								->getTextContent(
+									$a["attributes"]
+									["href"]
+								),
+							"value" => $value
+						];
+						
+						$description[] = [
+							"type" => "text",
+							"value" =>
+								": " .
+								$this->fuckhtml
+								->getTextContent(
+									$spans[0]
+								) . "\n"
+						];
+					}
+				}
+			}
+			
+			// reset
+			$this->fuckhtml->load($rhs);
+		}
+		
+		// abort if we didnt find any description
+		if(count($description) === 0){
+			
+			return $out;
+		}
+		
+		// get table elements
+		$table = [];
+		$table_elems =
+			$this->fuckhtml
+			->getElementsByClassName(
+				$this->getstyle(
+					[
+						"margin-top" => "7px"
+					]
+				),
+				"div"
+			);
+		
+		foreach($table_elems as $elem){
+			
+			$this->fuckhtml->load($elem);
+			
+			$spans =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"span"
+				);
+			
+			if(count($spans) === 0){
+				
+				// ?? invalid
+				continue;
+			}
+			
+			$elem["innerHTML"] =
+				str_replace(
+					$spans[0]["outerHTML"],
+					"",
+					$elem["innerHTML"]
+				);
+			
+			$key =
+				rtrim(
+					$this->fuckhtml
+					->getTextContent(
+						$spans[0]
+					),
+					": "
+				);
+			
+			if($key == ""){
+				
+				continue;
+			}
+			
+			$table[$key] =
+				preg_replace(
+					'/ +/',
+					" ",
+					$this->fuckhtml
+					->getTextContent(
+						$elem
+					)
+				);
+			
+			// reset
+			$this->fuckhtml->load($rhs);
+		}
+		
+		
+		// get sublink elements
+		$sublinks = [];
+		
+		// get the website div
+		$as =
+			$this->fuckhtml
+			->getElementsByAttributeValue(
+				"data-attrid",
+				"visit_official_site",
+				"a"
+			);
+		
+		if(count($as) !== 0){
+			
+			$sublinks["Website"] =
+				str_replace(
+					"http://",
+					"https://",
+					$this->fuckhtml
+					->getTextContent(
+						$as[0]
+						["attributes"]
+						["href"]
+					)
+				);
+		}
+		
+		// get social media links
+		$as =
+			$this->fuckhtml
+			->getElementsByTagName(
+				"g-link"
+			);
+		
+		foreach($as as $a){
+			
+			$this->fuckhtml->load($a);
+			
+			$link =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"a"
+				);
+			
+			if(count($link) === 0){
+				
+				continue;
+			}
+			
+			$sublink_title =
+				$this->fuckhtml
+				->getTextContent(
+					$a
+				);
+			
+			if($sublink_title == "X (Twitter)"){
+				
+				$sublink_title = "Twitter";
+			}
+			
+			$sublinks[$sublink_title] =
+				$this->fuckhtml
+				->getTextContent(
+					$link[0]
+					["attributes"]
+					["href"]
+				);
+		}
+		
+		// reset
+		$this->fuckhtml->load($rhs);
+		
+		// get those round containers
+		$containers =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"tpa-ci"
+			);
+		
+		foreach($containers as $container){
+			
+			$this->fuckhtml->load($container);
+			
+			$as =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"a"
+				);
+			
+			if(count($as) === 0){
+				
+				continue;
+			}
+			
+			$sublinks[
+				$this->fuckhtml
+				->getTextContent(
+					$as[0]
+				)
+			] =
+				$this->fuckhtml
+				->getTextContent(
+					$as[0]
+					["attributes"]
+					["href"]
+				);
+		}
+		
+		$out["answer"][] = [
+			"title" => $title,
+			"description" => $description,
+			"url" => $url,
+			"thumb" => null,
+			"table" => $table,
+			"sublink" => $sublinks
+		];
+		
+		return $out;
+	}
+	
+	
+	private function scrape_dimg($html){
+		
+		// get images loaded through javascript
+		$this->dimg = [];
+		
+		preg_match_all(
+			'/function\(\){google\.ldi=({.*?});/',
+			$html,
+			$dimg
+		);
+		
+		if(isset($dimg[1])){
+			
+			foreach($dimg[1] as $i){
+				
+				$tmp = json_decode($i, true);
+				foreach($tmp as $key => $value){
+					
+					$this->dimg[$key] =
+						$this->unshit_thumb(
+							$value
+						);
+				}
+			}
+		}
+		
+		// get additional javascript base64 images
+		preg_match_all(
+			'/var s=\'(data:image\/[^\']+)\';var ii=\[((?:\'[^\']+\',?)+)\];/',
+			$html,
+			$dimg
+		);
+		
+		if(isset($dimg[1])){
+			
+			for($i=0; $i<count($dimg[1]); $i++){
+				
+				$delims = explode(",", $dimg[2][$i]);
+				$string =
+					$this->fuckhtml
+					->parseJsString(
+						$dimg[1][$i]
+					);
+				
+				foreach($delims as $delim){
+					
+					$this->dimg[trim($delim, "'")] = $string;
+				}
+			}
+		}
+	}
+	
+	
+	private function scrape_imagearr($html){
+		// get image links arrays
+		preg_match_all(
+			'/\[0,"([^"]+)",\["([^"]+)\",([0-9]+),([0-9]+)\],\["([^"]+)",([0-9]+),([0-9]+)\]/',
+			$html,
+			$image_arr
+		);
+		
+		$this->image_arr = [];
+		if(isset($image_arr[1])){
+			
+			for($i=0; $i<count($image_arr[1]); $i++){
+				
+				$this->image_arr[$image_arr[1][$i]] =
+					[
+						[
+							"url" =>
+								$this->fuckhtml
+								->parseJsString(
+									$image_arr[5][$i]
+								),
+							"width" => (int)$image_arr[7][$i],
+							"height" => (int)$image_arr[6][$i]
+						],
+						[
+							"url" =>
+								$this->unshit_thumb(
+									$this->fuckhtml
+									->parseJsString(
+										$image_arr[2][$i]
+									)
+								),
+							"width" => (int)$image_arr[4][$i],
+							"height" => (int)$image_arr[3][$i]
+						]
+					];
+			}
+		}
+	}
+	
+	
+	private function getdimg($dimg){
+		
+		return isset($this->dimg[$dimg]) ? $this->dimg[$dimg] : null;
+	}
+	
+	
+	private function unshit_thumb($url){
+		// https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQINE2vbnNLHXqoZr3RVsaEJFyOsj1_BiBnJch-e1nyz3oia7Aj5xVj
+		// https://i.ytimg.com/vi/PZVIyA5ER3Y/mqdefault.jpg?sqp=-oaymwEFCJQBEFM&rs=AMzJL3nXeaCpdIar-ltNwl82Y82cIJfphA
+		
+		$parts = parse_url($url);
+		
+		if(
+			isset($parts["host"]) &&
+			preg_match(
+				'/tbn.*\.gstatic\.com/',
+				$parts["host"]
+			)
+		){
+			
+			parse_str($parts["query"], $params);
+			
+			if(isset($params["q"])){
+				
+				return "https://" . $parts["host"] . "/images?q=" . $params["q"];
+			}
+		}
+		
+		return $url;
+	}
+	
+	
+	private function parsestyles(){
+		
+		$styles = [];
+
+		$style_div =
+			$this->fuckhtml
+			->getElementsByTagName(
+				"style"
+			);
+		
+		$raw_styles = "";
+		
+		foreach($style_div as $style){
+			
+			$raw_styles .= $style["innerHTML"];
+		}
+		
+		// filter out media/keyframe queries
+		$raw_styles =
+			preg_replace(
+				'/@\s*(?!font-face)[^{]+\s*{[\S\s]+?}\s*}/',
+				"",
+				$raw_styles
+			);
+		
+		// get styles
+		preg_match_all(
+			'/(.+?){([\S\s]*?)}/',
+			$raw_styles,
+			$matches
+		);
+		
+		for($i=0; $i<count($matches[1]); $i++){
+			
+			// get style values
+			preg_match_all(
+				'/([^:;]+):([^;]*?(?:\([^)]+\)[^;]*?)?)(?:;|$)/',
+				$matches[2][$i],
+				$values_regex
+			);
+			
+			$values = [];
+			for($k=0; $k<count($values_regex[1]); $k++){
+				
+				$values[trim($values_regex[1][$k])] =
+					trim($values_regex[2][$k]);
+			}
+			
+			$names = explode(",", $matches[1][$i]);
+			
+			// h1,h2,h3 will each get their own array index
+			foreach($names as $name){
+				
+				$name = trim($name, "}\t\n\r\0\x0B");
+				
+				foreach($values as $key => $value){
+					
+					$styles[$name][$key] = $value;
+				}
+			}
+		}
+		
+		foreach($styles as $key => $values){
+			
+			$styles[$key]["_c"] = count($values);
+		}
+		
+		$this->styles = $styles;
+		
+		// get CSS colors
+		$this->css_colors = [];
+		
+		if(isset($this->styles[":root"])){
+			
+			foreach($this->styles[":root"] as $key => $value){
+				
+				$this->css_colors[$value] = $key;
+			}
+		}
+	}
+	
+	
+	
+	private function getstyle($styles){
+		
+		$styles["_c"] = count($styles);
+		
+		foreach($this->styles as $style_key => $style_values){
+			
+			if(count(array_intersect_assoc($style_values, $styles)) === $styles["_c"] + 1){
+				
+				$style_key =
+					explode(" ", $style_key);
+				
+				$style_key = $style_key[count($style_key) - 1];
+				
+				return
+					ltrim(
+						str_replace(
+							[".", "#"],
+							" ",
+							$style_key
+						)
+					);
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	
+	private function getcolorvar($color){
+		
+		if(isset($this->css_colors[$color])){
+			
+			return $this->css_colors[$color];
+		}
+		
+		return null;
+	}
+	
+	
+	
 	public function web($get){
 		
 		if($get["npt"]){
 			
-			[$req, $ip] = $this->backend->get($get["npt"], "web");
-			parse_str(
-				parse_url($req, PHP_URL_QUERY),
-				$search
-			);
+			[$params, $proxy] = $this->backend->get($get["npt"], "web");
+			$params = json_decode($params, true);
 			
-			if(isset($search["q"])){
-				
-				$search = $search["q"];
-			}else{
-				
-				$search = "a"; // lol
-			}
+			$search = $params["q"];
 			
-			try{
-				$html =
-					$this->get(
-						$ip,
-						"https://www.google.com" . $req,
-						[]
-					);
-			}catch(Exception $error){
-				
-				throw new Exception("Failed to get HTML");
-			}
 		}else{
 			$search = $get["s"];
 			$country = $get["country"];
@@ -600,7 +3844,10 @@ class google{
 			$lang = $get["lang"];
 			$older = $get["older"];
 			$newer = $get["newer"];
-			$ip = $this->backend->get_ip();
+			$spellcheck = $get["spellcheck"];
+			$proxy = $this->backend->get_ip();
+			
+			$offset = 0;
 			
 			$params = [
 				"q" => $search,
@@ -623,42 +3870,57 @@ class google{
 				$params["lr"] = "lang_" . $lang;
 			}
 			
-			// &sort=review-date:r:20090301:20090430
-			$older = $older === false ? false : date("Ymd", $older);
-			$newer = $newer === false ? false : date("Ymd", $newer);
+			// generate tbs
+			$tbs = [];
+			
+			// get date
+			$older = $older === false ? null : date("m/d/Y", $older);
+			$newer = $newer === false ? null : date("m/d/Y", $newer);
 			
 			if(
-				$older !== false &&
-				$newer === false
+				$older !== null ||
+				$newer !== null
 			){
 				
-				$newer = date("Ymd", time());
+				$tbs["cdr"] = "1";
+				$tbs["cd_min"] = $newer;
+				$tbs["cd_max"] = $older;
 			}
 			
-			if(
-				$older !== false ||
-				$newer !== false
-			){
+			// spellcheck filter
+			if($spellcheck == "no"){
 				
-				$params["sort"] = "review-date:r:" . $older . ":" . $newer;
+				$params["nfpr"] = "1";
 			}
 			
-			try{
-				$html =
-					$this->get(
-						$ip,
-						"https://www.google.com/search",
-						$params
-					);
-			}catch(Exception $error){
+			if(count($tbs) !== 0){
 				
-				throw new Exception("Failed to get HTML");
+				$params["tbs"] = "";
+				
+				foreach($tbs as $key => $value){
+					
+					$params["tbs"] .= $key . ":" . $value . ",";
+				}
+				
+				$params["tbs"] = rtrim($params["tbs"], ",");
 			}
-			
-			//$html = file_get_contents("scraper/google.html");
 		}
 		
-		return $this->parsepage($html, "web", $search, $ip);
+		try{
+			$html =
+				$this->get(
+					$proxy,
+					"https://www.google.com/search",
+					$params
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to get HTML");
+		}
+		
+		//$html = file_get_contents("scraper/google.html");
+		
+		return $this->parsepage($html, "web", $search, $proxy, $params);
 	}
 	
 	
@@ -667,43 +3929,21 @@ class google{
 		
 		if($get["npt"]){
 			
-			[$req, $ip] = $this->backend->get($get["npt"], "videos");
-			parse_str(
-				parse_url($req, PHP_URL_QUERY),
-				$search
-			);
+			[$params, $proxy] = $this->backend->get($get["npt"], "web");
+			$params = json_decode($params, true);
 			
-			if(isset($search["q"])){
-				
-				$search = $search["q"];
-			}else{
-				
-				$search = "a"; // lol
-			}
-			
-			try{
-				
-				$html =
-					$this->get(
-						$ip,
-						"https://www.google.com" . $req,
-						[]
-					);
-			}catch(Exception $error){
-				
-				throw new Exception("Failed to get HTML");
-			}
+			$search = $params["q"];
 			
 		}else{
 			$search = $get["s"];
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
-			$lang = $get["lang"];
-			$time = $get["time"];
+			$older = $get["older"];
+			$newer = $get["newer"];
 			$duration = $get["duration"];
 			$quality = $get["quality"];
 			$captions = $get["captions"];
-			$ip = $this->backend->get_ip();
+			$proxy = $this->backend->get_ip();
 			
 			$params = [
 				"q" => $search,
@@ -721,18 +3961,20 @@ class google{
 			// nsfw
 			$params["safe"] = $nsfw == "yes" ? "off" : "active";
 			
-			// language
-			if($lang != "any"){
-				
-				$params["lr"] = "lang_" . $lang;
-			}
-			
 			$tbs = [];
+			
+			// get date
+			$older = $older === false ? null : date("m/d/Y", $older);
+			$newer = $newer === false ? null : date("m/d/Y", $newer);
+			
+			if(
+				$older !== null ||
+				$newer !== null
+			){
 				
-			// time
-			if($time != "any"){
-				
-				$tbs[] = "qdr:" . $time;
+				$tbs["cdr"] = "1";
+				$tbs["cd_min"] = $newer;
+				$tbs["cd_max"] = $older;
 			}
 			
 			// duration
@@ -759,24 +4001,26 @@ class google{
 				$params["tbs"] =
 					implode(",", $tbs);
 			}
-			
-			try{
-				$html =
-					$this->get(
-						$ip,
-						"https://www.google.com/search",
-						$params
-					);
-			}catch(Exception $error){
-				
-				throw new Exception("Failed to get HTML");
-			}
 		}
 		
-		$json = $this->parsepage($html, "videos", $search, $ip);
+		try{
+			$html =
+				$this->get(
+					$proxy,
+					"https://www.google.com/search",
+					$params
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to get HTML");
+		}
+		
+		//$html = file_get_contents("scraper/google-video.html");
+		
+		$response = $this->parsepage($html, "videos", $search, $proxy, $params);
 		$out = [
 			"status" => "ok",
-			"npt" => $json["npt"],
+			"npt" => $response["npt"],
 			"video" => [],
 			"author" => [],
 			"livestream" => [],
@@ -784,30 +4028,21 @@ class google{
 			"reel" => []
 		];
 		
-		foreach($json["web"] as $item){
+		foreach($response["web"] as $result){
 			
 			$out["video"][] = [
-				"title" => $item["title"],
-				"description" => $item["description"],
+				"title" => $result["title"],
+				"description" => $result["description"],
 				"author" => [
-					"name" => null,
+					"name" => isset($result["table"]["Author"]) ? $result["table"]["Author"] : null,
 					"url" => null,
 					"avatar" => null
 				],
-				"date" => isset($item["table"]["Posted"]) ? strtotime($item["table"]["Posted"]) : null,
-				"duration" => isset($item["table"]["Duration"]) ? $this->hms2int($item["table"]["Duration"]) : null,
+				"date" => $result["date"],
+				"duration" => isset($result["table"]["Duration"]) ? $this->hms2int($result["table"]["Duration"]) : null,
 				"views" => null,
-				"thumb" =>
-					$item["thumb"]["url"] === null ?
-					[
-						"url" => null,
-						"ratio" => null
-					] :
-					[
-						"url" => $item["thumb"]["url"],
-						"ratio" => "16:9"
-					],
-				"url" => $item["url"]
+				"thumb" => $result["thumb"],
+				"url" => $result["url"]
 			];
 		}
 		
@@ -820,25 +4055,17 @@ class google{
 		
 		if($get["npt"]){
 			
-			[$req, $ip] = $this->backend->get($get["npt"], "news");
-			parse_str(
+			[$req, $proxy] = $this->backend->get($get["npt"], "news");
+			/*parse_str(
 				parse_url($req, PHP_URL_QUERY),
 				$search
-			);
-			
-			if(isset($search["q"])){
-				
-				$search = $search["q"];
-			}else{
-				
-				$search = "a"; // lol
-			}
+			);*/
 			
 			try{
 				
 				$html =
 					$this->get(
-						$ip,
+						$proxy,
 						"https://www.google.com" . $req,
 						[]
 					);
@@ -851,10 +4078,10 @@ class google{
 			$search = $get["s"];
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
-			$lang = $get["lang"];
-			$time = $get["time"];
+			$older = $get["older"];
+			$newer = $get["newer"];
 			$sort = $get["sort"];
-			$ip = $this->backend->get_ip();
+			$proxy = $this->backend->get_ip();
 			
 			$params = [
 				"q" => $search,
@@ -872,1804 +4099,295 @@ class google{
 			// nsfw
 			$params["safe"] = $nsfw == "yes" ? "off" : "active";
 			
-			// language
-			if($lang != "any"){
-				
-				$params["lr"] = "lang_" . $lang;
-			}
-			
 			$tbs = [];
+			
+			// get date
+			$older = $older === false ? null : date("m/d/Y", $older);
+			$newer = $newer === false ? null : date("m/d/Y", $newer);
+			
+			if(
+				$older !== null ||
+				$newer !== null
+			){
 				
-			// time
-			if($time != "any"){
-				
-				if($time == "a"){
-					
-					$tbs[] = "ar:1";
-				}else{
-					
-					$tbs[] = "qdr:" . $time;
-				}
+				$tbs["cdr"] = "1";
+				$tbs["cd_min"] = $newer;
+				$tbs["cd_max"] = $older;
 			}
 			
 			// relevance
 			if($sort == "date"){
 				
-				$tbs[] = "sbd:1";
+				$tbs["sbd"] = "1";
 			}
 					
 			// append tbs
 			if(count($tbs) !== 0){
 				
-				$params["tbs"] =
-					implode(",", $tbs);
+				$params["tbs"] = "";
+				
+				foreach($tbs as $key => $value){
+					
+					$params["tbs"] .= $key . ":" . $value . ",";
+				}
+				
+				$params["tbs"] = rtrim($params["tbs"], ",");
 			}
+			
+			//$html = file_get_contents("scraper/google-news.html");
 			
 			$html =
 				$this->get(
-					$ip,
+					$proxy,
 					"https://www.google.com/search",
 					$params
 				);
 		}
 		
-		$json = $this->parsepage($html, "news", $search, $ip);
 		$out = [
 			"status" => "ok",
-			"npt" => $json["npt"],
+			"npt" => null,
 			"news" => []
 		];
 		
-		foreach($json["web"] as $item){
+		$this->fuckhtml->load($html);
+		
+		$this->detect_sorry();
+		
+		// get images
+		$this->scrape_dimg($html);
+		
+		// parse styles
+		$this->parsestyles();
+		
+		$center_col =
+			$this->fuckhtml
+			->getElementById(
+				"center_col",
+				"div"
+			);
+		
+		if($center_col === null){
 			
-			$description = array_key_first($item["table"]);
-			
-			if($description !== null){
-				
-				$date = $item["table"][$description];
-			}else{
-				
-				$date = null;
-			}
-			
-			$out["news"][] = [
-				"title" => $item["title"],
-				"author" => $item["author"],
-				"description" => $description,
-				"date" => strtotime($date),
-				"thumb" =>
-					$item["thumb"]["url"] === null ?
-					[
-						"url" => null,
-						"ratio" => null
-					] :
-					[
-						"url" => $item["thumb"]["url"],
-						"ratio" => "16:9"
-					],
-				"url" => $item["url"]
-			];
+			throw new Exception("Could not grep result div");
 		}
 		
-		return $out;
-	}
-	
-	
-	
-	private function parsepage($html, $pagetype, $search, $ip){
-		/*
-		$handle = fopen("scraper/google.html", "r");
-		$html = fread($handle, filesize("scraper/google.html"));
-		fclose($handle);
-		*/
+		$this->fuckhtml->load($center_col);
 		
-		$out = [
-			"status" => "ok",
-			"spelling" => [
-				"type" => "no_correction",
-				"using" => null,
-				"correction" => null
-			],
-			"npt" => null,
-			"answer" => [],
-			"web" => [],
-			"image" => [],
-			"video" => [],
-			"news" => [],
-			"related" => []
-		];
+		// get next page
+		$npt =
+			$this->fuckhtml
+			->getElementById(
+				"pnnext",
+				"a"
+			);
 		
-		if($error = $this->detect_sorry($html)){
+		if($npt !== false){
 			
-			throw new Exception($error);
-		}
-		
-		$this->parsejavascript($html);
-		
-		//
-		// parse accdef's
-		//
-		$has_appended_accdef = false;
-		
-		preg_match_all(
-			'/window\.jsl\.dh\(\'(accdef_[0-9]+)\',\'(.*)\'\);/',
-			$html,
-			$accdefs_regex
-		);
-		
-		$accdefs = [];
-		for($i=0; $i<count($accdefs_regex[0]); $i++){
-			
-			// decode UTF-16 string
-			$answer =
-				$this->fuckhtml
-				->parseJsString(
-					$accdefs_regex[2][$i]
-				);
-			
-			$this->fuckhtml->load($answer);
-			
-			// get description
-			$description =
-				$this->fuckhtml
-				->getElementsByClassName(
-					$this->findstyles(
-						[
-							"padding" => "12px 16px 12px",
-						],
-						self::is_class
-					),
-					"div"
-				);
-			
-			if(!isset($description[1])){
-				
-				throw new Exception("Google returned an unsupported page format (will fix)");
-			}else{
-				
-				$description = $description[1];
-			}
-			
-			// get date (rare)
-			$date =
-				$this->fuckhtml
-				->getElementsByTagName("sub");
-			
-			if(count($date) !== 0){
-				
-				$description =
-					str_replace(
-						$date[0]["outerHTML"],
-						"",
-						$description["innerHTML"]
-					);
-				
-				$date =
-					strtotime(
-						$this->fuckhtml
-						->getTextContent(
-							$date[0]
-						)
-					);
-			}else{
-				
-				$date = null;
-			}
-			
-			// get information table
-			$table = [];
-			
-			$tbody =
-				$this->fuckhtml
-				->getElementsByTagName("tbody");
-			
-			if(count($tbody) !== 0){
-				
-				$this->fuckhtml->load($tbody[0]);
-				
-				$trs =
+			$out["npt"] =
+				$this->backend->store(
 					$this->fuckhtml
-					->getElementsByTagName("tr");
-				
-				foreach($trs as $tr){
-					
-					$this->fuckhtml->load($tr);
-					
-					$tds =
-						$this->fuckhtml
-						->getElementsByTagName("td");
-					
-					if(count($tds) === 2){
-						
-						$table[
-							$this->fuckhtml
-							->getTextContent(
-								$tds[0]
-							)
-						] =
-							$this->fuckhtml
-							->getTextContent(
-								$tds[1]
-							);
-					}
-				}
-				
-				// load back what we had
-				$this->fuckhtml->load($answer);
-			}
-			
-			// get title & link
-			$a =
-				$this->fuckhtml
-				->getElementsByTagName("a")[0];
+					->getTextContent(
+						$npt["attributes"]
+						["href"]
+					),
+					"news",
+					$proxy
+				);
+		}
+		
+		$as =
+			$this->fuckhtml
+			->getElementsByAttributeName(
+				"jsname",
+				"a"
+			);
+		
+		foreach($as as $a){
 			
 			$this->fuckhtml->load($a);
 			
+			// get title
 			$title =
 				$this->fuckhtml
-				->getElementsByTagName("span");
+				->getElementsByAttributeValue(
+					"role",
+					"heading",
+					"div"
+				);
 			
 			if(count($title) === 0){
 				
 				continue;
 			}
 			
-			$accdefs[] = [
-				"title" =>
-					$this->titledots(
-						$this->fuckhtml
-						->getTextContent(
-							$title[0]
-						)
-					),
-				"description" =>
+			$title =
+				$this->titledots(
 					$this->fuckhtml
 					->getTextContent(
-						$description
-					),
-				"url" =>
-					$this->unshiturl(
-						$a["attributes"]["href"]
-					),
-				"date" => $date,
-				"type" => "web",
-				"thumb" => [
-					"url" => null,
-					"ratio" => null
-				],
-				"sublink" => [],
-				"table" => $table
-			];
-		}
-		
-		$this->fuckhtml->load($html);
-		
-		$containers =
-			$this->fuckhtml
-			->getElementsByClassName(
-				$this->findstyles(
-					[
-						"background-color" => "#fff",
-						"margin-bottom" => "10px",
-						"-webkit-box-shadow" => "0 1px 6px rgba(32,33,36,0.28)",
-						"border-radius" => "8px"
-					],
-					self::is_class
-				),
-				"div"
-			);
-		
-		foreach($containers as $container){
+						$title[0]
+					)
+				);
 			
-			$this->fuckhtml->load($container);
+			// get thumbnail
+			$image =
+				$this->fuckhtml
+				->getElementsByAttributeName(
+					"id",
+					"img"
+				);
 			
-			// detect spelling
-			$spelling =
+			// check for padded title node, if found, we're inside a carousel
+			$probe =
 				$this->fuckhtml
 				->getElementsByClassName(
-					$this->findstyles(
+					$this->getstyle(
 						[
-							"font-size" => "20px",
-							"line-height" => "26px",
-							"padding-top" => "2px",
-							"margin-bottom" => "1px"
-						],
-						self::is_class
+							"padding" => "16px 16px 40px 16px"
+						]
 					),
 					"div"
 				);
 			
-			if(count($spelling) !== 0){
+			if(count($probe) !== 0){
 				
-				$a =
-					$this->fuckhtml
-					->getElementsByTagName("a");
+				$probe = true;
+			}else{
 				
-				if(count($a) !== 0){
-					
-					$scripts =
-						$this->fuckhtml
-						->getElementsByTagName("script");
-					
-					foreach($scripts as $script){
-						
-						$container["innerHTML"] =
-							str_replace(
-								$script["outerHTML"],
-								"",
-								$container["innerHTML"]
-							);
-					}
-					
-					$container["innerHTML"] =
-						$this->fuckhtml
-						->getTextContent(
-							str_replace(
-								$a[0]["outerHTML"],
-								"",
-								$container["innerHTML"]
-							)
-						);
-					
-					if(
-						preg_match(
-							'/^did you mean/i',
-							$container["innerHTML"]
-						)
-					){
-						
-						$out["spelling"] = [
-							"type" => "not_many",
-							"using" => $search,
-							"correction" =>
-								$this->fuckhtml
-								->getTextContent(
-									$a[0]
-								)
-						];
-					}
-					
-					elseif(
-						preg_match(
-							'/^showing results for/i',
-							$container["innerHTML"]
-						)
-					){
-						
-						$out["spelling"] = [
-							"type" => "including",
-							"using" =>
-								$this->fuckhtml
-								->getTextContent(
-									$a[0]
-								),
-							"correction" => $search
-						];
-					}
-				}
-				
-				continue;
+				$probe = false;
 			}
 			
-			$title =
-				$this->fuckhtml
-				->getElementsByClassName(
-					$this->findstyles(
-						[
-							"color" => "#1967d2",
-							"font-size" => "20px",
-							"line-height" => "26px"
-						],
-						self::is_class
-					),
-					"div"
-				);
-			
-			if(count($title) !== 0){
+			if(
+				count($image) !== 0 &&
+				!isset($image[0]["attributes"]["width"])
+			){
 				
-				//
-				//	Container is a web link
-				//
-				$web = [
-					"title" =>
-						$this->titledots(
-							$this->fuckhtml
-							->getTextContent(
-								$title[0]
-							)
+				$thumb = [
+					"url" =>
+						$this->getdimg(
+							$image[0]["attributes"]["id"]
 						),
-					"description" => null,
-					"url" => null,
-					"date" => null,
-					"type" => "web",
-					"thumb" => [
-						"url" => null,
-						"ratio" => null
-					],
-					"sublink" => [],
-					"table" => []
+					"ratio" => $probe === true ? "16:9" : "1:1"
 				];
+			}else{
 				
-				// get link
-				$web["url"] =
-					$this->unshiturl(
-						$this->fuckhtml
-						->getElementsByTagName("a")
-						[0]
-						["attributes"]
-						["href"]
-					);
+				$thumb = [
+					"url" => null,
+					"ratio" => null
+				];
+			}
+			
+			$description = null;
+			
+			if($probe === false){
 				
-				//
-				// check if link contains a carousel
-				//
-				$carousels = $this->parsecarousels();
-				if(count($carousels) !== 0){
-					
-					$first = true;
-					foreach($carousels as $carousel_cat){
-						
-						foreach($carousel_cat as $carousel){
-							
-							if($first === true){
-								
-								$first = false;
-							}elseif($carousel["image"] !== null){
-								
-								$out["image"][] = [
-									"title" => $carousel["title"],
-									"source" => [
-										[
-											"url" => $carousel["image"],
-											"width" => null,
-											"height" => null
-										]
-									],
-									"url" => $carousel["url"]
-								];
-							}
-							
-							$web["sublink"][] = [
-								"title" => $carousel["title"],
-								"date" => $carousel["date"],
-								"description" => $carousel["description"],
-								"url" => $carousel["url"]
-							];
-						}
-					}
-					
-					if($carousels[0][0]["image"] !== null){
-						$web["thumb"] = [
-							"url" => $carousels[0][0]["image"],
-							"ratio" => "16:9"
-						];
-					}
-					
-					$out["web"][] = $web;
-					continue;
-				}
-				
-				//
-				// no carousel entries, parse as normal link
-				//
-				$this->fuckhtml->load($container);
-				
-				// parse URL
-				$web["url"] =
-					$this->unshiturl(
-						$this->fuckhtml
-						->getElementsByTagName("a")
-						[0]
-						["attributes"]
-						["href"]
-					);
-				
-				$container = $container["innerHTML"];
-				
-				$line_detect =
+				$desc_divs =
 					$this->fuckhtml
-					->getElementsByClassName(
-						$this->findstyles(
-							[
-								"height" => "1px",
-								"background-color" => "#dadce0",
-								"margin" => "0 16px"
-							],
-							self::is_class
-						),
+					->getElementsByAttributeName(
+						"style",
 						"div"
 					);
 				
-				if(count($line_detect) !== 0){
+				foreach($desc_divs as $desc){
 					
-					// we found a line, this means we're dealing with a
-					// "featured snippet"
-					$featured = true;
-					
-					$description_container =
-						$this->fuckhtml
-						->getElementsByClassName(
-							$this->findstyles(
-								[
-									"white-space" => "pre-line",
-									"word-wrap" => "break-word"
-								],
-								self::is_class
-							),
-							"div"
-						)[1];
-										
-					// get date node for it
-					$date =
-						$this->fuckhtml
-						->getElementsByTagName("sub");
-					
-					if(count($date) !== 0){
-						$web["date"] =
-							strtotime(
+					if(
+						strpos(
+							$desc["attributes"]["style"],
+							"margin-top:"
+						) !== false
+					){
+						
+						$description =
+							$this->titledots(
 								$this->fuckhtml
 								->getTextContent(
-									$date[0]
+									$desc
 								)
 							);
-					}
-				}else{
-					
-					// we're dealing with a normal link
-					$featured = false;
-					
-					$description_container =
-						$this->fuckhtml
-						->getElementsByClassName(
-							$this->findstyles(
-								[
-									"padding" => "12px 16px 12px"
-								],
-								self::is_class
-							),
-							"div"
-						)[1];
-				}
-				
-				//
-				// Get author if we're parsing news
-				//
-				if($pagetype == "news"){
-					
-					$author =
-						$this->fuckhtml
-						->getElementsByClassName(
-							$this->findstyles(
-								[
-									"position" => "absolute",
-									"width" => "100%",
-									"top" => "0",
-									"left" => "0",
-									"padding-top" => "1px",
-									"margin-bottom" => "-1px"
-								],
-								self::is_class
-							),
-							"div"
-						);
-					
-					if(count($author) !== 0){
-						
-						$web["author"] =
-							$this->fuckhtml
-							->getTextContent(
-								$author[0]
-							);
-					}else{
-						
-						$web["author"] = null;
-					}
-				}
-				
-				$description =
-					$description_container["innerHTML"];
-				
-				$this->fuckhtml->load($description);
-				
-				//
-				// get thumbnail before we call loadhtml again
-				//
-				$img =
-					$this->fuckhtml
-					->getElementsByTagName("img");
-				
-				if(count($img) !== 0){
-					
-					$skip = true;
-					
-					if(
-						isset($img[0]["attributes"]["alt"]) &&
-						stripos($img[0]["attributes"]["alt"], "Video for") !== false
-					){
-						
-						// is a video thumbnail
-						$web["thumb"]["ratio"] = "16:9";
-					}else{
-						
-						// is a google thumbnail
-						$web["thumb"]["ratio"] = "1:1";
-					}
-					
-					$web["thumb"]["url"] =
-						$this->getimage(
-							$img[0]["attributes"]["id"]
-						);
-				}else{
-					
-					$skip = false;
-				}
-				
-				//
-				// get sublinks
-				//
-				$links =
-					$this->fuckhtml
-					->getElementsByTagName("a");
-				
-				foreach($links as $link){
-					
-					if($skip === true){
-						
-						$skip = false;
-						continue;
-					}
-					
-					$description =
-						str_replace(
-							$link["outerHTML"],
-							"",
-							$description
-						);
-					
-					$sublink = [
-						"title" => null,
-						"description" => null,
-						"url" => null,
-						"date" => null
-					];
-					
-					$sublink["title"] =
-						$this->titledots(
-							$this->fuckhtml
-							->getTextContent(
-								$link
-							)
-						);
-					
-					$sublink["url"] =
-						$this->unshiturl(
-							$link
-							["attributes"]
-							["href"]
-						);
-					
-					if(parse_url($sublink["url"], PHP_URL_HOST) !== null){
-						
-						$web["sublink"][] = $sublink;
-					}
-				}
-				
-				//
-				// Parse spans in description
-				//
-				$this->fuckhtml->load($description);
-				
-				if($featured === false){
-					
-					$levels =
-						$this->fuckhtml
-						->getElementsByClassName(
-							$this->findstyles(
-								[
-									"padding-bottom" => "8px"
-								],
-								self::is_class
-							),
-							"div"
-						);
-					
-					// oh my god yes, fucking great, sometimes there are NO levels
-					// hahahahahhahahahahahahahahahhahaa
-					if(count($levels) === 0){
-						
-						$levels = [$description];
-					}
-					
-					foreach($levels as $level){
-						
-						$this->fuckhtml->load($level);
-						
-						$spans =
-							$this->fuckhtml
-							->getElementsByTagName(
-								"span"
-							);
-						
-						$is_rating = -1;
-						
-						foreach($spans as $span){
-							
-							$innertext =
-								trim(
-									$this->fuckhtml
-									->getTextContent(
-										$span
-									),
-									" ·."
-								);
-							
-							if($innertext == ""){ continue; }
-							
-							if(
-								strtolower($innertext)
-								== "rating"
-							){
-								
-								$is_rating = 0;
-								
-								// clean up before we go
-								$description =
-									str_replace(
-										$span["outerHTML"],
-										"",
-										$description
-									);
-								continue;
-							}
-							
-							//
-							//	Parse rating object
-							//
-							if($is_rating >= 0){
-								
-								// clean up description
-								$description =
-									str_replace(
-										$span["outerHTML"],
-										"",
-										$description
-									);
-								
-								if($span["level"] !== 1){ continue; }
-								$is_rating++;
-								
-								// 10/10 (123)
-								if($is_rating === 1){
-									
-									$innertext = explode(" ", $innertext, 2);
-									
-									$web["table"]["Rating"] = $innertext[0];
-									
-									if(count($innertext) === 2){
-										$web["table"]["Hits"] =
-											trim(
-												str_replace(
-													[
-														"(",
-														")"
-													],
-													"",
-													$innertext[1]
-												)
-											);
-										
-										if($web["table"]["Hits"] == ""){
-											
-											unset($web["table"]["Hits"]);
-										}
-									}
-									continue;
-								}
-								
-								// US$4.99
-								// MYR 50.00
-								// $38.34
-								// JP¥6,480
-								// Reviewed by your mom
-								if($is_rating === 2){
-									
-									if(
-										preg_match(
-											'/^Review by (.+)/',
-											$innertext,
-											$match
-										)
-									){
-										
-										$web["table"]["Author"] = $match[1];
-										continue;
-									}
-									
-									$web["table"]["Price"] = $innertext;
-									continue;
-								}
-								
-								// Android / In stock
-								if($is_rating === 3){
-									
-									$web["table"]["Support"] = $innertext;
-									continue;
-								}
-								
-								// ignore the rest
-								continue;
-							}
-							
-							//
-							//	Parse standalone text
-							//
-							
-							// If we reach this point:
-							// 1. Ratings have been parsed
-							// 2. We're parsing a WEB link, not some shitty piece of shit
-							
-							// check for date
-							// if span has no text before it, assume it's a date
-							$desc_split =
-								explode(
-									$span["outerHTML"],
-									$description,
-									2
-								);
-							
-							if(
-								$this->fuckhtml
-								->getTextContent(
-									$desc_split[0]
-								) == ""
-							){
-								
-								// has no text before
-								$date = strtotime($innertext);
-								if($date){
-									
-									$web["date"] = $date;
-								}
-								
-								// cleanup
-								$description =
-									str_replace(
-										$span["outerHTML"],
-										"",
-										$description
-									);
-								
-								continue;
-							}
-							
-							// Ready to parse table
-							if(count($desc_split) === 2){
-								$this->fuckhtml->load($desc_split[1]);
-								
-								$web["table"][
-									$this->fuckhtml
-									->getTextContent(
-										trim($desc_split[0], ": ")
-									)
-								] = $innertext;
-								
-								// cleanup
-								$description =
-									str_replace(
-										$desc_split[0] . $span["outerHTML"],
-										"",
-										$description
-									);
-							}
-						}
-					}
-				}
-				
-				$web["description"] =
-					trim(
-						$this->fuckhtml
-						->getTextContent(
-							$description
-						),
-						" ·."
-					);
-				
-				if($web["description"] == ""){
-					
-					$web["description"] = null;
-				}
-				
-				$out["web"][] = $web;
-				
-				continue;
-			}
-			
-			//
-			// Detect wikipedia shit
-			//
-			$wiki_title =
-				$this->fuckhtml
-				->getElementsByTagName("h3");
-			
-			if(count($wiki_title) !== 0){
-				
-				$description_after = [];
-				$description = [];
-				$table = [];
-				$sublink = [];
-				
-				$as =
-					$this->fuckhtml
-					->getElementsByTagName("a");
-				
-				foreach($as as $a){
-					
-					if(
-						isset($a["attributes"]["href"]) &&
-						parse_url($a["attributes"]["href"], PHP_URL_HOST) == "maps.google.com"
-					){
-						
-						// detected maps embed, ignore
-						continue 2;
-					}
-				}
-				
-				// get carousels and remove them from container for image grepper
-				$carousels = $this->parsecarousels($container["innerHTML"]);
-				$this->fuckhtml->load($container);
-				
-				// add images to image tab, if applicable
-				for($i=0; $i<count($carousels); $i++){
-					
-					foreach($carousels[$i] as $item){
-						
-						if(
-							$item["url"] !== null &&
-							$item["ref"] !== null &&
-							$item["image"] !== null &&
-							$item["title"] !== null
-						){
-							
-							$out["image"][] = [
-								"title" => $item["title"],
-								"source" => [
-									[
-										"url" => $item["url"],
-										"width" => $item["image_width"],
-										"height" => $item["image_height"]
-									],
-									[
-										"url" => $item["image"],
-										"width" => $item["thumb_width"],
-										"height" => $item["thumb_height"]
-									]
-								],
-								"url" => $item["ref"]
-							];
-							
-							unset($carousels[$i]);
-						}
-					}
-				}
-				
-				$carousels = array_values($carousels);
-				
-				// interpret remaining carousels as title + carousel
-				$titles =
-					$this->fuckhtml
-					->getElementsByClassName(
-						$this->findstyles(
-							[
-								"font-weight" => "700",
-								"letter-spacing" => "0.75px",
-								"text-transform" => "uppercase"
-							],
-							self::is_class
-						)
-					);
-				
-				for($i=0; $i<count($titles); $i++){
-					
-					if(!isset($carousels[$i])){
-						
 						break;
 					}
-					
-					$description_after[] = [
-						"type" => "title",
-						"value" =>
-							$this->fuckhtml
-							->getTextContent(
-								$titles[$i]
-							)
-					];
-					
-					foreach($carousels[$i] as $carousel){
-						
-						$description_after[] = [
-							"type" => "link",
-							"url" => "web?s=" . urlencode($carousel["description"]) . "&scraper=google",
-							"value" => $carousel["description"]
-						];
-						
-						if($carousel["subtext"] !== null){
-							
-							$description_after[] = [
-								"type" => "quote",
-								"value" => $carousel["subtext"]
-							];
-						}
-						
-						$description_after[] = [
-							"type" => "image",
-							"url" => $carousel["image"]
-						];
-					}
 				}
-				
-				$categories =
-					$this->fuckhtml
-					->getElementsByClassName(
-						$this->findstyles(
-							[
-								"padding" => "12px 16px 12px"
-							],
-							self::is_class
-						)
-					);
-				
-				$image =
-					$this->fuckhtml
-					->getElementsByTagName("img");
-				
-				if(count($image) !== 0){
-					
-					$image = $this->getimage($image[0]["attributes"]["id"]);
-				}else{
-					
-					$image = null;
-				}
-				
-				$url = null;
-				
-				for($i=0; $i<count($categories); $i++){
-					
-					$this->fuckhtml->load($categories[$i]);
-					
-					if($i === 0){
-						// first node. this should be the header with the small
-						// information snippet
-						
-						$url =
-							$this->fuckhtml
-							->getElementsByTagName("a");
-						
-						if(count($url) !== 0){
-							
-							$url =
-								$this->unshiturl(
-									$url[0]["attributes"]["href"]
-								);
-							
-							if(parse_url($url, PHP_URL_HOST) == "encrypted-tbn0.gstatic.com"){
-								
-								$image = $url;
-								$url = null;
-							}
-						}else{
-							
-							$url = null;
-						}
-						
-						$categories[$i]["innerHTML"] =
-							str_replace(
-								$wiki_title[0]["outerHTML"],
-								"",
-								$categories[$i]["innerHTML"]
-							);
-						
-						$subtext =
-							$this->fuckhtml
-							->getTextContent(
-								$categories[$i]["innerHTML"]
-							);
-						
-						if(strlen($subtext) !== 0){
-							
-							$description[] = [
-								"type" => "quote",
-								"value" =>
-									$this->fuckhtml
-									->getTextContent(
-										$categories[$i]["innerHTML"]
-									)
-							];
-						}
-						
-						// detect audio file
-						$audio =
-							$this->fuckhtml
-							->getElementsByTagName("audio");
-						
-						if(count($audio) !== 0){
-							
-							$description[] = [
-								"type" => "audio",
-								"url" =>
-									$this->fuckhtml
-									->getTextContent(
-										$audio[0]["attributes"]["src"]
-									)
-							];
-						}
-					}else{
-						
-						// check for separator elements IN THERE
-						$separators =
-							$this->fuckhtml
-							->getElementsByClassName(
-								$this->findstyles(
-									[
-										"white-space" => "pre-line",
-										"word-wrap" => "break-word"
-									],
-									self::is_class
-								),
-								"div"
-							);
-						
-						// detect container type
-						foreach($separators as $separator){
-							
-							$this->fuckhtml->load($separator);
-							
-							// ignore wrong levels
-							if($separator["level"] !== 2){
-								
-								continue;
-							}
-								
-							//
-							// Detect word definition
-							//
-							$wordwraps =
-								$this->fuckhtml
-								->getElementsByClassName(
-									$this->findstyles(
-										[
-											"padding-bottom" => "12px"
-										],
-										self::is_class
-									),
-									"div"
-								);
-							
-							if(count($wordwraps) !== 0){
-								
-								foreach($wordwraps as $word){
-									
-									$this->fuckhtml->load($word);
-									
-									// detect title
-									$span =
-										$this->fuckhtml
-										->getElementsByTagName(
-											"span"
-										);
-									
-									if(
-										count($span) === 1 &&
-										$this->fuckhtml
-										->getTextContent(
-											str_replace(
-												$span[0]["outerHTML"],
-												"",
-												$word["innerHTML"]
-											)
-										) == ""
-									){
-										
-										$description[] = [
-											"type" => "title",
-											"value" =>
-												$this->fuckhtml
-												->getTextContent(
-													$span[0]
-												)
-										];
-										continue;
-									}
-									
-									// detect list element
-									$lists =
-										$this->fuckhtml
-										->getElementsByTagName("ol");
-									
-									if(count($lists) !== 0){
-										foreach($lists as $list){
-											
-											$this->fuckhtml->load($list);
-											
-											$items =
-												$this->fuckhtml
-												->getElementsByTagName("li");
-											
-											$w = 0;
-											foreach($items as $item){
-												
-												$w++;
-												$this->fuckhtml->load($item);
-												
-												// get subnodes
-												$subnodes =
-													$this->fuckhtml
-													->getElementsByClassName(
-														$this->findstyles(
-															[
-																"white-space" => "pre-line",
-																"word-wrap" => "break-word"
-															],
-															self::is_class
-														),
-														"div"
-													);
-												
-												foreach($subnodes as $subnode){
-													
-													$this->fuckhtml->load($subnode);
-													
-													$spans =
-														$this->fuckhtml
-														->getElementsByTagName("span");
-													
-													if(count($spans) !== 0){
-														
-														// append quote
-														$description[] = [
-															"type" => "quote",
-															"value" =>
-																$this->fuckhtml
-																->getTextContent(
-																	$subnode
-																)
-														];
-													}else{
-														
-														// append text
-														$description[] = [
-															"type" => "text",
-															"value" =>
-																$w . ". " .
-																$this->fuckhtml
-																->getTextContent(
-																	$subnode
-																)
-														];
-													}
-												}
-											}
-										}
-									}else{
-										
-										// parse without list
-										// get subnodes
-										$subnodes =
-											$this->fuckhtml
-											->getElementsByClassName(
-												$this->findstyles(
-													[
-														"white-space" => "pre-line",
-														"word-wrap" => "break-word"
-													],
-													self::is_class
-												),
-												"div"
-											);
-										
-										foreach($subnodes as $subnode){
-											
-											$this->fuckhtml->load($subnode);
-											
-											$spans =
-												$this->fuckhtml
-												->getElementsByTagName("span");
-											
-											if(count($spans) !== 0){
-												
-												// append quote
-												$description[] = [
-													"type" => "quote",
-													"value" =>
-														$this->fuckhtml
-														->getTextContent(
-															$subnode
-														)
-												];
-											}else{
-												
-												// append text
-												$description[] = [
-													"type" => "text",
-													"value" =>
-														$this->fuckhtml
-														->getTextContent(
-															$subnode
-														)
-												];
-											}
-										}
-									}
-								}
-							}else{
-								
-								//
-								// Parse table
-								//
-								$spans =
-									$this->fuckhtml
-									->getElementsByTagName("span");
-								
-								foreach($spans as $span){
-									
-									if(!isset($span["attributes"]["class"])){
-										
-										// found table
-										$row =
-											explode(
-												":",	
-												$this->fuckhtml
-												->getTextContent(
-													$separator
-												),
-												2
-											);
-										
-										if(count($row) === 2){
-											
-											$table[rtrim($row[0])] =
-												ltrim($row[1]);
-											
-										}
-										continue 2;
-									}
-								}
-								
-								//
-								// Parse normal description
-								//
-								$links_rem =
-									$this->fuckhtml
-									->getElementsByTagName("a");
-								
-								foreach($links_rem as $rem){
-									
-									$separator["innerHTML"] =
-										str_replace(
-											$rem["outerHTML"],
-											"",
-											$separator["innerHTML"]
-										);
-								}
-								
-								$description[] = [
-									"type" => "text",
-									"value" =>
-										rtrim(
-											$this->fuckhtml
-											->getTextContent(
-												$separator
-											),
-											" .,"
-										)
-								];
-							}
-						}
-					}
-							
-					// detect huge buttons
-					$buttons =
-						$this->fuckhtml
-						->getElementsByClassName(
-							$this->findstyles(
-								[
-									"display" => "table-cell",
-									"vertical-align" => "middle",
-									"height" => "52px",
-									"text-align" => "center"
-								],
-								self::is_class
-							),
-							"a"
-						);
-					
-					if(count($buttons) !== 0){
-								
-						foreach($buttons as $button){
-							
-							if(isset($button["attributes"]["href"])){
-								
-								$sublink[
-									$this->fuckhtml
-									->getTextContent(
-										$button
-									)
-								] =
-									$this->unshiturl(
-										$button["attributes"]["href"]
-									);
-							}
-						}
-					}
-				}
-				
-				// append description_after (contains carousel info)
-				$description = array_merge(
-					$description,
-					$description_after
-				);
-				
-				$out["answer"][] = [
-					"title" =>
-						$this->fuckhtml
-						->getTextContent(
-							$wiki_title[0]
-						),
-					"description" => $description,
-					"url" => $url,
-					"thumb" => $image,
-					"table" => $table,
-					"sublink" => $sublink
-				];
-				
-				continue;
 			}
 			
-			//
-			// Detect related searches containers
-			//
-			$container_title =
+			// get author
+			$author =
 				$this->fuckhtml
 				->getElementsByClassName(
-					$this->findstyles(
+					$this->getstyle(
 						[
-							"color" => "#000",
-							"font-size" => "16px",
-							"font-weight" => "bold",
-							"margin" => "0",
-							"padding" => "12px 16px 0px 16px"
-						],
-						self::is_class
+							"overflow" => "hidden",
+							"text-align" => "left",
+							"text-overflow" => "ellipsis",
+							"white-space" => "nowrap",
+							"margin-bottom" => "8px"
+						]
 					),
 					"div"
 				);
 			
-			if(count($container_title) !== 0){
+			if(count($author) !== 0){
 				
-				// get carousel entries
-				$carousels = $this->parsecarousels($container["innerHTML"]);
-				$this->fuckhtml->load($container);
-				
-				foreach($carousels as $carousel){
-					
-					foreach($carousel as $item){
-						
-						if($item["url"] !== null){
-							
-							$out["related"][] = $item["url"];
-						}
-					}
-				}
-				
-				$container_title =
-					strtolower(
-						$this->fuckhtml
-						->getTextContent(
-							$container_title[0]
-						)
-					);
-				
-				switch($container_title){
-					
-					case "related searches":
-					case "people also search for":
-						//
-						//	Parse related searches
-						//
-						$as =
-							$this->fuckhtml
-							->getElementsByTagName("a");
-						
-						foreach($as as $a){
-							
-							$out["related"][] =
-								$this->fuckhtml
-								->getTextContent($a);
-						}
-						break;
-					
-					case "people also ask":
-						// get related queries
-						$divs =
-							$this->fuckhtml
-							->getElementsByTagName("div");
-						
-						foreach($divs as $div){
-							
-							// add accdef's here
-							if($has_appended_accdef === false){
-								
-								$out["web"] = array_merge($out["web"], $accdefs);
-								$has_appended_accdef = true;
-							}
-							
-							// add accdef's questions
-							if(isset($div["attributes"]["role"])){
-								
-								$out["related"][] =
-									$this->fuckhtml
-									->getTextContent($div);
-								
-								continue;
-							}
-						}
-						break;
-				}
-				
-				continue;
-			}
-			
-			//
-			// Parse news
-			//
-			$title =
-				$this->fuckhtml
-				->getElementsByClassName(
-					$this->findstyles(
-						[
-							"font-size" => "16px",
-							"line-height" => "20px",
-							"font-weight" => "400"
-						],
-						self::is_class
-					),
-					"div"
-				);
-			
-			if(count($title) !== 0){
-				
-				$carousels = $this->parsecarousels();
-				$this->fuckhtml->load($container);
-				
-				if(count($carousels) === 0){
-					
-					// no carousels found
-					continue;
-				}
-				
-				$title =
-					strtolower(
-						$this->fuckhtml
-						->getTextContent(
-							$title[0]
-						)
-					);
-				
-				if(
-					preg_match(
-						'/^latest from|^top stories/',
-						$title
-					)
-				){
-					
-					// Found news article
-					foreach($carousels[0] as $carousel){
-						
-						if($carousel["image"] !== null){
-							
-							$thumb = [
-								"url" => $carousel["image"],
-								"ratio" => "16:9"
-							];
-						}else{
-							
-							$thumb = [
-								"url" => null,
-								"ratio" => null
-							];
-						}
-						
-						$out["news"][] = [
-							"title" => $carousel["title"],
-							"description" => $carousel["description"],
-							"date" => $carousel["date"],
-							"thumb" => $thumb,
-							"url" => $carousel["url"]
-						];
-					}
-				}
-				
-				elseif(
-					$title == "images"
-				){
-					
-					foreach($carousels as $carousel){
-						
-						foreach($carousel as $item){
-							
-							$out["image"][] = [
-								"title" => $item["title"],
-								"source" => [
-									[
-										"url" => $item["url"],
-										"width" => $item["image_width"],
-										"height" => $item["image_height"]
-									],
-									[
-										"url" => $item["image"],
-										"width" => $item["thumb_width"],
-										"height" => $item["thumb_height"]
-									]
-								],
-								"url" => $item["ref"]
-							];
-						}
-					}
-				}
-				
-				continue;
-			}
-			
-			//
-			// Detect nodes with only text + links
-			//
-			
-			// ignore elements with <style> tags
-			$style =
-				$this->fuckhtml
-				->getElementsByTagName("style");
-			
-			if(count($style) !== 0){
-				
-				continue;
-			}
-			
-			$as =
-				$this->fuckhtml
-				->getElementsByTagName("a");
-			
-			$description = [];
-			
-			$pcitems =
-				$this->fuckhtml
-				->getElementsByClassName(
-					"pcitem",
-					"div"
-				);
-			
-			if(count($pcitems) !== 0){
-				
-				// ignore elements with carousels in them
-				continue;
-			}
-			
-			foreach($as as $a){
-				
-				//
-				// Detect next page
-				//
-				if(
-					isset($a["attributes"]["aria-label"]) &&
-					strtolower($a["attributes"]["aria-label"]) == "next page"
-				){
-					
-					$out["npt"] =
-						$this->backend->store(
-							$this->fuckhtml
-							->getTextContent(
-								$a["attributes"]["href"]
-							),
-							$pagetype,
-							$ip
-						);
-						continue 2;
-				}
-				
-				//
-				// Parse as text node
-				//
-				$container["innerHTML"] =
-					explode(
-						$a["outerHTML"],
-						$container["innerHTML"],
-						2
-					);
-				
-				$before =
+				$author =
 					$this->fuckhtml
 					->getTextContent(
-						$container["innerHTML"][0],
-						false,
-						false
+						$author[0]
+					);
+			}else{
+				
+				$author = null;
+			}
+			
+			// get date
+			$date = null;
+			
+			$date_div =
+				$this->fuckhtml
+				->getElementsByAttributeName(
+					"style",
+					"div"
+				);
+			
+			foreach($date_div as $d){
+				
+				$this->fuckhtml->load($d);
+				
+				$span =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"span"
 					);
 				
-				// set after
-				if(count($container["innerHTML"]) === 2){
+				if(
+					strpos(
+						$d["attributes"]["style"],
+						"bottom:"
+					) !== false
+				){
 					
-					$container["innerHTML"] =
-						$container["innerHTML"][1];
-				}else{
-					
-					$container["innerHTML"] = "";
+					$date =
+						strtotime(
+							$this->fuckhtml
+							->getTextContent(
+								$span[count($span) - 1]
+							)
+						);
+					break;
 				}
-				
-				if($before != ""){
-					
-					$description[] = [
-						"type" => "text",
-						"value" => $before
-					];
-				}
-				
-				// add link
-				$description[] = [
-					"type" => "link",
-					"url" =>
-						$this->unshiturl(
-							$a["attributes"]
-							["href"]
-						),
-					"value" =>
-						$this->fuckhtml
-						->getTextContent(
-							$a
-						)
-				];
 			}
 			
-			if($container["innerHTML"] != ""){
-				
-				$description[] = [
-					"type" => "text",
-					"value" =>
-						$this->fuckhtml
-						->getTextContent(
-							$container["innerHTML"]
-						)
-				];
-			}
-			
-			$out["answer"][] = [
-				"title" => "Notice",
+			$out["news"][] = [
+				"title" => $title,
+				"author" => $author,
 				"description" => $description,
-				"url" => null,
-				"thumb" => null,
-				"table" => [],
-				"sublink" => []
+				"date" => $date,
+				"thumb" => $thumb,
+				"url" =>
+					$this->unshiturl(
+						$a["attributes"]
+						["href"]
+					)
 			];
 		}
-		
-		//
-		// remove duplicate web links cause instant answers
-		// sometimes contains duplicates
-		//
-		$c = count($out["web"]);
-		$links = [];
-		
-		for($i=0; $i<$c; $i++){
-			
-			foreach($links as $link){
-				
-				if($out["web"][$i]["url"] == $link){
-					
-					unset($out["web"][$i]);
-					continue 2;
-				}
-			}
-			
-			$links[] = $out["web"][$i]["url"];
-		}
-		
-		$out["web"] = array_values($out["web"]);
 		
 		return $out;
 	}
@@ -2700,7 +4418,6 @@ class google{
 			$proxy = $this->backend->get_ip();
 			$country = $get["country"];
 			$nsfw = $get["nsfw"];
-			$lang = $get["lang"];
 			$time = $get["time"];
 			$size = $get["size"];
 			$ratio = $get["ratio"];
@@ -2711,106 +4428,94 @@ class google{
 			
 			$params = [
 				"q" => $search,
-				"tbm" => "isch"
+				"udm" => "2" // get images
 			];
 			
-			// country
+			// country (image search uses cr instead of gl)
 			if($country != "any"){
 				
-				$params["gl"] = $country;
+				$params["cr"] = "country" . strtoupper($country);
 			}
 			
 			// nsfw
 			$params["safe"] = $nsfw == "yes" ? "off" : "active";
 			
-			// language
-			if($lang != "any"){
-				
-				$params["lr"] = "lang_" . $lang;
-			}
-			
+			// generate tbs
 			$tbs = [];
 			
 			// time
 			if($time != "any"){
 				
-				$tbs[] = "qrd:" . $time;
+				$tbs["qdr"] = $time;
 			}
 			
 			// size
 			if($size != "any"){
 				
-				if(
-					in_array(
-						$size,
-						["l", "s", "i"]
-					)
-				){
-					
-					$tbs[] = "isz:" . $size;
-				}else{
-					
-					$tbs[] = "tbz:lt";
-					$tbs[] = "islt:" . $size;
-				}
+				$params["imgsz"] = $size;
 			}
 			
 			// ratio
 			if($ratio != "any"){
 				
-				$tbs[] = "iar:" . $ratio;
+				$params["imgar"] = $ratio;
 			}
 			
 			// color
 			if($color != "any"){
 				
 				if(
-					in_array(
-						$color,
-						["color", "gray", "trans"]
-					)
+					$color == "color" ||
+					$color == "trans"
 				){
 					
-					$tbs[] = "ic:" . $color;
+					$params["imgc"] = $color;
+				}elseif($color == "bnw"){
+					
+					$params["imgc"] = "gray";
 				}else{
 					
-					$tbs[] = "ic:specific";
-					$tbs[] = "isc:" . $color;
+					$tbs["ic"] = "specific";
+					$tbs["isc"] = $color;
 				}
 			}
 			
 			// type
 			if($type != "any"){
 				
-				$tbs[] = "itp:" . $type;
+				$tbs["itp"] = $type;
 			}
 			
 			// format
 			if($format != "any"){
 				
-				$tbs[] = "ift:" . $format;
+				$params["as_filetype"] = $format;
 			}
 			
-			// rights
+			// rights (tbs)
 			if($rights != "any"){
 				
-				$tbs[] = "il:" . $rights;
+				$tbs["sur"] = $rights;
 			}
 			
 			// append tbs
 			if(count($tbs) !== 0){
 				
-				$params["tbs"] =
-					implode(",", $tbs);
+				$params["tbs"] = "";
+				
+				foreach($tbs as $key => $value){
+					
+					$params["tbs"] .= $key . ":" . $value . ",";
+				}
+				
+				$params["tbs"] = rtrim($params["tbs"], ",");
 			}
 		}
-		
 		/*
 		$handle = fopen("scraper/google-img.html", "r");
 		$html = fread($handle, filesize("scraper/google-img.html"));
 		fclose($handle);*/
 		
-		// scrape images
 		try{
 			$html = 
 				$this->get(
@@ -2823,10 +4528,12 @@ class google{
 			throw new Exception("Failed to get search page");
 		}
 		
-		if($error = $this->detect_sorry($html)){
-			
-			throw new Exception($error);
-		}
+		$this->fuckhtml->load($html);
+		
+		$this->detect_sorry();
+		
+		// get javascript images
+		$this->scrape_imagearr($html);
 		
 		$out = [
 			"status" => "ok",
@@ -2837,659 +4544,87 @@ class google{
 		$images =
 			$this->fuckhtml
 			->getElementsByClassName(
-				"islrtb isv-r",
+				"ivg-i",
 				"div"
 			);
 		
-		foreach($images as $image){
+		foreach($images as $div){
 			
-			$this->fuckhtml->load($image);
-			$img =
+			$this->fuckhtml->load($div);
+			
+			$image =
 				$this->fuckhtml
 				->getElementsByTagName("img")[0];
-			
-			$og_width = (int)$image["attributes"]["data-ow"];
-			$og_height = (int)$image["attributes"]["data-oh"];
-			$thumb_width = (int)$image["attributes"]["data-tw"];
-			
-			$ratio = $og_width / $og_height;
-			
-			if(isset($img["attributes"]["data-src"])){
-				
-				$src = &$img["attributes"]["data-src"];
-			}else{
-				
-				$src = &$img["attributes"]["src"];
-			}
-			
-			$thumb_height = floor($thumb_width / $ratio);
 			
 			$out["image"][] = [
 				"title" =>
 					$this->titledots(
 						$this->fuckhtml
 						->getTextContent(
-							$image["attributes"]["data-pt"]
+							$image["attributes"]["alt"]
 						)
 					),
-				"source" => [
-					[
-						"url" =>
-							$this->fuckhtml
-							->getTextContent(
-								$image["attributes"]["data-ou"]
-							),
-						"width" => $og_width,
-						"height" => $og_height
+				"source" =>
+					$this->image_arr[
+						$div["attributes"]["data-docid"]
 					],
-					[
-						"url" =>
-							$this->fuckhtml
-							->getTextContent(
-								$src
-							),
-						"width" => $thumb_width,
-						"height" => $thumb_height
-					]
-				],
 				"url" =>
 					$this->fuckhtml
 					->getTextContent(
-						$image["attributes"]["data-ru"]
+						$div["attributes"]["data-lpage"]
 					)
 			];
 		}
 		
-		// get next page
-		// https://www.google.com/search
-		// ?q=higurashi
-		// &tbm=isch
-		// &async=_id%3Aislrg_c%2C_fmt%3Ahtml
-		// &asearch=ichunklite
-		// &ved=0ahUKEwidjYXJqJSAAxWrElkFHZ07CDwQtDIIQygA
-		
-		if(count($out["image"]) !== 100){
+		// as usual, no way to check if there is a next page reliably
+		if(count($out["image"]) > 50){
 			
-			// no more results
-			return $out;
-		}
-		
-		if($get["npt"]){
-			
-			// update nextpage information
-			$params["start"] = (int)$params["start"] + count($out["image"]);
-			$params["ijn"] = (int)$params["ijn"] + 1;
+			if(!isset($params["start"])){
+				
+				$params["start"] = 10;
+			}else{
+				
+				$params["start"] += 10;
+			}
 			
 			$out["npt"] =
-				$this->backend->store(
+				$this->backend
+				->store(
 					json_encode($params),
-					"images",
+					"image",
 					$proxy
 				);
-		}else{
-			
-			// scrape nextpage information
-			$this->fuckhtml->load($html);
-			
-			$ved =
-				$this->fuckhtml
-				->getElementById("islrg", "div");
-			
-			if($ved){
-				
-				$ved =
-					$this->fuckhtml
-					->getTextContent(
-						$ved["attributes"]["data-ved"]
-					);
-				
-				// &vet=1{$ved}..i (10ahUKEwidjYXJqJSAAxWrElkFHZ07CDwQtDIIQygA..i)
-				
-				/*
-					These 2 are handled by us
-					start = start + number of results
-					ijn = current page number
-				*/
-				// &start=100
-				// &ijn=1
-				
-				// &imgvl=CAEY7gQgBSj3Aji8VTjXVUC4AUC3AUgAYNdV
-				preg_match(
-					'/var e=\'([A-z0-9]+)\';/',
-					$html,
-					$imgvl
-				);
-				
-				if(isset($imgvl[1])){
-					$imgvl = $imgvl[1];
-					
-					$params["async"] = "_id:islrg_c,_fmt:html";
-					$params["asearch"] = "ichunklite";
-					$params["ved"] = $ved;
-					$params["vet"] = "1" . $ved . "..i";
-					$params["start"] = 100;
-					$params["ijn"] = 1;
-					$params["imgvl"] = $imgvl;
-					
-					$out["npt"] =
-						$this->backend->store(
-							json_encode($params),
-							"images",
-							$proxy
-						);
-				}
-			}
 		}
 		
 		return $out;
 	}
 	
-	private function hms2int($time){
-		
-		$parts = explode(":", $time, 3);
-		$time = 0;
-		
-		if(count($parts) === 3){
-			
-			// hours
-			$time = $time + ((int)$parts[0] * 3600);
-			array_shift($parts);
-		}
-		
-		if(count($parts) === 2){
-			
-			// minutes
-			$time = $time + ((int)$parts[0] * 60);
-			array_shift($parts);
-		}
-		
-		// seconds
-		$time = $time + (int)$parts[0];
-		
-		return $time;
-	}
-	
-	private function parsejavascript($html){
-		
-		$this->fuckhtml->load($html);
-		
-		$styles =
-			$this->fuckhtml
-			->getElementsByTagName("style");
-		
-		$this->computedstyle = [];
-		$this->ask = [];
-		
-		foreach($styles as $style){
-			
-			$this->computedstyle =
-				array_merge(
-					$this->computedstyle,
-					$this->parsestyles($style["innerHTML"])
-				);
-		}
-		
-		// get images in javascript var
-		preg_match(
-			'/google\.ldi=({[^}]+})/',
-			$html,
-			$this->js_image
-		);
-		
-		if(count($this->js_image) !== 0){
-			
-			$this->js_image = json_decode($this->js_image[1], true);
-		}else{
-			
-			$this->js_image = [];
-		}
-		
-		// additional js_images present in <script> tags
-		// ugh i fucking hate you
-		$scripts =
-			$this->fuckhtml
-			->getElementsByTagName("script");
-		
-		foreach($scripts as $script){
-			
-			if(!isset($script["innerHTML"])){
-				
-				continue;
-			}
-			
-			preg_match_all(
-				'/var s=\'(data:image[^\']+)\';var i=\[(\'[^\;]*\')];/',
-				$script["innerHTML"],
-				$image_grep
-			);
-			
-			if(count($image_grep[0]) !== 0){
-				
-				$items = explode(",", $image_grep[2][0]);
-				$value =
-					$this->fuckhtml
-					->getTextContent(
-						$image_grep[1][0]
-					);
-				
-				foreach($items as $item){
-					
-					$this->js_image[trim($item, "' ")] = $value;
-				}
-			}
-			
-			// even more javascript crap
-			// "People also ask" node is loaded trough javascript
-			preg_match_all(
-				'/window\.jsl\.dh\(\'([^\']+)\',\'(.+)\'\);/',
-				$script["innerHTML"],
-				$ask_grep
-			);
-			
-			for($i=0; $i<count($ask_grep[0]); $i++){
-				
-				$this->ask[trim($ask_grep[1][$i])] =
-					$this->fuckhtml->parseJsString(
-						$ask_grep[2][$i]
-					);
-			}
-		}
-	}
-	
-	private function findstyles($rules, $is){
-		
-		$c = count($rules);
-		
-		foreach($this->computedstyle as $classname => $styles){
-			
-			if($classname[0] != $is){
-				
-				// not a class, skip
-				continue;
-			}
-			
-			$i = 0;
-			foreach($styles as $stylename => $stylevalue){
-				
-				if(
-					isset($rules[$stylename]) &&
-					$rules[$stylename] == $stylevalue
-				){
-					
-					$i++;
-				}else{
-					
-					continue 2;
-				}
-			}
-			
-			if($c === $i){
-				
-				return ltrim($classname, $is);
-			}
-		}
-		
-		// fail, did not find classname.
-		return false;
-	}
-	
-	private function parsestyles($style){
-		
-		// get style tags
-		preg_match_all(
-			'/([^{]+){([^}]*)}/',
-			$style,
-			$tags_regex
-		);
-		
-		$tags = [];
-		
-		for($i=0; $i<count($tags_regex[0]); $i++){
-			
-			$tagnames = explode(",", trim($tags_regex[1][$i]));
-			
-			foreach($tagnames as $tagname){
-				
-				$tagname = trim($tagname);
-				
-				if(!isset($tags[$tagname])){
-					$tags[$tagname] = [];
-				}
-				
-				$values = explode(";", $tags_regex[2][$i]);
-				
-				foreach($values as $value){
-					
-					$value = explode(":", $value, 2);
-					
-					if(count($value) !== 2){
-						
-						continue;
-					}
-					
-					$tags[$tagname][trim($value[0])] =
-						trim($value[1]);
-				}
-			}
-		}
-		
-		return $tags;
-	}
-	
-	private function getimage($id){
-		
-		if(isset($this->js_image[$id])){
-			
-			$return = $this->fuckhtml->parseJsString($this->js_image[$id]);
-			
-			if(
-				$return != "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABAUlEQVR4AWMYesChoYElLjkzPj4lY3d8csZjIL4MxPNjUzPcSTYsISFLAqj5NBD/h+LPQPwbiT87NCuLh2gDgRr2QzXuT0jNMoBYksARn5zuHJ+UcR0kB6RXE2VYXHJGOlTDZmzyIJcB5e+D1CSkZDgQNBAaZv+jU1JkcKpJygiGeZ0I76a/Byq8jU9NZFqaCNTA48SE33/iDcw8TIyBt0GKQTFN0Msp6f2EIyUpo57YSIlLSrMhIg0WCIBcCfXSdlzJBsheTHQ6jEnOUgEFOLaEDbMIlhZBOYrorAdJk+nroVnvPsSgdGdoOF7HZyhZ2XPoGQoqjbCpIbt0AiejIQMArVLI7k/DXFkAAAAASUVORK5CYII=" &&
-				$return != "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAA6ElEQVR4Ae2UvQ7BYBSGW4uFxlVICLsYDA0D14NEunRxHSJ+BkYG9ibiHtgkuvpZWOod3uFESqpOF/ElT/q958h5OtQx/iexY/evY9ACJjBewUtkXHEPyBYUNQQuCETuggNrF2DHF3A4kfUMmLB+BoUYAg4nIX0TTNnbfCjg8HDBGuR4z4Ij+813giAC8rcrkXusjdQEpMpcYt5rCzrMaea7tqD9JLhpCyrMZeadpmApssPaUOszXQALGHz67De0/2gpMGPP014VFpizfgJ5zWXnAF8MryW1rj3x5l8LJANQF1lZQH5f8AAWpNcUs6HAEAAAAABJRU5ErkJggg=="
-			){
-				
-				if(
-					preg_match(
-						'/^\/\//',
-						$return
-					)
-				){
-					
-					return 'https:' . $return;
-				}
-				
-				return $return;
-			}
-			
-			return null;
-		}
-	}
-	
-	private function parsecarousels(&$item_to_remove = false){
-		
-		$carousels =
-			$this->fuckhtml
-			->getElementsByClassName(
-				$this->findstyles(
-					[
-						"padding" => "16px",
-						"position" => "relative"
-					],
-					self::is_class
-				)
-			);
-		
-		$return = [];
-		
-		for($i=0; $i<count($carousels); $i++){
-			
-			if(!isset($carousels[$i]["outerHTML"])){
-				
-				continue;
-			}
-			
-			$this->fuckhtml->load($carousels[$i]);
-			
-			if($item_to_remove !== false){
-				
-				$item_to_remove =
-					str_replace(
-						$carousels[$i]["outerHTML"],
-						"",
-						$item_to_remove
-					);
-			}
-			
-			$pcitems =
-				$this->fuckhtml
-				->getElementsByClassName(
-					"pcitem",
-					"div"
-				);
-			
-			foreach($pcitems as $pcitem){
-				
-				$this->fuckhtml->load($pcitem);
-				
-				$out = [
-					"url" => null,
-					"ref" => null,
-					"image" => null,
-					"thumb_width" => null,
-					"thumb_height" => null,
-					"image_width" => null,
-					"image_height" => null,
-					"title" => null,
-					"description" => null,
-					"subtext" => null,
-					"date" => null
-				];
-				
-				$url =
-					$this->unshiturl(
-						$this->fuckhtml
-						->getElementsByTagName("a")
-						[0]
-						["attributes"]
-						["href"],
-						true
-					);
-				
-				// set ref
-				$out["ref"] = $url["ref"];
-				
-				// set url
-				$out["url"] = $url["url"];
-				
-				// set sizes
-				$out["thumb_width"] = $url["thumb_width"];
-				$out["thumb_height"] = $url["thumb_height"];
-				$out["image_width"] = $url["image_width"];
-				$out["image_height"] = $url["image_height"];
-				
-				// get image
-				$out["image"] =
-					$this->fuckhtml
-					->getElementsByTagName(
-						"img"
-					);
-				
-				if(count($out["image"]) !== 0){
-					
-					// get title from image
-					if(isset($out["image"][0]["attributes"]["alt"])){
-						
-						$out["title"] =
-							$this->titledots(
-								$this->fuckhtml
-								->getTextContent(
-									$out["image"][0]["attributes"]["alt"]
-								)
-							);
-					}
-					
-					// get image url
-					if(isset($out["image"][0]["attributes"]["id"])){
-						
-						$out["image"] = $this->getimage($out["image"][0]["attributes"]["id"]);
-					}
-					
-					elseif(isset($out["image"][0]["attributes"]["data-ll"])){
-						
-						$out["image"] =
-							$this->fuckhtml
-							->getTextContent(
-								$out["image"][0]["attributes"]["data-ll"]
-							);
-					}else{
-						
-						// failed to get image information
-						$out["image"] = null;
-					}
-					
-					if($out["image"] == 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAgMAAACdGdVrAAAADFBMVEVMaXFChfRChfRChfT0tCPZAAAAA3RSTlMAgFJEkGxNAAAAL0lEQVR4AWPADxgdwBT3BTDF9AUiuhdC6WNK/v///y+UggrClSA07EWVglmEFwAA5eYSExeCwigAAAAASUVORK5CYII='){
-						
-						// found arrow image base64, skip entry
-						continue;
-					}
-				}else{
-					
-					// Could not find any image in node
-					$out["image"] = null;
-				}
-				
-				// get title from spans
-				$title =
-					$this->fuckhtml
-					->getElementsByClassName(
-						$this->findstyles(
-							[
-								"color" => "#1967d2"
-							],
-							self::is_class
-						),
-						"span"
-					);
-				
-				if(count($title) !== 0){
-					
-					$out["title"] =
-						$this->fuckhtml
-						->getTextContent(
-							$title[0]
-						);
-				}
-				
-				// get textnodes
-				$textnodes =
-					$this->fuckhtml
-					->getElementsByClassName(
-						$this->findstyles(
-							[
-								"white-space" => "pre-line",
-								"word-wrap" => "break-word"
-							],
-							self::is_class
-						)
-					);
-				
-				$subtext = null;
-				
-				if(count($textnodes) !== 0){
-					
-					// get date
-					$date =
-						$this->fuckhtml
-						->getTextContent(
-							$textnodes[count($textnodes) - 1],
-							true
-						);
-					
-					if(str_replace("\n", " ", $date) == $title){
-						
-						$date = null;
-					}else{
-						
-						if(strpos($date, "\n") !== false){
-							
-							$date = explode("\n", $date);
-							$date = $date[count($date) - 1];
-						}
-						elseif(strpos($date, "•") !== false){
-							
-							$date = explode("•", $date);
-							$date = ltrim($date[count($date) - 1]);
-						}else{
-							
-							$date = null;
-						}
-					}
-					
-					if($date !== null){
-						
-						$date = strtotime($date);
-					}
-					
-					// get description
-					$description =
-						$this->fuckhtml
-						->getTextContent(
-							$textnodes[0]
-						);
-					
-					if($out["title"] === null){
-						
-						if($date === null){
-							
-							$out["title"] = $description;
-							$description = null;
-						}else{
-							
-							$out["title"] = parse_url($out["url"], PHP_URL_HOST);
-						}
-					}
-					
-					if(isset($textnodes[1])){
-						
-						$out["subtext"] =
-							$this->fuckhtml
-							->getTextContent(
-								$textnodes[1]
-							);
-					}
-					
-				}else{
-					
-					$date = null;
-					$description = null;
-				}
-				
-				$out["date"] = $date;
-				$out["description"] = $this->titledots($description);
-				
-				if($out["url"] === null){
-					
-					$out["url"] = $out["title"];
-				}
-				
-				if($out["title"] == $out["description"]){
-					
-					$out["description"] = null;
-				}
-				
-				$return[$i][] = $out;
-			}
-		}
-		
-		return $return;
-	}
-	
 	private function unshiturl($url, $return_size = false){
 		
-		// get parameters from URL
+		// decode
 		$url =
 			$this->fuckhtml
 			->getTextContent($url);
 		
-		$newurl = parse_url($url, PHP_URL_QUERY);
+		$url_parts = parse_url($url);
 		
-		if($newurl == ""){
+		if(
+			!isset(
+				$url_parts["host"]
+			)
+		){
 			
-			// probably telephone number
-			return $url;
-		}
-		
-		$url = $newurl;
-		unset($newurl);
-		
-		parse_str($url, $query);
-		
-		if(isset($query["imgurl"])){
+			// no host, we have a tracking url
+			parse_str($url_parts["query"], $query);
 			
-			$url = $query["imgurl"];
-		}
-		elseif(isset($query["q"])){
-			
-			$url = $query["q"];
+			if(isset($query["imgurl"])){
+				
+				$url = $query["imgurl"];
+			}
+			elseif(isset($query["q"])){
+				
+				$url = $query["q"];
+			}
 		}
 		
 		// rewrite URLs to remove extra tracking parameters
@@ -3567,7 +4702,6 @@ class google{
 				$domain
 			)
 		){
-			
 			// remove more referrers from twitter.com
 			$oldquery = parse_url($url, PHP_URL_QUERY);
 			if($oldquery !== null){
@@ -3577,14 +4711,9 @@ class google{
 				
 				$query = http_build_query($query);
 				
-				if($query != ""){
-					
-					$query .= "?" . $query;
-				}
-				
 				$url =
 					str_replace(
-						'?' . $oldquery,
+						$oldquery,
 						$query,
 						$url
 					);
@@ -3644,47 +4773,46 @@ class google{
 	
 	private function titledots($title){
 		
-		return rtrim($title, ". \t\n\r\0\x0B");
+		return trim($title, " .\t\n\r\0\x0B…");
 	}
 	
-	private function detect_sorry($html){
+	private function hms2int($time){
 		
-		$this->fuckhtml->load($html);
-		$detect_sorry =
-			$this->fuckhtml
-			->getElementsByTagName("title");
+		$parts = explode(":", $time, 3);
+		$time = 0;
 		
-		if(
-			isset($detect_sorry[0]) &&
-			$detect_sorry[0]["innerHTML"] == "302 Moved"
-		){
+		if(count($parts) === 3){
 			
-			// may be consent.google.com in europe or /sorry captcha page
-			$url =
-				$this->fuckhtml
-				->getElementsByTagName("a");
-			
-			if(
-				strpos(
-					parse_url(
-						$this->fuckhtml
-						->getTextContent(
-							$url[0]["attributes"]["href"]
-						),
-						PHP_URL_PATH
-					),
-					"/sorry"
-				) === 0
-			){
-				
-				// found /sorry
-				return "Google blocked this 4get instance. Please setup a proxy!";
-			}
-			
-			// found consent.google, should not happen anymore
-			return "Google served a GPDR consent form. This should not happen, please report if you encounter this message";
+			// hours
+			$time = $time + ((int)$parts[0] * 3600);
+			array_shift($parts);
 		}
 		
-		return false;
+		if(count($parts) === 2){
+			
+			// minutes
+			$time = $time + ((int)$parts[0] * 60);
+			array_shift($parts);
+		}
+		
+		// seconds
+		$time = $time + (int)$parts[0];
+		
+		return $time;
+	}
+	
+	private function detect_sorry(){
+		
+		$recaptcha =
+			$this->fuckhtml
+			->getElementById(
+				"recaptcha",
+				"div"
+			);
+		
+		if($recaptcha !== false){
+			
+			throw new Exception("Google returned a captcha");
+		}
 	}
 }

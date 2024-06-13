@@ -101,12 +101,16 @@ class config{
 		"https://search.milivojevic.in.rs",
 		"https://4get.snine.nl",
 		"https://4get.datura.network",
-		"https://4get.neco.lol"
+		"https://4get.neco.lol",
+		"https://4get.lol",
+		"https://4get.ch",
+		"https://4get.edmateo.site",
+		"https://4get.sudovanilla.org"
 	];
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP
