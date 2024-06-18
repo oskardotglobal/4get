@@ -36,9 +36,9 @@ class config{
 	// Eg. data/captcha/birds/1.png up to 2263.png
 	const CAPTCHA_DATASET = [
 		// example:
-		// ["birds", 2263],
-		// ["fumo_plushies", 1006],
-		// ["minecraft", 848]
+		//["birds", 2263],
+		//["fumo_plushies", 1006],
+		//["minecraft", 848]
 	];
 	
 	// If this regex expression matches on the user agent, it blocks the request
@@ -49,18 +49,18 @@ class config{
 	// Eg: ["x-forwarded-for", "x-via", "forwarded-for", "via"];
 	// Useful for blocking *some* proxies used for botting
 	const FILTERED_HEADER_KEYS = [
-		"x-forwarded-for",
-		"x-cluster-client-ip",
-		"x-client-ip",
-		"x-real-ip",
-		"client-ip",
-		"real-ip",
-		"forwarded-for",
-		"forwarded-for-ip",
-		"forwarded",
-		"proxy-connection",
-		"remote-addr",
-		"via"
+		//"x-forwarded-for",
+		//"x-cluster-client-ip",
+		//"x-client-ip",
+		//"x-real-ip",
+		//"client-ip",
+		//"real-ip",
+		//"forwarded-for",
+		//"forwarded-for-ip",
+		//"forwarded",
+		//"proxy-connection",
+		//"remote-addr",
+		//"via"
 	];
 	
 	// Maximal number of searches per captcha key/pass issued. Counter gets
@@ -105,7 +105,8 @@ class config{
 		"https://4get.lol",
 		"https://4get.ch",
 		"https://4get.edmateo.site",
-		"https://4get.sudovanilla.org"
+		"https://4get.sudovanilla.org",
+		"https://search.mint.lgbt"
 	];
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
