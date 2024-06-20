@@ -48,6 +48,9 @@ socks5:tor:9050::
 create a file named `docker-compose.yaml` with the following content
 This docker compose file will run `luuul/tor` and `luuul/4get` and configure 4get to load `proxies/onion.txt` for outgoing requests.
 
+If you mount your own torrc make sure you include `SocksPort 0.0.0.0:9050`
+Read the warning in [starting tor](./docker_tor.md#Starting-tor)!
+
 ```
 # docker-compose.yaml
 version: "3.7"
@@ -64,7 +67,8 @@ services:
     environment:
       - FOURGET_PROTO=http
       - FOURGET_SERVER_NAME=4get.ca
-      - FOURGET_PROXY_DDG="onion" # loads proxies/onion.txt
+      # loads proxies/onion.txt
+      - FOURGET_PROXY_DDG="onion" 
       - FOURGET_PROXY_BRAVE="onion"
       - FOURGET_PROXY_FB="onion"
       - FOURGET_PROXY_GOOGLE="onion"
