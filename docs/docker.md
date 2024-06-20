@@ -72,7 +72,6 @@ services:
     image: luuul/4get:latest
     restart: unless-stopped
     environment:
-      - FOURGET_VERSION=6
       - FOURGET_PROTO=http
       - FOURGET_SERVER_NAME=4get.ca
 
@@ -91,7 +90,6 @@ services:
     image: luuul/4get:latest
     restart: unless-stopped
     environment:
-      - FOURGET_VERSION=6
       - FOURGET_PROTO=https
       - FOURGET_SERVER_NAME=4get.ca
 
@@ -117,7 +115,6 @@ services:
     image: luuul/4get:latest
     restart: unless-stopped
     environment:
-      - FOURGET_VERSION=6
       - FOURGET_PROTO=http
       - FOURGET_SERVER_NAME=4get.ca
       - FOURGET_BOT_PROTECTION=1
@@ -140,7 +137,6 @@ services:
     image: luuul/4get:latest
     restart: unless-stopped
     environment:
-      - FOURGET_VERSION=6
       - FOURGET_PROTO=http
       - FOURGET_SERVER_NAME=4get.ca
 
@@ -150,3 +146,7 @@ services:
     volumes:
       - ./banners:/var/www/html/4get/banner
 ```
+
+##### Tor
+
+You can route incoming and outgoing requests through tor by following [docker tor documentation](./docker_tor.md)
