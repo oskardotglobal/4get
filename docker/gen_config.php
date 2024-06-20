@@ -66,10 +66,10 @@ foreach(($merged_config) as $key => $val){
             // Handle case when original type of field is array and there is a type mismatch when a comma separted string is passed, 
             // then split on comma if string (and not numeric, boolean, null, etc)
             // 
-            // except in the case where the inital value in default config is null. Assuming null
+            // except in the case where the inital value in default config is null or boolean. Assuming null and boolean
             // in default config will be never be assigned an array
             
-            if(gettype($from_config[$key]) != gettype($val) && !is_numeric($val) && !is_null($from_config[$key])) {
+            if(gettype($from_config[$key]) != gettype($val) && !is_numeric($val) && !is_null($from_config[$key]) && gettype($from_config[$key]) != "boolean") {
                 $stored_value = explode(",", $val);
             } 
             $output = $output . "\tconst " . $key . " = " . type_to_string($stored_value) . ";\n";
