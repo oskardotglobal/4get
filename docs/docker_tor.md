@@ -15,6 +15,9 @@ Remember to set `SocksPort 0.0.0.0:9050` otherwise communication between contain
 
 You will see this warning `Other people on the Internet might find your computer and use it as an open proxy. Please don't allow this unless you have a good reason.`
 
+This setting is in the torrc of this `luuul/tor` image. If you mount your own torrc then that will be read instead.
+
+If you use `SocksPort 0.0.0.0:9050` anywhere make sure it is inaccessible to outside world.
 As long as you don't publish this port (-p or --publish) it shouldn't be accessible to outside world.
 
 
@@ -38,19 +41,6 @@ More information about this file available in [proxy documentation](./configure.
 
 ```
 # proxies/onion.txt
-
-# Specify proxies by following this format:
-#  <protocol>:<address>:<port>:<username>:<password>
-#
-# Examples:
-#  https:1.3.3.7:6969:abcd:efg
-#  socks4:1.2.3.4:8080::
-#  raw_ip::::
-#
-# Available protocols:
-#  raw_ip, http, https, socks4, socks5, socks4a, socks5_hostname
-
-# Local tor proxy
 # Note: "tor" is the service name of luuul/tor in docker-compose.yaml
 socks5:tor:9050::
 ```
@@ -121,7 +111,6 @@ This will create a hidden service that will be accessible via an onion link.
 ```
 # torrc
 User root
-DataDirectory /var/lib/tor
 
 HiddenServiceDir /var/lib/tor/4get/
 HiddenServicePort 80 fourget:80
@@ -132,9 +121,16 @@ HiddenServicePort 80 fourget:80
 
 Make sure it has permission `600` otherwise you will get an error
 
+> Permissions on directory /var/lib/tor/4get/ are too permissive.
+
+you can change permissions with 
+
 ```
-Permissions on directory /var/lib/tor/4get/ are too permissive.
+chmod 600 4get
 ```
+
+3. Create a folder named "data" that will contain your DataDirectory
+
 
 4. create a `docker-compose.yaml` with the following content
 
@@ -156,14 +152,16 @@ services:
   tor:
     image: luuul/tor:latest
     restart: unless-stopped
+    
     volumes:
       - ./torrc:/etc/tor/torrc
       - ./4get:/var/lib/tor/4get
+      - ./data:/root/.tor
 ```
 
-4. You can now start both with `docker compose up -d`
+5. You can now start both with `docker compose up -d`
 
-5. print onion hostname with 
+6. print onion hostname with 
 
 ```
 docker exec `docker ps -qf ancestor=luuul/tor:latest` sh -c "cat /var/lib/tor/4get/hostname"
