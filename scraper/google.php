@@ -2591,6 +2591,12 @@ class google{
 				
 				foreach($relateds as $related){
 					
+					if(!isset($related["innerHTML"])){
+						
+						// found an image
+						continue;
+					}
+					
 					$text =
 						$this->fuckhtml
 						->getTextContent(
@@ -3192,41 +3198,52 @@ class google{
 			
 			$this->fuckhtml->load($header[0]);
 			
-			$title_tag =
-				$this->fuckhtml
-				->getElementsByAttributeValue(
-					"data-attrid",
-					"title",
-					"div"
-				);
-			
-			if(count($title_tag) !== 0){
-				$title =
+			// g-snackbar-action present: we found a button instead
+			if(
+				count(
 					$this->fuckhtml
-					->getTextContent(
-						$title_tag[0]
-					);
+					->getElementsByTagName(
+						"g-snackbar-action"
+					)
+				) !== 0
+			){
 				
-				$header[0]["innerHTML"] =
-					str_replace(
-						$title_tag[0]["outerHTML"],
-						"",
-						$header[0]["innerHTML"]
-					);
-				
-				// if header still contains text, add it as a subtitle in description
-				$subtitle =
+				$title_tag =
 					$this->fuckhtml
-					->getTextContent(
-						$header[0]
+					->getElementsByAttributeValue(
+						"data-attrid",
+						"title",
+						"div"
 					);
 				
-				if(strlen($subtitle) !== 0){
+				if(count($title_tag) !== 0){
+					$title =
+						$this->fuckhtml
+						->getTextContent(
+							$title_tag[0]
+						);
 					
-					$description[] = [
-						"type" => "quote",
-						"value" => $subtitle
-					];
+					$header[0]["innerHTML"] =
+						str_replace(
+							$title_tag[0]["outerHTML"],
+							"",
+							$header[0]["innerHTML"]
+						);
+					
+					// if header still contains text, add it as a subtitle in description
+					$subtitle =
+						$this->fuckhtml
+						->getTextContent(
+							$header[0]
+						);
+					
+					if(strlen($subtitle) !== 0){
+						
+						$description[] = [
+							"type" => "quote",
+							"value" => $subtitle
+						];
+					}
 				}
 			}
 			
@@ -3386,9 +3403,117 @@ class google{
 			$this->fuckhtml->load($rhs);
 		}
 		
-		// abort if we didnt find any description
+		// initialize sublinks
+		$sublinks = [];
+		
+		// get description from business
 		if(count($description) === 0){
 			
+			$data_attrid =
+				$this->fuckhtml
+				->getElementsByAttributeName(
+					"data-attrid"
+				);
+			
+			$summary =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"data-attrid",
+					"kc:/local:one line summary",
+					$data_attrid
+				);
+			
+			if(count($summary) !== 0){
+				
+				$description[] = [
+					"type" => "quote",
+					"value" =>
+						$this->fuckhtml
+						->getTextContent(
+							$summary[0]
+						)
+				];
+				
+				// remove summary so it doesnt get parsed as a table
+				$rhs["innerHTML"] =
+					str_replace(
+						$summary[0]["outerHTML"],
+						"",
+						$rhs["innerHTML"]
+					);
+				
+				$this->fuckhtml->load($rhs);
+			}
+			
+			$address =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"data-attrid",
+					"kc:/location/location:address",
+					$data_attrid
+				);
+			
+			if(count($address) !== 0){
+				
+				$description[] = [
+					"type" => "text",
+					"value" =>
+						$this->fuckhtml
+						->getTextContent(
+							$address[0]
+						)
+				];
+			}
+			
+			// get title
+			$title_div =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"data-attrid",
+					"title",
+					$data_attrid
+				);
+			
+			if(count($title_div) !== 0){
+				
+				$title =
+					$this->fuckhtml
+					->getTextContent(
+						$title_div[0]
+					);
+			}
+				
+			// get phone number
+			$phone =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"data-attrid",
+					"kc:/local:alt phone",
+					$data_attrid
+				);
+			
+			if(count($phone) !== 0){
+				
+				$this->fuckhtml->load($phone[0]);
+				
+				$sublinks["Call"] =
+					"tel:" .
+					$this->fuckhtml
+					->getTextContent(
+						$this->fuckhtml
+						->getElementsByAttributeName(
+							"aria-label",
+							"span"
+						)[0]
+					);
+				
+				$this->fuckhtml->load($rhs);
+			}
+		}
+		
+		if(count($description) === 0){
+			
+			// still no description? abort
 			return $out;
 		}
 		
@@ -3437,7 +3562,55 @@ class google{
 					": "
 				);
 			
-			if($key == ""){
+			if(
+				$key == "" ||
+				$key == "Phone"
+			){
+				
+				continue;
+			}
+			
+			if($key == "Hours"){
+				
+				$hours = [];
+				
+				$this->fuckhtml->load($elem);
+				
+				$trs =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"tr"
+					);
+				
+				foreach($trs as $tr){
+					
+					$this->fuckhtml->load($tr);
+					
+					$tds =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"td"
+						);
+					
+					if(count($tds) === 2){
+						
+						$hours[] =
+							$this->fuckhtml
+							->getTextContent(
+								$tds[0]
+							) . ": " .
+							$this->fuckhtml
+							->getTextContent(
+								$tds[1]
+							);
+					}
+				}
+				
+				if(count($hours) !== 0){
+					
+					$hours = implode("\n", $hours);
+					$table["Hours"] = $hours;
+				}
 				
 				continue;
 			}
@@ -3451,14 +3624,10 @@ class google{
 						$elem
 					)
 				);
-			
-			// reset
-			$this->fuckhtml->load($rhs);
 		}
 		
-		
-		// get sublink elements
-		$sublinks = [];
+		// reset
+		$this->fuckhtml->load($rhs);
 		
 		// get the website div
 		$as =
@@ -3482,6 +3651,28 @@ class google{
 						["href"]
 					)
 				);
+		}else{
+			
+			// get website through button
+			$button =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"ab_button",
+					"a"
+				);
+			
+			if(count($button) !== 0){
+				
+				$sublinks["Website"] =
+					$this->unshiturl(
+						$this->fuckhtml
+						->getTextContent(
+							$button[0]
+							["attributes"]
+							["href"]
+						)
+					);
+			}
 		}
 		
 		// get social media links

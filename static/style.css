@@ -794,6 +794,10 @@ table tr a:last-child{
 	background:var(--1d2021);
 }
 
+.web .wiki-head table td{
+	white-space:pre-line;
+}
+
 .web .wiki-head td, .about table td{
 	padding:4px 7px;
 	vertical-align:middle;
