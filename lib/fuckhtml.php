@@ -240,7 +240,17 @@ class fuckhtml{
 	public function getElementsByFuzzyAttributeValue(string $name, string $value, $collection = null){
 		
 		$elems = $this->getElementsByAttributeName($name, $collection);
-		$value = explode(" ", $value);
+		$value =
+			explode(
+				" ",
+				trim(
+					preg_replace(
+						'/ +/',
+						" ",
+						$value
+					)
+				)
+			);
 		
 		$return = [];
 		

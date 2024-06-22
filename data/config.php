@@ -48,9 +48,9 @@ class config{
 	// Eg. data/captcha/birds/1.png up to 2263.png
 	const CAPTCHA_DATASET = [
 		// example:
-		// ["birds", 2263],
-		// ["fumo_plushies", 1006],
-		// ["minecraft", 848]
+		//["birds", 2263],
+		//["fumo_plushies", 1006],
+		//["minecraft", 848]
 	];
 	
 	// If this regex expression matches on the user agent, it blocks the request
@@ -61,10 +61,10 @@ class config{
 	// Eg: ["x-forwarded-for", "x-via", "forwarded-for", "via"];
 	// Useful for blocking *some* proxies used for botting
 	const FILTERED_HEADER_KEYS = [
-		# "x-forwarded-for",
+		// "x-forwarded-for",
 		"x-cluster-client-ip",
 		"x-client-ip",
-		# "x-real-ip",
+		// "x-real-ip",
 		"client-ip",
 		"real-ip",
 		"forwarded-for",
@@ -113,12 +113,17 @@ class config{
 		"https://search.milivojevic.in.rs",
 		"https://4get.snine.nl",
 		"https://4get.datura.network",
-		"https://4get.neco.lol"
+		"https://4get.neco.lol",
+		"https://4get.lol",
+		"https://4get.ch",
+		"https://4get.edmateo.site",
+		"https://4get.sudovanilla.org",
+		"https://search.mint.lgbt"
 	];
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP

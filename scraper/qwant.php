@@ -360,7 +360,17 @@ class qwant{
 				return $out;
 			}
 			
-			throw new Exception("Server returned an error code: " . $json["data"]["error_code"]);
+			if(isset($json["data"]["error_code"])){
+				
+				switch($json["data"]["error_code"]){
+					
+					case 27:
+						throw new Exception("Qwant returned a captcha");
+						break;
+				}
+			}
+			
+			throw new Exception("Qwant returned an error code: " . $json["data"]["error_code"]);
 		}
 		
 		if(!isset($json["data"]["result"]["items"]["mainline"])){
@@ -488,17 +498,7 @@ class qwant{
 						// detect gibberish results
 						if(
 							$first_iteration &&
-							preg_match(
-								"/^" .
-								preg_quote(
-									$this->trimdots(
-										$result["source"]
-									),
-									"/"
-								) .
-								"/",
-								$result["url"]
-							) !== 1
+							!isset($result["urlPingSuffix"])
 						){
 							
 							throw new Exception("Qwant returned gibberish results");
