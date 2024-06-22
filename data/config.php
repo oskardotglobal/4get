@@ -12,7 +12,7 @@ class config{
 	const SERVER_NAME = "Oskar's 4get";
 	
 	// Will be shown in <meta> tag on home page
-	const SERVER_SHORT_DESCRIPTION = "Faster than SearXNG";
+	const SERVER_SHORT_DESCRIPTION = "Faster than SearXNG AND FUCKING GOOGLE";
 	
 	// Will be shown in server list ping (null for no description)
 	const SERVER_LONG_DESCRIPTION = null;

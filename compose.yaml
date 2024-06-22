@@ -6,14 +6,13 @@ networks:
 
 services:
   app:
-    build: .
+    build: 
+      context: .
+      dockerfile: caddy.Dockerfile
     container_name: fourgor
-    restart: always
-    environment:
-      - FOURGET_VERSION=8
-      - FOURGET_SERVER_NAME=search.oskar.global
+    restart: unless-stopped
     networks:
-      - traefik
+      traefik:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fourget.entrypoints=websecure"
@@ -35,7 +34,12 @@ services:
       - "traefik.http.middlewares.fourget-headers.headers.customresponseheaders.Cache-Control=no-cache, no-store"
       - "traefik.http.middlewares.fourget-headers.headers.customresponseheaders.Pragma=no-cache"
       - "traefik.http.routers.fourget.middlewares=fourget-headers@docker,gzip@file"
-  # mount custom banners and captcha
-  # volumes:
-  #   - ./banners:/var/www/html/4get/banner
-  #   - ./captcha:/var/www/html/4get/data/captcha
+  
+  php-fpm:
+    build: 
+      context: .
+      dockerfile: php-fpm.Dockerfile
+    restart: unless-stopped
+    networks:
+      traefik:
+
