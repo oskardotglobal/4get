@@ -295,6 +295,7 @@ class brave{
 		$html = fread($handle, filesize("scraper/brave.html"));
 		fclose($handle);
 		*/
+		
 		try{
 			$html =
 				$this->get(
@@ -406,15 +407,20 @@ class brave{
 		
 		if(!isset($grep[1])){
 			
-			throw new Exception("Could not get data JS");
+			throw new Exception("Could not grep JavaScript object");
 		}
-			
+		
 		$data =
 			$this->fuckhtml
 			->parseJsObject(
 				$grep[1]
 			);
 		unset($grep);
+		
+		if($data === null){
+			
+			throw new Exception("Failed to decode JavaScript object");
+		}
 		
 		$data = $data[1]["data"]["body"]["response"];
 		
