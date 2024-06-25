@@ -422,6 +422,19 @@ class brave{
 			throw new Exception("Failed to decode JavaScript object");
 		}
 		
+		if(
+			isset($data[2]["data"]["title"]) &&
+			stripos($data[2]["data"]["title"], "PoW Captcha") !== false
+		){
+			
+			throw new Exception("Brave returned a PoW captcha");
+		}
+		
+		if(!isset($data[1]["data"]["body"]["response"])){
+			
+			throw new Exception("Brave did not return a result object");
+		}
+		
 		$data = $data[1]["data"]["body"]["response"];
 		
 		/*
