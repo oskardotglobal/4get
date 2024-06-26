@@ -25,3 +25,4 @@ data/captcha/fumo_plushies/
 data/captcha/minecraft/
 !banner/*default*
 scraper/curlie.html
+icons/*
