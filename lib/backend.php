@@ -75,6 +75,7 @@ class backend{
 				break;
 			
 			case "socks5_hostname":
+			case "socks5a":
 				curl_setopt($curlproc, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5_HOSTNAME);
 				curl_setopt($curlproc, CURLOPT_PROXY, $address . ":" . $port);
 				break;

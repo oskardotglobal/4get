@@ -424,8 +424,6 @@ class fuckhtml{
 				$escape = false;
 			}
 			
-			$lastchar = $json[$i];
-			
 			if(
 				$bracket === false &&
 				$is_close_bracket === false
@@ -436,7 +434,6 @@ class fuckhtml{
 					
 					case "[":
 					case "{":
-						// dont execute whats in "default"
 						$json_out .= $json[$i];
 						break;
 					
