@@ -1,8 +1,0 @@
-:80
-
-root * /srv
-file_server
-php_fastcgi php-fpm:9000
-redir /{path}.php{query} 301
-try_files {path} {path}.php
-
