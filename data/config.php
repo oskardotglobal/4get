@@ -29,7 +29,7 @@ class config{
         // Redirect Minecraft Fandom to new official wiki
         "/^https?:\/\/minecraft.fandom.com\/wiki\/(.*)$/i" => "https://minecraft.wiki/w/$1",
         // Redirect old nix wiki to new nix wiki
-        "/^https?:\/\/nixos.wiki\/(.*)$/i" => "https://wiki.nixos.org/$1",
+        "/^https?:\/\/wiki.nixos.org\/(.*)$/i" => "https://wiki.nixos.org/$1",
     ];
 	
 	// Enable the API?
