@@ -57,7 +57,8 @@ class sc{
 				"Connection: keep-alive",
 				"Sec-Fetch-Dest: empty",
 				"Sec-Fetch-Mode: cors",
-				"Sec-Fetch-Site: same-site"]
+				"Sec-Fetch-Site: same-site",
+				"Priority: u=1"]
 			);
 		}else{
 			
@@ -433,7 +434,8 @@ class sc{
 				$this->get(
 					$proxy,
 					"https://soundcloud.com",
-					[]
+					[],
+					true
 				);
 		}catch(Exception $error){
 			
