@@ -327,9 +327,12 @@ class sc{
 						$description[] = $song["title"];
 					}
 					
-					if(count($description) != 0){
+					if(count($description) !== 0){
 						
 						$description = trim($count . " songs. " . implode(", ", $description));
+					}else{
+						
+						$description = "";
 					}
 					
 					if(
