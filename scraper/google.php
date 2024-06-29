@@ -704,6 +704,43 @@ class google{
 			
 			// reset
 			$this->fuckhtml->load($result_div);
+		}else{
+			
+			// get the "Did you mean?" prompt
+			$taw =
+				$this->fuckhtml
+				->getElementById(
+					"taw"
+				);
+			
+			if($taw){
+				
+				$this->fuckhtml->load($taw);
+				
+				$as =
+					$this->fuckhtml
+					->getElementsByTagName(
+						"a"
+					);
+				
+				if(count($as) !== 0){
+					
+					$text = 
+						$this->fuckhtml
+						->getTextContent(
+							$as[0]
+						);
+					
+					// @TODO implement did_you_mean
+					$out["spelling"] = [
+						"type" => "including",
+						"using" => $search,
+						"correction" => $text
+					];
+				}
+			}
+			
+			$this->fuckhtml->load($result_div);
 		}
 		
 		//
@@ -895,36 +932,10 @@ class google{
 		// get "Related Searches" and "People also search for"
 		//
 		$relateds =
-			array_merge(
-				$this->fuckhtml
-				->getElementsByClassName(
-					$this->getstyle(
-						[
-							"align-items" => "center",
-							"background-color" => "#28292a",
-							"border-radius" => "100px",
-							"box-sizing" => "border-box",
-							"display" => "flex",
-							"max-height" => "none",
-							"min-height" => "48px",
-							"padding-left" => "17px",
-							"padding-right" => "17px",
-							"position" => "relative"
-						]
-					) . " " .
-					$this->getstyle(
-						[
-							"margin-left" => "8px",
-							"margin-right" => "8px"
-						]
-					),
-					"a"
-				),
-				$this->fuckhtml
-				->getElementsByClassName(
-					"wyccme",
-					"div"
-				)
+			$this->fuckhtml
+			->getElementsByClassName(
+				"wyccme",
+				"div"
 			);
 		
 		foreach($relateds as $related){
@@ -1354,7 +1365,7 @@ class google{
 									"font-size" => "12px",
 									"line-height" => "1.34",
 									"display" => "inline-block",
-									"font-family" => "Google Sans,arial,sans-serif",
+									"font-family" => "google sans,arial,sans-serif",
 									"padding-right" => "0",
 									"white-space" => "nowrap"
 								]
@@ -1415,12 +1426,9 @@ class google{
 							->getElementsByClassName(
 								$this->getstyle(
 									[
-										"border-radius" => "10px",
-										"font-family" => "arial,sans-serif-medium,sans-serif",
-										"font-size" => "12px",
-										"line-height" => "16px",
-										"padding-block" => "2px",
-										"padding-inline" => "8px"
+										"background-color" => "rgba(0,0,0,0.6)",
+										"color" => "#fff",
+										"fill" => "#fff"
 									]
 								),
 								"div"
@@ -1432,14 +1440,6 @@ class google{
 								$this->fuckhtml
 								->getTextContent(
 									$duration[0]
-								);
-							
-							// remove duration from description
-							$description[0]["innerHTML"] =
-								str_replace(
-									$duration[0]["outerHTML"],
-									"",
-									$description[0]["innerHTML"]
 								);
 						}
 						
@@ -1979,7 +1979,7 @@ class google{
 					"font-size" => "12px",
 					"line-height" => "1.34",
 					"display" => "inline-block",
-					"font-family" => "Google Sans,arial,sans-serif",
+					"font-family" => "google sans,arial,sans-serif",
 					"padding-right" => "0",
 					"white-space" => "nowrap"
 				]
@@ -2211,7 +2211,7 @@ class google{
 					->getElementsByClassName(
 						$this->getstyle(
 							[
-								"font-family" => "Google Sans,arial,sans-serif",
+								"font-family" => "google sans,arial,sans-serif",
 								"font-size" => "28px",
 								"line-height" => "36px"
 							]
@@ -2801,7 +2801,22 @@ class google{
 				}
 			}
 			
-			// get thumbnail
+			// get heading element
+			$heading =
+				$this->fuckhtml
+				->getElementsByAttributeValue(
+					"role",
+					"heading",
+					"div"
+				);
+			
+			if(count($heading) === 0){
+				
+				// no heading, fuck this.
+				continue;
+			}
+			
+			// get thumbnail before loading heading object
 			$image =
 				$this->fuckhtml
 				->getElementsByAttributeName(
@@ -2822,35 +2837,6 @@ class google{
 					"ratio" => null
 				];
 			}
-			
-			// get title
-			$title =
-				$this->fuckhtml
-				->getElementsByClassName(
-					$this->getstyle(
-						[
-							"font-family" => "arial,sans-serif",
-							"font-size" => "16px",
-							"font-weight" => "400",
-							"line-height" => "24px"
-						]
-					),
-					"div"
-				);
-			
-			if(count($title) === 0){
-				
-				// ?? no title
-				continue;
-			}
-			
-			$title =
-				$this->titledots(
-					$this->fuckhtml
-					->getTextContent(
-						$title[0]
-					)
-				);
 			
 			// get duration
 			$duration_div =
@@ -2907,6 +2893,38 @@ class google{
 					$duration = null;
 				}
 			}
+			
+			// load heading
+			$this->fuckhtml->load($heading[0]);
+			
+			// get title
+			$title =
+				$this->fuckhtml
+				->getElementsByClassName(
+					$this->getstyle(
+						[
+							"font-family" => "arial,sans-serif",
+							"font-size" => "16px",
+							"font-weight" => "400",
+							"line-height" => "24px"
+						]
+					),
+					"div"
+				);
+			
+			if(count($title) === 0){
+				
+				// ?? no title
+				continue;
+			}
+			
+			$title =
+				$this->titledots(
+					$this->fuckhtml
+					->getTextContent(
+						$title[0]
+					)
+				);
 			
 			// get date
 			$date_div =
@@ -3940,7 +3958,7 @@ class google{
 			for($k=0; $k<count($values_regex[1]); $k++){
 				
 				$values[trim($values_regex[1][$k])] =
-					trim($values_regex[2][$k]);
+					strtolower(trim($values_regex[2][$k]));
 			}
 			
 			$names = explode(",", $matches[1][$i]);
@@ -3971,7 +3989,7 @@ class google{
 			
 			foreach($this->styles[":root"] as $key => $value){
 				
-				$this->css_colors[$value] = $key;
+				$this->css_colors[$value] = strtolower($key);
 			}
 		}
 	}
