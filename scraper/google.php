@@ -1412,7 +1412,7 @@ class google{
 									"line-height" => "22px",
 									"overflow" => "hidden",
 									"word-break" => "break-word",
-									"color" => "#bdc1c6"
+									"color" => "#4d5156"
 								]
 							),
 							"div"
@@ -4224,7 +4224,7 @@ class google{
 			throw new Exception("Failed to get HTML");
 		}
 		
-		//$html = file_get_contents("scraper/google-video.html");
+		//$html = file_get_contents("scraper/google.html");
 		
 		$response = $this->parsepage($html, "videos", $search, $proxy, $params);
 		$out = [
