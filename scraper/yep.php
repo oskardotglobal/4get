@@ -252,21 +252,23 @@ class yep{
 		
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
+		// use http2
+		curl_setopt($curlproc, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
 			["User-Agent: " . config::USER_AGENT,
 			"Accept: */*",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip, deflate, br, zstd",
-			"Connection: keep-alive",
-			"DNT: 1",
-			"Priority: u=1",
-			"Origin: https://yep.com",
 			"Referer: https://yep.com/",
+			"Origin: https://yep.com",
+			"DNT: 1",
 			"Connection: keep-alive",
 			"Sec-Fetch-Dest: empty",
 			"Sec-Fetch-Mode: cors",
 			"Sec-Fetch-Site: same-site",
+			"Priority: u=4",
 			"TE: trailers"]
 		);
 		
