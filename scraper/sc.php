@@ -6,6 +6,9 @@ class sc{
 		
 		include "lib/backend.php";
 		$this->backend = new backend("sc");
+		
+		include "lib/fuckhtml.php";
+		$this->fuckhtml = new fuckhtml();
 	}
 	
 	public function getfilters($page){
@@ -25,7 +28,7 @@ class sc{
 		];
 	}
 	
-	private function get($proxy, $url, $get = []){
+	private function get($proxy, $url, $get = [], $web_req = false){
 		
 		$curlproc = curl_init();
 		
@@ -37,19 +40,43 @@ class sc{
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
-		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
-			["User-Agent: " . config::USER_AGENT,
-			"Accept: application/json, text/javascript, */*; q=0.01",
-			"Accept-Language: en-US,en;q=0.5",
-			"Accept-Encoding: gzip",
-			"Referer: https://soundcloud.com/",
-			"Origin: https://soundcloud.com",
-			"DNT: 1",
-			"Connection: keep-alive",
-			"Sec-Fetch-Dest: empty",
-			"Sec-Fetch-Mode: cors",
-			"Sec-Fetch-Site: same-site"]
-		);
+		
+		// use http2
+		curl_setopt($curlproc, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+		
+		if($web_req === false){
+			
+			curl_setopt($curlproc, CURLOPT_HTTPHEADER,
+				["User-Agent: " . config::USER_AGENT,
+				"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+				"Accept-Language: en-US,en;q=0.5",
+				"Accept-Encoding: gzip",
+				"Referer: https://soundcloud.com/",
+				"Origin: https://soundcloud.com",
+				"DNT: 1",
+				"Connection: keep-alive",
+				"Sec-Fetch-Dest: empty",
+				"Sec-Fetch-Mode: cors",
+				"Sec-Fetch-Site: same-site",
+				"Priority: u=1"]
+			);
+		}else{
+			
+			curl_setopt($curlproc, CURLOPT_HTTPHEADER,
+				["User-Agent: " . config::USER_AGENT,
+				"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+				"Accept-Language: en-US,en;q=0.5",
+				"Accept-Encoding: gzip",
+				"DNT: 1",
+				"Connection: keep-alive",
+				"Upgrade-Insecure-Requests: 1",
+				"Sec-Fetch-Dest: document",
+				"Sec-Fetch-Mode: navigate",
+				"Sec-Fetch-Site: cross-site",
+				"Priority: u=1",
+				"TE: trailers"]
+			);
+		}
 		
 		curl_setopt($curlproc, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYHOST, 2);
@@ -300,9 +327,12 @@ class sc{
 						$description[] = $song["title"];
 					}
 					
-					if(count($description) != 0){
+					if(count($description) !== 0){
 						
 						$description = trim($count . " songs. " . implode(", ", $description));
+					}else{
+						
+						$description = "";
 					}
 					
 					if(
@@ -396,13 +426,48 @@ class sc{
 		
 		$token = apcu_fetch("sc_token");
 		
-		if($token === false){
+		if($token !== false){
+			
+			return $token;
+		}
+		
+		// search through all javascript components on the main page
+		try{
+			$html =
+				$this->get(
+					$proxy,
+					"https://soundcloud.com",
+					[],
+					true
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to fetch front page");
+		}
+		
+		$this->fuckhtml->load($html);
+		
+		$scripts =
+			$this->fuckhtml
+			->getElementsByTagName(
+				"script"
+			);
+		
+		foreach($scripts as $script){
+			
+			if(
+				!isset($script["attributes"]["src"]) ||
+				strpos($script["attributes"]["src"], "sndcdn.com") === false
+			){
+				
+				continue;
+			}
 			
 			try{
 				$js =
 					$this->get(
 						$proxy,
-						"https://a-v2.sndcdn.com/assets/0-a901c1e0.js",
+						$script["attributes"]["src"],
 						[]
 					);
 			}catch(Exception $error){
@@ -416,16 +481,15 @@ class sc{
 				$token
 			);
 			
-			if(!isset($token[1])){
+			if(isset($token[1])){
 				
-				throw new Exception("Failed to get search token");
+				apcu_store("sc_token", $token[1]);
+				return $token[1];
+				break;
 			}
-			
-			apcu_store("sc_token", $token[1]);
-			return $token[1];
 		}
 		
-		return $token;
+		throw new Exception("Did not find a Soundcloud token in the Javascript blobs");
 	}
 	
 	private function limitstrlen($text){

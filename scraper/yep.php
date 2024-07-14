@@ -252,21 +252,30 @@ class yep{
 		
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
+		// use http2
+		curl_setopt($curlproc, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+		
+		// set ciphers
+		curl_setopt(
+			$curlproc,
+			CURLOPT_SSL_CIPHER_LIST,
+			"aes_128_gcm_sha_256,chacha20_poly1305_sha_256,aes_256_gcm_sha_384,ecdhe_ecdsa_aes_128_gcm_sha_256,ecdhe_rsa_aes_128_gcm_sha_256,ecdhe_ecdsa_chacha20_poly1305_sha_256,ecdhe_rsa_chacha20_poly1305_sha_256,ecdhe_ecdsa_aes_256_gcm_sha_384,ecdhe_rsa_aes_256_gcm_sha_384,ecdhe_ecdsa_aes_256_sha,ecdhe_ecdsa_aes_128_sha,ecdhe_rsa_aes_128_sha,ecdhe_rsa_aes_256_sha,rsa_aes_128_gcm_sha_256,rsa_aes_256_gcm_sha_384,rsa_aes_128_sha,rsa_aes_256_sha"
+		);
+		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
 			["User-Agent: " . config::USER_AGENT,
 			"Accept: */*",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip, deflate, br, zstd",
-			"Connection: keep-alive",
-			"DNT: 1",
-			"Priority: u=1",
-			"Origin: https://yep.com",
 			"Referer: https://yep.com/",
+			"Origin: https://yep.com",
+			"DNT: 1",
 			"Connection: keep-alive",
 			"Sec-Fetch-Dest: empty",
 			"Sec-Fetch-Mode: cors",
 			"Sec-Fetch-Site: same-site",
+			"Priority: u=4",
 			"TE: trailers"]
 		);
 		
