@@ -228,7 +228,7 @@ class startpage{
 				throw new Exception("Failed to fetch search page");
 			}
 			
-			$is_first_page = false;
+			$get_instant_answer = false;
 			
 		}else{
 			
@@ -237,9 +237,17 @@ class startpage{
 			$params = [
 				"query" => $get["s"],
 				"cat" => "web",
-				"pl" => "opensearch",
-				"qadf" => $get["nsfw"] == "yes" ? "none" : "heavy"
+				"pl" => "opensearch"
 			];
+			
+			if($get["nsfw"] == "no"){
+				
+				$params["qadf"] = "heavy";
+				$get_instant_answer = false;
+			}else{
+				
+				$get_instant_answer = true;
+			}
 			
 			if($get["country"] !== "any"){
 				
@@ -263,8 +271,6 @@ class startpage{
 			}
 			
 			//$html = file_get_contents("scraper/startpage.html");
-			
-			$is_first_page = true;
 		}
 		
 		if(
@@ -456,7 +462,7 @@ class startpage{
 		// parse instant answers
 		if(
 			$get["extendedsearch"] == "yes" &&
-			$is_first_page === true
+			$get_instant_answer === true
 		){
 			
 			// https://www.startpage.com/sp/qi?qimsn=ex&sxap=%2Fv1%2Fquery&sc=BqZ3inqrAgF701&sr=1
