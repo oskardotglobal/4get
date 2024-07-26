@@ -4138,7 +4138,7 @@ class google{
 		
 		if($get["npt"]){
 			
-			[$params, $proxy] = $this->backend->get($get["npt"], "web");
+			[$params, $proxy] = $this->backend->get($get["npt"], "video");
 			$params = json_decode($params, true);
 			
 			$search = $params["q"];

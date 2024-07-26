@@ -929,6 +929,7 @@ class frontend{
 						"brave" => "Brave",
 						"yandex" => "Yandex",
 						"google" => "Google",
+						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
 						"greppr" => "Greppr",
