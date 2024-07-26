@@ -260,7 +260,7 @@ h3,h4,h5,h6{
 	height:100%;
 	background:var(--282828);
 	display:block;
-	object-fit:contain;
+	object-fit:fill;
 }
 
 .home #center{
