@@ -26,3 +26,5 @@ data/captcha/minecraft/
 !banner/*default*
 scraper/curlie.html
 icons/*
+.idea
+
