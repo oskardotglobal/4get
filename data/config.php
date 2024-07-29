@@ -120,7 +120,7 @@ class config{
 	const PROXY_DDG = false; // duckduckgo
 	const PROXY_BRAVE = false;
 	const PROXY_FB = false; // facebook
-	const PROXY_GOOGLE = "1vpn";
+	const PROXY_GOOGLE = false;
 	const PROXY_STARTPAGE = false;
 	const PROXY_QWANT = false;
 	const PROXY_MARGINALIA = false;
