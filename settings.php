@@ -80,6 +80,10 @@ $settings = [
 						"text" => "Google"
 					],
 					[
+						"value" => "startpage",
+						"text" => "Startpage"
+					],
+					[
 						"value" => "qwant",
 						"text" => "Qwant"
 					],
