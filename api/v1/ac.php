@@ -18,7 +18,8 @@ class autocomplete{
 			"yep" => "https://api.yep.com/ac/?query={searchTerms}",
 			"marginalia" => "https://search.marginalia.nu/suggest/?partial={searchTerms}",
 			"yt" => "https://suggestqueries-clients6.youtube.com/complete/search?client=youtube&q={searchTerms}",
-			"sc" => ""
+			"sc" => "",
+			"startpage" => "https://www.startpage.com/suggestions?q={searchTerms}&format=opensearch&segment=startpage.defaultffx&lui=english"
 		];
 		
 		/*

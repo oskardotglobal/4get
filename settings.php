@@ -184,6 +184,10 @@ $settings = [
 						"text" => "Google"
 					],
 					[
+						"value" => "startpage",
+						"text" => "Startpage"
+					],
+					[
 						"value" => "qwant",
 						"text" => "Qwant"
 					],
@@ -230,6 +234,10 @@ $settings = [
 						"text" => "Google"
 					],
 					[
+						"value" => "startpage",
+						"text" => "Startpage"
+					],
+					[
 						"value" => "qwant",
 						"text" => "Qwant"
 					],
@@ -250,6 +258,10 @@ $settings = [
 					[
 						"value" => "google",
 						"text" => "Google"
+					],
+					[
+						"value" => "startpage",
+						"text" => "Startpage"
 					],
 					[
 						"value" => "qwant",

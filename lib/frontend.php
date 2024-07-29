@@ -945,6 +945,7 @@ class frontend{
 						"yandex" => "Yandex",
 						"brave" => "Brave",
 						"google" => "Google",
+						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
 						//"pinterest" => "Pinterest",
@@ -964,6 +965,7 @@ class frontend{
 						"brave" => "Brave",
 						"yandex" => "Yandex",
 						"google" => "Google",
+						"startpage" => "Startpage",
 						"qwant" => "Qwant"
 					]
 				];
@@ -976,6 +978,7 @@ class frontend{
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
 						"google" => "Google",
+						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
 						"mojeek" => "Mojeek"

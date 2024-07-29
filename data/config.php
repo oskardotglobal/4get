@@ -11,7 +11,7 @@ class config{
 	const SERVER_NAME = "4get";
 	
 	// Will be shown in <meta> tag on home page
-	const SERVER_SHORT_DESCRIPTION = "They live in our walls!";
+	const SERVER_SHORT_DESCRIPTION = "4get is a proxy search engine that doesn't suck.";
 	
 	// Will be shown in server list ping (null for no description)
 	const SERVER_LONG_DESCRIPTION = null;
@@ -111,7 +111,7 @@ class config{
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP
@@ -120,7 +120,7 @@ class config{
 	const PROXY_DDG = false; // duckduckgo
 	const PROXY_BRAVE = false;
 	const PROXY_FB = false; // facebook
-	const PROXY_GOOGLE = false;
+	const PROXY_GOOGLE = "1vpn";
 	const PROXY_STARTPAGE = false;
 	const PROXY_QWANT = false;
 	const PROXY_MARGINALIA = false;

@@ -88,7 +88,7 @@ class startpage{
 						]
 					],
 					"time" => [ // with_date
-						"display" => "Time fetched",
+						"display" => "Time posted",
 						"option" => [
 							"any" => "Any time",
 							"d" => "Past 24 hours",
@@ -106,6 +106,141 @@ class startpage{
 					]
 				];
 				break;
+			
+			case "images":
+				return [
+					"nsfw" => [ // qadf
+						"display" => "NSFW",
+						"option" => [
+							"yes" => "Yes", // qadf=none
+							"no" => "No" // qadf=heavy
+						]
+					],
+					"size" => [ // flimgsize
+						"display" => "Size",
+						"option" => [
+							"any" => "Any size",
+							"Small" => "Small",
+							"Medium" => "Medium",
+							"Large" => "Large",
+							"Wallpaper" => "Wallpaper",
+							// from here, image-size-select, var prefix = isz:lt,islt:
+							"qsvgs" => "Larger than 400x300",
+							"vga" => "Larger than 640x480",
+							"svga" => "Larger than 800x600",
+							"xga" => "Larger than 1024x768",
+							"qsvgs" => "Larger than 400x300",
+							"2mp" => "Larger than 2 MP (1600x1200)",
+							"4mp" => "Larger than 4 MP (2272x1704)",
+							"6mp" => "Larger than 6 MP (2816x2112)",
+							"8mp" => "Larger than 8 MP (3264x2448)",
+							"10mp" => "Larger than 10 MP (3648x2736)",
+							"12mp" => "Larger than 12 MP (4096x3072)",
+							"15mp" => "Larger than 15 MP (4480x3360)",
+							"20mp" => "Larger than 20 MP (5120x3840)",
+							"40mp" => "Larger than 40 MP (7216x5412)",
+							"70mp" => "Larger than 70 MP (9600x7200)"
+						]
+					],
+					"color" => [ // flimgcolor
+						"display" => "Color",
+						"option" => [
+							"any" => "Any color",
+							// from here, var prefix = ic:
+							"color" => "Color only",
+							"bnw" => "Black & white", // set to "gray"
+							// from here, var prefix = ic:specific,isc:
+							"red" => "Red",
+							"orange" => "Orange",
+							"yellow" => "Yellow",
+							"green" => "Green",
+							"teal" => "Teal",
+							"blue" => "Blue",
+							"purple" => "Purple",
+							"pink" => "Pink",
+							"white" => "White",
+							"gray" => "Gray",
+							"black" => "Black",
+							"brown" => "Brown"
+						]
+					],
+					"type" => [ // flimgtype
+						"display" => "Type",
+						"option" => [
+							"any" => "Any type",
+							"AnimatedGif" => "Animated GIF",
+							"Clipart" => "Clip Art",
+							"Line" => "Line Drawing",
+							"Photo" => "Photograph",
+							"Transparent" => "Transparent Background"
+						]
+					],
+					"license" => [ // flimglicense
+						"display" => "License",
+						"option" => [
+							"any" => "Any license",
+							"p" => "Public domain",
+							"s" => "Free to share",
+							"sc" => "Free to share commercially",
+							"m" => "Free to modify",
+							"mc" => "Free to modify commercially"
+						]
+					]
+				];
+				break;
+			
+			case "videos":
+				return [
+					"nsfw" => [ // qadf
+						"display" => "NSFW",
+						"option" => [
+							"yes" => "Yes", // qadf=none
+							"no" => "No" // qadf=heavy
+						]
+					],
+					"sort" => [
+						"display" => "Sort by",
+						"option" => [
+							"relevance" => "Most relevant",
+							"popular" => "Most popular",
+							"recent" => "Most recent"
+						]
+					],
+					"duration" => [ // with_duration
+						"display" => "Duration",
+						"option" => [
+							"any" => "Any duration",
+							"short" => "Short",
+							"medium" => "Medium",
+							"long" => "Long"
+						]
+					]
+				];
+				break;
+			
+			case "news":
+				return [
+					"nsfw" => [ // qadf
+						"display" => "NSFW",
+						"option" => [
+							"yes" => "Yes", // qadf=none
+							"no" => "No" // qadf=heavy
+						]
+					],
+					"time" => [ // with_date
+						"display" => "Time posted",
+						"option" => [
+							"any" => "Any time",
+							"d" => "Past 24 hours",
+							"w" => "Past week",
+							"m" => "Past month"
+						]
+					]
+				];
+				break;
+				
+				//preferences=date_timeEEEworldN1Ndisable_family_filterEEE1N1Ndisable_open_in_new_windowEEE0N1Nenable_post_methodEEE1N1Nenable_proxy_safety_suggestEEE0N1Nenable_stay_controlEEE0N1Ninstant_answersEEE1N1Nlang_homepageEEEs%2Fdevice%2FenN1NlanguageEEEazerbaijaniN1Nlanguage_uiEEEenglishN1Nnum_of_resultsEEE20N1Nsearch_results_regionEEEallN1NsuggestionsEEE1N1Nwt_unitEEEcelsius; Domain=startpage.com; Expires=Mon, 28 Oct 2024 20:21:58 GMT; Secure; Path=/
+				//preferences=date_timeEEEworldN1Ndisable_family_filterEEE1N1Ndisable_open_in_new_windowEEE0N1Nenable_post_methodEEE1N1Nenable_proxy_safety_suggestEEE0N1Nenable_stay_controlEEE0N1Ninstant_answersEEE1N1Nlang_homepageEEEs%2Fdevice%2FenN1NlanguageEEEenglishN1Nlanguage_uiEEEenglishN1Nnum_of_resultsEEE20N1Nsearch_results_regionEEEallN1NsuggestionsEEE1N1Nwt_unitEEEcelsius; Domain=startpage.com; Expires=Mon, 28 Oct 2024 20:22:52 GMT; Secure; Path=/
 		}
 	}
 	
@@ -291,6 +426,8 @@ class startpage{
 			throw new Exception("Failed to decode JSON");
 		}
 		
+		//print_r($json);
+		
 		$out = [
 			"status" => "ok",
 			"spelling" => [
@@ -308,40 +445,7 @@ class startpage{
 		];
 		
 		// get npt
-		foreach($json["render"]["presenter"]["pagination"]["pages"] as $page){
-			
-			if($page["name"] == "Next"){
-				
-				parse_str(
-					explode(
-						"?",
-						$page["url"],
-						2
-					)[1],
-					$str
-				);
-				
-				$out["npt"] =
-					$this->backend->store(
-						http_build_query(
-							[
-								"lui" => "english",
-								"language" => "english",
-								"query" => $str["q"],
-								"cat" => "web",
-								"sc" => $str["sc"],
-								"t" => "device",
-								"segment" => "startpage.udog",
-								"page" => $str["page"]
-							]
-						),
-						"web",
-						$proxy
-					);
-				
-				break;
-			}
-		}
+		$out["npt"] = $this->parse_npt($json, "web", $proxy);
 		
 		foreach($json["render"]["presenter"]["regions"]["mainline"] as $category){
 			
@@ -456,6 +560,86 @@ class startpage{
 						];
 					}
 					break;
+				
+				case "spellsuggest-google":
+					$out["spelling"] =
+						[
+							"type" => "including",
+							"using" => $json["render"]["query"],
+							"correction" => $category["results"][0]["query"]
+						];
+					break;
+				
+				case "dictionary-qi":
+					foreach($category["results"] as $result){
+						
+						$answer = [
+							"title" => $result["word"],
+							"description" => [],
+							"url" => null,
+							"thumb" => null,
+							"table" => [],
+							"sublink" => []
+						];
+						
+						foreach($result["lexical_categories"] as $lexic_type => $definitions){
+							
+							$answer["description"][] = [
+								"type" => "title",
+								"value" => $lexic_type
+							];
+							
+							$i = 0;
+							
+							foreach($definitions as $definition){
+								
+								$text_definition = trim($definition["definition"]);
+								$text_example = trim($definition["example"]);
+								$text_synonyms = implode(", ", $definition["synonyms"]);
+								
+								if($text_definition != ""){
+									
+									$i++;
+									
+									$c = count($answer["description"]) - 1;
+									if(
+										$c !== 0 &&
+										$answer["description"][$c]["type"] == "text"
+									){
+										
+										$answer["description"][$c]["value"] .=
+											"\n\n" . $i . ". " . $text_definition;
+										
+									}else{
+										
+										$answer["description"][] = [
+											"type" => "text",
+											"value" => $i . ". " . $text_definition
+										];
+									}
+								}
+								
+								if($text_example != ""){
+									
+									$answer["description"][] = [
+										"type" => "quote",
+										"value" => $text_example
+									];
+								}
+								
+								if($text_synonyms != ""){
+									
+									$answer["description"][] = [
+										"type" => "text",
+										"value" => "Synonyms: " . $text_synonyms
+									];
+								}
+							}
+						}
+						
+						$out["answer"][] = $answer;
+					}
+					break;
 			}
 		}
 		
@@ -568,9 +752,11 @@ class startpage{
 					$answer["description"][] = [
 						"type" => "text",
 						"value" =>
-							$this->fuckhtml
-							->getTextContent(
-								$description[0]
+							html_entity_decode(
+								$this->fuckhtml
+								->getTextContent(
+									$description[0]
+								)
 							)
 					];
 				}
@@ -772,6 +958,482 @@ class startpage{
 		return $out;
 	}
 	
+	public function image($get){
+		
+		if($get["npt"]){
+			
+			[$post, $proxy] = $this->backend->get($get["npt"], "images");
+			
+			try{
+				$html = $this->get(
+					$proxy,
+					"https://www.startpage.com/sp/search",
+					$post,
+					true
+				);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
+			
+		}else{
+			
+			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			try{
+				
+				$proxy = $this->backend->get_ip();
+				
+				$params = [
+					"query" => $get["s"],
+					"cat" => "images",
+					"pl" => "opensearch"
+				];
+				
+				if($get["nsfw"] == "no"){
+					
+					$params["qadf"] = "heavy";
+				}
+				
+				if($get["size"] != "any"){
+					
+					if(
+						$get["size"] == "Small" ||
+						$get["size"] == "Medium" ||
+						$get["size"] == "Large" ||
+						$get["size"] == "Wallpaper"
+					){
+						
+						$params["flimgsize"] = $get["size"];
+					}else{
+						
+						$params["image-size-select"] = "isz:lt,islt:" . $get["size"];
+					}
+				}
+				
+				if($get["color"] != "any"){
+					
+					if($get["color"] == "color"){
+						
+						$params["flimgcolor"] = "ic:color";
+					}elseif($get["color"] == "bnw"){
+						
+						$params["flimgcolor"] = "ic:gray";
+					}else{
+						
+						$params["flimgcolor"] = "ic:specific,isc:" . $get["color"];
+					}
+				}
+				
+				if($get["type"] != "any"){
+					
+					$params["flimgtype"] = $get["type"];
+				}
+				
+				if($get["license"] != "any"){
+					
+					$params["flimglicense"] = $get["license"];
+				}
+				
+				try{
+					$html = $this->get(
+						$proxy,
+						"https://www.startpage.com/sp/search",
+						$params
+					);
+				}catch(Exception $error){
+					
+					throw new Exception("Failed to fetch search page");
+				}
+				//$html = file_get_contents("scraper/startpage.html");
+				
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
+		}
+		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"image" => []
+		];
+		
+		if(
+			preg_match(
+				'/React\.createElement\(UIStartpage\.AppSerpImages, ?(.+)\),$/m',
+				$html,
+				$matches
+			) === 0
+		){
+			
+			throw new Exception("Failed to grep JSON object");
+		}
+		
+		$json = json_decode($matches[1], true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON object");
+		}
+		
+		// get npt
+		$out["npt"] = $this->parse_npt($json, "images", $proxy);
+		
+		// get images
+		foreach($json["render"]["presenter"]["regions"]["mainline"] as $category){
+			
+			if($category["display_type"] != "images-bing"){
+				
+				// ignore ads and !! suggestions !! @todo
+				continue;
+			}
+			
+			foreach($category["results"] as $image){
+				
+				$out["image"][] = [
+					"title" => $this->titledots($image["title"]),
+					"source" => [
+						[
+							"url" => $this->unshitimage($image["clickUrl"]),
+							"width" => (int)$image["width"],
+							"height" => (int)$image["height"]
+						],
+						[
+							"url" => $this->unshitimage($image["thumbnailUrl"]),
+							"width" => (int)$image["thumbnailWidth"],
+							"height" => (int)$image["thumbnailHeight"]
+						]
+					],
+					"url" => $image["altClickUrl"]
+				];
+			}
+		}
+		
+		return $out;
+	}
+	
+	public function video($get){
+		
+		if($get["npt"]){
+			
+			[$post, $proxy] = $this->backend->get($get["npt"], "videos");
+			
+			try{
+				$html = $this->get(
+					$proxy,
+					"https://www.startpage.com/sp/search",
+					$post,
+					true
+				);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
+			
+		}else{
+			
+			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			try{
+				
+				$proxy = $this->backend->get_ip();
+				
+				$params = [
+					"query" => $get["s"],
+					"cat" => "video",
+					"pl" => "opensearch"
+				];
+				
+				if($get["nsfw"] == "no"){
+					
+					$params["qadf"] = "heavy";
+				}
+				
+				if($get["sort"] != "relevance"){
+					
+					$params["sort_by"] = $get["sort"];
+				}
+				
+				if($get["duration"] != "any"){
+					
+					$params["with_duration"] = $get["duration"];
+				}
+				
+				try{
+					$html = $this->get(
+						$proxy,
+						"https://www.startpage.com/sp/search",
+						$params
+					);
+				}catch(Exception $error){
+					
+					throw new Exception("Failed to fetch search page");
+				}
+				//$html = file_get_contents("scraper/startpage.html");
+				
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
+		}
+		
+		if(
+			preg_match(
+				'/React\.createElement\(UIStartpage\.AppSerpVideos, ?(.+)\),$/m',
+				$html,
+				$matches
+			) === 0
+		){
+			
+			throw new Exception("Failed to get JSON object");
+		}
+		
+		$json = json_decode($matches[1], true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON object");
+		}
+		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"video" => [],
+			"author" => [],
+			"livestream" => [],
+			"playlist" => [],
+			"reel" => []
+		];
+		
+		// get npt
+		$out["npt"] = $this->parse_npt($json, "video", $proxy);
+		
+		// get results
+		foreach($json["render"]["presenter"]["regions"]["mainline"] as $category){
+			
+			if($category["display_type"] == "video-youtube"){
+				
+				foreach($category["results"] as $video){
+					
+					if(
+						isset($video["thumbnailUrl"]) &&
+						$video["thumbnailUrl"] !== null
+					){
+						
+						$thumb = [
+							"ratio" => "16:9",
+							"url" => $this->unshitimage($video["thumbnailUrl"])
+						];
+					}else{
+						
+						$thumb = [
+							"ratio" => null,
+							"url" => null
+						];
+					}
+					
+					$out["video"][] = [
+						"title" => $video["title"],
+						"description" => $this->limitstrlen($video["description"]),
+						"author" => [
+							"name" => $video["channelTitle"],
+							"url" => null,
+							"avatar" => null
+						],
+						"date" => strtotime($video["publishDate"]),
+						"duration" => $this->hms2int($video["duration"]),
+						"views" => (int)$video["viewCount"],
+						"thumb" => $thumb,
+						"url" => $video["clickUrl"]
+					];
+				}
+			}
+		}
+		
+		return $out;
+	}
+	
+	public function news($get){
+		
+		if($get["npt"]){
+			
+			[$post, $proxy] = $this->backend->get($get["npt"], "news");
+			
+			try{
+				$html = $this->get(
+					$proxy,
+					"https://www.startpage.com/sp/search",
+					$post,
+					true
+				);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
+			
+		}else{
+			
+			$search = $get["s"];
+			if(strlen($search) === 0){
+				
+				throw new Exception("Search term is empty!");
+			}
+			
+			try{
+				
+				$proxy = $this->backend->get_ip();
+				
+				$params = [
+					"query" => $get["s"],
+					"cat" => "news",
+					"pl" => "opensearch"
+				];
+								
+				if($get["nsfw"] == "no"){
+					
+					$params["qadf"] = "heavy";
+				}
+				
+				if($get["time"] != "any"){
+					
+					$params["with_date"] = $get["time"];
+				}
+				
+				try{
+					$html = $this->get(
+						$proxy,
+						"https://www.startpage.com/sp/search",
+						$params
+					);
+				}catch(Exception $error){
+					
+					throw new Exception("Failed to fetch search page");
+				}
+				//$html = file_get_contents("scraper/startpage.html");
+				
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
+		}
+		
+		if(
+			preg_match(
+				'/React\.createElement\(UIStartpage\.AppSerpNews, ?(.+)\),$/m',
+				$html,
+				$matches
+			) === 0
+		){
+			
+			throw new Exception("Failed to get JSON object");
+		}
+		
+		$json = json_decode($matches[1], true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON object");
+		}
+		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"news" => []
+		];
+		
+		// get npt
+		$out["npt"] = $this->parse_npt($json, "news", $proxy);
+		
+		foreach($json["render"]["presenter"]["regions"]["mainline"] as $category){
+			
+			if($category["display_type"] != "news-bing"){
+				
+				// unsupported category
+				continue;
+			}
+			
+			foreach($category["results"] as $news){
+				
+				if(
+					isset($news["thumbnailUrl"]) &&
+					$news["thumbnailUrl"] !== null
+				){
+					
+					$thumb = [
+						"ratio" => "16:9",
+						"url" => $this->unshitimage($news["thumbnailUrl"])
+					];
+				}else{
+					
+					$thumb = [
+						"ratio" => null,
+						"url" => null
+					];
+				}
+				
+				$out["news"][] = [
+					"title" => $this->titledots($this->remove_penguins($news["title"])),
+					"author" => $news["source"],
+					"description" => $this->titledots($this->remove_penguins($news["description"])),
+					"date" => (int)substr((string)$news["date"], 0, -3),
+					"thumb" => $thumb,
+					"url" => $news["clickUrl"]
+				];
+			}
+		}
+		
+		return $out;
+	}
+	
+	private function parse_npt($json, $pagetype, $proxy){
+		
+		foreach($json["render"]["presenter"]["pagination"]["pages"] as $page){
+			
+			if($page["name"] == "Next"){
+				
+				parse_str(
+					explode(
+						"?",
+						$page["url"],
+						2
+					)[1],
+					$str
+				);
+				
+				return
+					$this->backend->store(
+						http_build_query(
+							[
+								"lui" => "english",
+								"language" => "english",
+								"query" => $str["q"],
+								"cat" => $pagetype,
+								"sc" => $str["sc"],
+								"t" => "device",
+								"segment" => "startpage.udog",
+								"page" => $str["page"]
+							]
+						),
+						$pagetype,
+						$proxy
+					);
+				
+				break;
+			}
+		}
+		
+		return null;
+	}
+	
 	private function unshitimage($url){
 		
 		$query = parse_url($url, PHP_URL_QUERY);
@@ -789,14 +1451,79 @@ class startpage{
 					)[0];
 			}
 			
+			if(
+				strpos($query["piurl"], "bing.net/") ||
+				strpos($query["piurl"], "bing.com/")
+			){
+				
+				return
+					explode(
+						"&",
+						$query["piurl"],
+						2
+					)[0];
+			}
+			
 			return $query["piurl"];
 		}
 		
 		return $url;
 	}
 	
+	private function limitstrlen($text){
+		
+		return
+			explode(
+				"\n",
+				wordwrap(
+					str_replace(
+						["\n\r", "\r\n", "\n", "\r"],
+						" ",
+						$text
+					),
+					300,
+					"\n"
+				),
+				2
+			)[0];
+	}
+	
 	private function titledots($title){
 		
 		return trim($title, " .\t\n\r\0\x0B…");
+	}
+	
+	private function hms2int($time){
+		
+		$parts = explode(":", $time, 3);
+		$time = 0;
+		
+		if(count($parts) === 3){
+			
+			// hours
+			$time = $time + ((int)$parts[0] * 3600);
+			array_shift($parts);
+		}
+		
+		if(count($parts) === 2){
+			
+			// minutes
+			$time = $time + ((int)$parts[0] * 60);
+			array_shift($parts);
+		}
+		
+		// seconds
+		$time = $time + (int)$parts[0];
+		
+		return $time;
+	}
+	
+	private function remove_penguins($text){
+		
+		return str_replace(
+			["", ""],
+			"",
+			$text
+		);
 	}
 }

@@ -6,7 +6,7 @@
 ## About 4get
 https://4get.ca/about
 
-## Try it out
+## Official instance
 https://4get.ca
 
 ## Totally unbiased comparison between alternatives
@@ -35,8 +35,9 @@ tl;dr the best way to actually browse for shit.
 | DuckDuckGo | DuckDuckGo   | YouTube    | DuckDuckGo | Soundcloud | Brave         |
 | Brave      | Brave        | DuckDuckGo | Brave      |            | DuckDuckGo    |
 | Yandex     | Yandex       | Brave      | Google     |            | Yandex        |
-| Google     | Google       | Yandex     | Qwant      |            | Google        |
-| Qwant      | Qwant        | Google     | Mojeek     |            | Qwant         |
+| Google     | Google       | Yandex     | Startpage  |            | Google        |
+| Startpage  | Startpage    | Google     | Qwant      |            | Startpage     |
+| Qwant      | Qwant        | Startpage  | Mojeek     |            | Qwant         |
 | Yep        | Yep          | Qwant      |            |            | Yep           |
 | Greppr     | Imgur        |            |            |            | Marginalia    |
 | Crowdview  | FindThatMeme |            |            |            | YouTube       |
@@ -51,3 +52,6 @@ Refer to the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/"
 
 ## Contact
 Shit breaks all the time but I repair it all the time too... Email me here: <b>will (at) lolcat.ca</b> or create an issue.
+
+## License
+AGPL
