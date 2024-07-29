@@ -408,6 +408,8 @@ class startpage{
 			//$html = file_get_contents("scraper/startpage.html");
 		}
 		
+		$this->detect_captcha($html);
+		
 		if(
 			preg_match(
 				'/React\.createElement\(UIStartpage\.AppSerpWeb, ?(.+)\),$/m',
@@ -1057,6 +1059,8 @@ class startpage{
 			}
 		}
 		
+		$this->detect_captcha($html);
+		
 		$out = [
 			"status" => "ok",
 			"npt" => null,
@@ -1185,6 +1189,8 @@ class startpage{
 				throw new Exception("Failed to fetch search page");
 			}
 		}
+		
+		$this->detect_captcha($html);
 		
 		if(
 			preg_match(
@@ -1325,6 +1331,8 @@ class startpage{
 				throw new Exception("Failed to fetch search page");
 			}
 		}
+		
+		$this->detect_captcha($html);
 		
 		if(
 			preg_match(
@@ -1525,5 +1533,47 @@ class startpage{
 			"",
 			$text
 		);
+	}
+	
+	private function detect_captcha($html){
+		
+		$this->fuckhtml->load($html);
+		
+		$title =
+			$this->fuckhtml
+			->getElementsByTagName(
+				"title"
+			);
+		
+		if(
+			count($title) !== 0 &&
+			$title[0]["innerHTML"] == "Redirecting..."
+		){
+			
+			// check if it's a captcha
+			$as =
+				$this->fuckhtml
+				->getElementsByTagName(
+					"a"
+				);
+			
+			foreach($as as $a){
+				
+				if(
+					strpos(
+						$this->fuckhtml
+						->getTextContent(
+							$a["innerHTML"]
+						),
+						"https://www.startpage.com/sp/captcha"
+					) !== false
+				){
+					
+					throw new Exception("Startpage returned a captcha");
+				}
+			}
+			
+			throw new Exception("Startpage redirected the scraper to an unhandled page");
+		}
 	}
 }
