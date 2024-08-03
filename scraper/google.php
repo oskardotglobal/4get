@@ -799,128 +799,147 @@ class google{
 					$title = "Notice";
 				}
 				
-				$description = [];
-				
-				$as =
+				$div =
 					$this->fuckhtml
 					->getElementsByTagName(
-						"a"
+						"div"
 					);
 				
-				if(count($as) !== 0){
+				// probe for related searches div, if found, ignore it cause its shit
+				$probe =
+					$this->fuckhtml
+					->getElementsByAttributeValue(
+						"role",
+						"list",
+						$div
+					);
+				
+				// also probe for children
+				if(count($probe) === 0){
 					
-					$first = true;
-					
-					foreach($as as $a){
-						
-						$text_link =
-							$this->fuckhtml
-							->getTextContent(
-								$a
-							);
-						
-						if(stripos($text_link, "repeat the search") !== false){
-							
-							$last_page = true;
-							break 2;
-						}
-						
-						$parts =
-							explode(
-								$a["outerHTML"],
-								$card["innerHTML"],
-								2
-							);
-						
-						$card["innerHTML"] = $parts[1];
-						
-						$value =
-							preg_replace(
-								'/ +/',
-								" ",
-								$this->fuckhtml
-								->getTextContent(
-									$parts[0],
-									false,
-									false
-								)
-							);
-						
-						if(strlen(trim($value)) !== 0){
-														
-							$description[] = [
-								"type" => "text",
-								"value" => $value
-							];
-							
-							if($first){
-								
-								$description[0]["value"] =
-									ltrim($description[0]["value"]);
-							}
-						}
-						
-						$first = false;
-						
-						$description[] = [
-							"type" => "link",
-							"url" =>
-								$this->fuckhtml
-								->getTextContent(
-									$a["attributes"]
-									["href"]
-								),
-							"value" => $text_link
-						];
-					}
-					
-					$text =
+					$probe =
 						$this->fuckhtml
-						->getTextContent(
-							$card["innerHTML"],
-							false,
-							false
+						->getElementsByClassName(
+							$this->getstyle(
+								[
+									"flex-shrink" => "0",
+									"-moz-box-flex" => "0",
+									"flex-grow" => "0",
+									"overflow" => "hidden"
+								]
+							),
+							$div
 						);
-					
-					if(strlen(trim($text)) !== 0){
-						
-						$description[] = [
-							"type" => "text",
-							"value" =>
-								rtrim(
-									$text
-								)
-						];
-					}
-					
-				}else{
-					
-					// @TODO: Check if this ever gets populated without giving me garbage
-					/*
-					$text =
-						$this->fuckhtml
-						->getTextContent(
-							$card
-						);
-					
-					if($text != ""){
-						$description[] = [
-							"type" => "text",
-							"value" => $text
-						];
-					}*/
 				}
 				
-				if(count($description) !== 0){
+				if(count($probe) === 0){
 					
-					$out["answer"][] = [
-						"title" => $title,
-						"description" => $description,
-						"url" => null,
-						"thumb" => null,
-						"table" => [],
-						"sublink" => []
-					];
+					$description = [];
+					
+					$as =
+						$this->fuckhtml
+						->getElementsByTagName(
+							"a"
+						);
+					
+					if(count($as) !== 0){
+						
+						$first = true;
+						
+						foreach($as as $a){
+							
+							$text_link =
+								$this->fuckhtml
+								->getTextContent(
+									$a
+								);
+							
+							if(stripos($text_link, "repeat the search") !== false){
+								
+								$last_page = true;
+								break 2;
+							}
+							
+							$parts =
+								explode(
+									$a["outerHTML"],
+									$card["innerHTML"],
+									2
+								);
+							
+							$card["innerHTML"] = $parts[1];
+							
+							$value =
+								preg_replace(
+									'/ +/',
+									" ",
+									$this->fuckhtml
+									->getTextContent(
+										$parts[0],
+										false,
+										false
+									)
+								);
+							
+							if(strlen(trim($value)) !== 0){
+															
+								$description[] = [
+									"type" => "text",
+									"value" => $value
+								];
+								
+								if($first){
+									
+									$description[0]["value"] =
+										ltrim($description[0]["value"]);
+								}
+							}
+							
+							$first = false;
+							
+							$description[] = [
+								"type" => "link",
+								"url" =>
+									$this->fuckhtml
+									->getTextContent(
+										$a["attributes"]
+										["href"]
+									),
+								"value" => $text_link
+							];
+						}
+						
+						$text =
+							$this->fuckhtml
+							->getTextContent(
+								$card["innerHTML"],
+								false,
+								false
+							);
+						
+						if(strlen(trim($text)) !== 0){
+							
+							$description[] = [
+								"type" => "text",
+								"value" =>
+									rtrim(
+										$text
+									)
+							];
+						}
+					}
+					
+					if(count($description) !== 0){
+						
+						$out["answer"][] = [
+							"title" => $title,
+							"description" => $description,
+							"url" => null,
+							"thumb" => null,
+							"table" => [],
+							"sublink" => []
+						];
+					}
 				}
 			}
 			
@@ -2451,6 +2470,7 @@ class google{
 						$this->getstyle(
 							[
 								"outline-offset" => "-1px",
+								"outline-width" => "1px",
 								"display" => "flex",
 								"flex-direction" => "column",
 								"flex-grow" => "1"
