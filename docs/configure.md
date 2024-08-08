@@ -8,10 +8,10 @@ Welcome! This guide assumes that you have a working 4get instance. This will hel
 3. The captcha imagesets are located in `data/captcha/your_image_set/*.png`
 4. The captcha font is located in `data/fonts/captcha.ttf`
 
-# Cloudflare bypass
+# Cloudflare bypass (TLS check)
 **Note: this only allows you to bypass the browser integrity checks. Captchas & javascript challenges will not be bypassed.**
 
-Configuring this lets you fetch images sitting behind Cloudflare and allows you to scrape the **Yep** search engine. Following these instructions might make your package manager unhappy.
+Configuring this lets you fetch images sitting behind Cloudflare and allows you to scrape the **Yep** & the **Mwmbl** search engines. Please be aware that APT will fight against you and will re-install the openSSL-version of curl constantly when updating.
 
 First, follow these instructions. Only install the Firefox modules:
 
