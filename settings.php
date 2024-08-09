@@ -84,6 +84,10 @@ $settings = [
 						"text" => "Startpage"
 					],
 					[
+						"value" => "kagi",
+						"text" => "Kagi"
+					],
+					[
 						"value" => "qwant",
 						"text" => "Qwant"
 					],

@@ -89,6 +89,7 @@ class frontend{
 		$user_agent = "";
 		$bad_header = false;
 		
+		// block bots that present X-Forwarded-For, Via, etc
 		foreach($headers_raw as $headerkey => $headervalue){
 			
 			$headerkey = strtolower($headerkey);
@@ -106,12 +107,27 @@ class frontend{
 			}
 		}
 		
+		// SSL check
+		$bad_ssl = false;
 		if(
+			isset($_SERVER["https"]) &&
+			$_SERVER["https"] == "on" &&
+			isset($_SERVER["SSL_CIPHER"]) &&
+			in_array($_SERVER["SSL_CIPHER"], config::FILTERED_HEADER_KEYS)
+		){
+			
+			$bad_ssl = true;
+		}
+		
+		if(
+			$bad_header === true ||
+			$bad_ssl === true ||
+			$user_agent == "" ||
+			// user agent check
 			preg_match(
 				config::HEADER_REGEX,
 				$user_agent
-			) ||
-			$bad_header === true
+			)
 		){
 			
 			// bot detected !!
@@ -1306,7 +1322,7 @@ class frontend{
 			return htmlspecialchars($image);
 		}
 		
-		return "/proxy?i=" . urlencode($image) . "&s=" . $format;
+		return "https://4get.ca/proxy?i=" . urlencode($image) . "&s=" . $format;
 	}
 	
 	public function htmlnextpage($gets, $npt, $page){

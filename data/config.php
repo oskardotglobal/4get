@@ -63,6 +63,14 @@ class config{
 		//"via"
 	];
 	
+	// Block SSL ciphers used by CLI tools used for botting
+	// Basically a primitive version of Cloudflare's browser integrity check
+	// ** If curl can still access the site (with spoofed headers), please make sure you use the new apache2 config **
+	// https://git.lolcat.ca/lolcat/4get/docs/apache2.md
+	const DISALLOWED_SSL = [
+		// "TLS_AES_256_GCM_SHA384" // used by WGET and CURL
+	];
+	
 	// Maximal number of searches per captcha key/pass issued. Counter gets
 	// reset on every APCU cache clear (should happen once a day).
 	// Only useful when BOT_PROTECTION is NOT set to 0
@@ -111,7 +119,7 @@ class config{
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP

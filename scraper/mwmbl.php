@@ -52,7 +52,7 @@ class mwmbl{
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($curlproc, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curlproc, CURLOPT_CONNECTTIMEOUT, 30);
-		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30); // @todo reset
+		curl_setopt($curlproc, CURLOPT_TIMEOUT, 30);
 		
 		$this->backend->assign_proxy($curlproc, $proxy);
 		
