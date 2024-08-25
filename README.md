@@ -7,16 +7,15 @@
 https://4get.ca/about
 
 ## Official instance
-https://4get.ca
+https://4get.ca , or visit the official instance list: https://4get.ca/instances
 
 ## Totally unbiased comparison between alternatives
 
-|                            | 4get                    | searx(ng) | librex      | araa      |
-|----------------------------|-------------------------|-----------|-------------|-----------|
-| RAM usage                  | 200-400mb~              | 2GB~      | 200-400mb~  | 2GB~      |
-| Does it suck               | no (debunked by snopes) | yes       | yes         | a little  |
-| Does it work               | ye                      | sometimes | no          | sometimes |
-| Did the dev commit suicide | not until my 30s        | no        | allegedly   | no        |
+|                            | 4get                    | searx(ng) | libreY      | araa      | hearch            |
+|----------------------------|-------------------------|-----------|-------------|-----------|-------------------|
+| RAM usage                  | 200-400mb~              | 2GB~      | 200-400mb~  | 2GB~      | idk               |
+| Does it suck               | no (debunked by snopes) | yes       | yes         | a little  | better than searx |
+| Does it work               | ye                      | sometimes | sometimes   | sometimes | yes               |
 
 ## Features
 1. Rotating proxies on a per-scraper basis
@@ -37,12 +36,12 @@ tl;dr the best way to actually browse for shit.
 | Yandex     | Yandex       | Brave      | Google     |            | Yandex        |
 | Google     | Google       | Yandex     | Startpage  |            | Google        |
 | Startpage  | Startpage    | Google     | Qwant      |            | Startpage     |
-| Qwant      | Qwant        | Startpage  | Mojeek     |            | Qwant         |
-| Yep        | Yep          | Qwant      |            |            | Yep           |
-| Greppr     | Imgur        |            |            |            | Marginalia    |
-| Crowdview  | FindThatMeme |            |            |            | YouTube       |
-| Mwmbl      |              |            |            |            | Soundcloud    |
-| Mojeek     |              |            |            |            |               |
+| Qwant      | Qwant        | Startpage  | Mojeek     |            | Kagi          |
+| Yep        | Yep          | Qwant      |            |            | Qwant         |
+| Greppr     | Imgur        |            |            |            | Yep           |
+| Crowdview  | FindThatMeme |            |            |            | Marginalia    |
+| Mwmbl      |              |            |            |            | YouTube       |
+| Mojeek     |              |            |            |            | Soundcloud    |
 | Marginalia |              |            |            |            |               |
 | wiby       |              |            |            |            |               |
 | Curlie     |              |            |            |            |               |
