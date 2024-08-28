@@ -412,7 +412,7 @@ class startpage{
 		
 		if(
 			preg_match(
-				'/React\.createElement\(UIStartpage\.AppSerpWeb, ?(.+)\),$/m',
+				'/React\.createElement\(UIStartpage\.AppSerpWeb, ?(.+)\),?$/m',
 				$html,
 				$matches
 			) === 0
@@ -1069,7 +1069,7 @@ class startpage{
 		
 		if(
 			preg_match(
-				'/React\.createElement\(UIStartpage\.AppSerpImages, ?(.+)\),$/m',
+				'/React\.createElement\(UIStartpage\.AppSerpImages, ?(.+)\),?$/m',
 				$html,
 				$matches
 			) === 0
@@ -1194,7 +1194,7 @@ class startpage{
 		
 		if(
 			preg_match(
-				'/React\.createElement\(UIStartpage\.AppSerpVideos, ?(.+)\),$/m',
+				'/React\.createElement\(UIStartpage\.AppSerpVideos, ?(.+)\),?$/m',
 				$html,
 				$matches
 			) === 0
@@ -1336,7 +1336,7 @@ class startpage{
 		
 		if(
 			preg_match(
-				'/React\.createElement\(UIStartpage\.AppSerpNews, ?(.+)\),$/m',
+				'/React\.createElement\(UIStartpage\.AppSerpNews, ?(.+)\),?$/m',
 				$html,
 				$matches
 			) === 0
