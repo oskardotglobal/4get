@@ -27,18 +27,24 @@ class mwmbl{
 		
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
+		// use http2
+		curl_setopt($curlproc, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+		
 		curl_setopt($curlproc, CURLOPT_ENCODING, ""); // default encoding
 		curl_setopt($curlproc, CURLOPT_HTTPHEADER,
 			["User-Agent: " . config::USER_AGENT,
 			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 			"Accept-Language: en-US,en;q=0.5",
 			"Accept-Encoding: gzip",
+			"Referer: https://beta.mwmbl.org/",
 			"DNT: 1",
+			"Sec-GPC: 1",
 			"Connection: keep-alive",
 			"Upgrade-Insecure-Requests: 1",
 			"Sec-Fetch-Dest: document",
 			"Sec-Fetch-Mode: navigate",
-			"Sec-Fetch-Site: none",
+			"Sec-Fetch-Site: same-origin",
+			"Priority: u=0, i",
 			"Sec-Fetch-User: ?1"]
 		);
 		
@@ -72,14 +78,14 @@ class mwmbl{
 		try{
 			$html = $this->get(
 				$this->backend->get_ip(), // no next page!
-				"https://mwmbl.org/app/home/",
+				"https://beta.mwmbl.org/",
 				[
 					"q" => $search
 				]
 			);
 		}catch(Exception $error){
 			
-			throw new Exception("Failed to fetch HTML");
+			throw new Exception("Failed to fetch HTML. If you're getting a timeout, make sure you have curl-impersonate setup.");
 		}
 		
 		$out = [
@@ -114,6 +120,68 @@ class mwmbl{
 			$p =
 				$this->fuckhtml
 				->getElementsByTagName("p");
+			
+			$sublinks = [];
+			
+			$mores =
+				$this->fuckhtml
+				->getElementsByClassName(
+					"result-link-more",
+					"div"
+				);
+			
+			foreach($mores as $more){
+				
+				$this->fuckhtml->load($more);
+				
+				$as =
+					$this->fuckhtml
+					->getElementsByClassName(
+						"more",
+						"a"
+					);
+				
+				if(count($as) === 0){
+					
+					// ?? invalid
+					continue;
+				}
+				
+				$sublinks[] = [
+					"title" =>
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$this->fuckhtml
+								->getElementsByClassName(
+									"more-title",
+									"span"
+								)[0]
+							)
+						),
+					"description" =>
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$this->fuckhtml
+								->getElementsByClassName(
+									"more-extract",
+									"span"
+								)[0]
+							)
+						),
+					"url" =>
+						$this->fuckhtml
+						->getTextContent(
+							$as[0]
+							["attributes"]
+							["href"]
+						)
+				];
+			}
+			
+			// reset
+			$this->fuckhtml->load($result);
 			
 			$out["web"][] = [
 				"title" =>
@@ -153,7 +221,7 @@ class mwmbl{
 					"url" => null,
 					"ratio" => null
 				],
-				"sublink" => [],
+				"sublink" => $sublinks,
 				"table" => []
 			];
 		}

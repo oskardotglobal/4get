@@ -89,6 +89,7 @@ class frontend{
 		$user_agent = "";
 		$bad_header = false;
 		
+		// block bots that present X-Forwarded-For, Via, etc
 		foreach($headers_raw as $headerkey => $headervalue){
 			
 			$headerkey = strtolower($headerkey);
@@ -106,12 +107,27 @@ class frontend{
 			}
 		}
 		
+		// SSL check
+		$bad_ssl = false;
 		if(
+			isset($_SERVER["https"]) &&
+			$_SERVER["https"] == "on" &&
+			isset($_SERVER["SSL_CIPHER"]) &&
+			in_array($_SERVER["SSL_CIPHER"], config::FILTERED_HEADER_KEYS)
+		){
+			
+			$bad_ssl = true;
+		}
+		
+		if(
+			$bad_header === true ||
+			$bad_ssl === true ||
+			$user_agent == "" ||
+			// user agent check
 			preg_match(
 				config::HEADER_REGEX,
 				$user_agent
-			) ||
-			$bad_header === true
+			)
 		){
 			
 			// bot detected !!
@@ -951,6 +967,7 @@ class frontend{
 						"yandex" => "Yandex",
 						"brave" => "Brave",
 						"google" => "Google",
+						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
 						//"pinterest" => "Pinterest",
@@ -970,6 +987,7 @@ class frontend{
 						"brave" => "Brave",
 						"yandex" => "Yandex",
 						"google" => "Google",
+						"startpage" => "Startpage",
 						"qwant" => "Qwant"
 					]
 				];
@@ -982,6 +1000,7 @@ class frontend{
 						"ddg" => "DuckDuckGo",
 						"brave" => "Brave",
 						"google" => "Google",
+						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
 						"mojeek" => "Mojeek"

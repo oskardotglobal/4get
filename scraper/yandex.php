@@ -751,6 +751,13 @@ class yandex{
 				"url" => htmlspecialchars_decode($image["snippet"]["url"])
 			];
 			
+			// add preview URL
+			$tmp["source"][]  = [
+				"url" => htmlspecialchars_decode($image["viewerData"]["preview"][0]["url"]),
+				"width" => (int)$image["viewerData"]["preview"][0]["w"],
+				"height" => (int)$image["viewerData"]["preview"][0]["h"],
+			];
+			
 			foreach($image["viewerData"]["dups"] as $dup){
 				
 				$tmp["source"][]  = [
@@ -767,8 +774,8 @@ class yandex{
 						"https://",
 						htmlspecialchars_decode($image["viewerData"]["thumb"]["url"])
 					),
-				"width" => (int)$image["viewerData"]["thumb"]["size"]["width"],
-				"height" => (int)$image["viewerData"]["thumb"]["size"]["height"]
+				"width" => (int)$image["viewerData"]["thumb"]["w"],
+				"height" => (int)$image["viewerData"]["thumb"]["h"]
 			];
 			
 			$out["image"][] = $tmp;

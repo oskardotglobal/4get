@@ -298,9 +298,8 @@ class greppr{
 			
 			$description =
 				$this->fuckhtml
-				->getElementsByFuzzyAttributeValue(
-					"style",
-					"color:#777777;",
+				->getElementsByClassName(
+					"highlightedDesc",
 					"p"
 				);
 			
@@ -310,9 +309,11 @@ class greppr{
 			}else{
 				
 				$description =
-					$this->fuckhtml
-					->getTextContent(
-						$description[0]
+					$this->limitstrlen(
+						$this->fuckhtml
+						->getTextContent(
+							$description[0]
+						)
 					);
 			}
 			
@@ -325,7 +326,7 @@ class greppr{
 			$date =
 				strtotime(
 					explode(
-						"Added:",
+						":",
 						$this->fuckhtml
 						->getTextContent(
 							$date[count($date) - 1]["innerHTML"]
@@ -425,5 +426,10 @@ class greppr{
 		apcu_store("greppr_token", $tokens);
 		
 		return $tokens;
+	}
+	
+	private function limitstrlen($text){
+		
+		return explode("\n", wordwrap($text, 300, "\n"))[0];
 	}
 }

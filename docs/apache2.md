@@ -74,7 +74,7 @@ Now, edit the following file: `/etc/apache2/sites-available/000-default.conf`, r
 
 	DocumentRoot /var/www/4get
 
-	Options +MultiViews
+	Options -MultiViews
 	RewriteEngine On
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_FILENAME} !-f
@@ -92,47 +92,56 @@ To make the above snippet work, please refer to our <a href="https://git.lolcat.
 ## default-ssl.conf
 Now, edit the file `/etc/apache2/sites-available/default-ssl.conf`, remove everything and, again, add each rule while modifying the relevant fields:
 
-This ruleset will redirect all clients that specify an unknown `Host` to the domain of our choice. I recommend you uncomment the `ErrorLog` directive while setting things up in case a problem occurs with PHP. Don't worry about the invalid SSL paths, we will generate our certificates later; Just make sure you specify the right domains in there:
+First, append the following redirect rule to point traffic from `www.4get.ca` to `4get.ca`:
 ```xml
 <VirtualHost *:443>
+	ServerName www.4get.ca
+	
+	SSLEngine On
+	SSLCertificateFile /etc/letsencrypt/live/4get.ca/fullchain.pem
+	SSLCertificateKeyFile /etc/letsencrypt/live/4get.ca/privkey.pem
+	SSLCertificateChainFile /etc/letsencrypt/live/4get.ca/chain.pem
+	
 	RedirectMatch 301 ^(.*)$ https://4get.ca$1
+</VirtualHost>
+```
+
+This ruleset tells apache2 where 4get is located (`/var/www/4get`), ensures that `4get.ca/settings` resolves to `4get.ca/settings.php` internally and that we deny access to `/data/*`, which may contain files you might want to keep private. `StdEnvVArs+` will make it so that PHP can view if the connection uses HTTPS, and which cipher was used. Useful for basic bot protection.
+
+Make sure to replace `4get.ca` with your own domain under the `SSLCertificate*` directives!
+```xml
+<VirtualHost *:443>
+	ServerName 4get.ca
+
 	ServerAdmin will@lolcat.ca
-
+	DocumentRoot /var/www/4get
+	
+	SSLEngine On
+	SSLOptions +StdEnvVars
+	
 	#ErrorLog ${APACHE_LOG_DIR}/error.log
-
-	SSLEngine on
-
-	<FilesMatch "\.(?:cgi|shtml|phtml|php)$">
-		SSLOptions +StdEnvVars
-	</FilesMatch>
-	<Directory /usr/lib/cgi-bin>
-		SSLOptions +StdEnvVars
-	</Directory>
-
+	
 	AddOutputFilterByType DEFLATE application/json
 	AddOutputFilterByType DEFLATE application/javascript
 	AddOutputFilterByType DEFLATE application/x-javascript
 	AddOutputFilterByType DEFLATE text/html
 	AddOutputFilterByType DEFLATE text/plain
 	AddOutputFilterByType DEFLATE text/css
-
+	
 	SSLCertificateFile /etc/letsencrypt/live/4get.ca/fullchain.pem
 	SSLCertificateKeyFile /etc/letsencrypt/live/4get.ca/privkey.pem
-</VirtualHost>
-```
-
-This ruleset tells apache2 where 4get is located (`/var/www/4get`), ensures that `4get.ca/settings` resolves to `4get.ca/settings.php` internally and that we deny access to `/data/*`, which may contain files you might want to keep private.
-```xml
-<VirtualHost *:443>
-	ServerName 4get.ca
-
-	DocumentRoot /var/www/4get
-
-	Options +MultiViews
-	RewriteEngine On
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^([^\.]+)$ $1.php [NC,L]
+	SSLCertificateChainFile /etc/letsencrypt/live/4get.ca/chain.pem
+	
+	<Directory /var/www/4get>
+		Options -MultiViews
+		AllowOverride All
+		Require all granted
+		
+		RewriteEngine On
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^([^\.]+)$ $1.php [NC,L]
+	</Directory>
 
 	# deny access to private resources
 	<Directory /var/www/4get/data/>
@@ -142,28 +151,7 @@ This ruleset tells apache2 where 4get is located (`/var/www/4get`), ensures that
 </VirtualHost>
 ```
 
-Don't forget to specify your other services here! Here's an example of a ruleset I use for `lolcat.ca`:
-```xml
-<VirtualHost *:443>
-	ServerName lolcat.ca
-
-	DocumentRoot /var/www/lolcat
-
-	Options +MultiViews
-	RewriteEngine On
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^([^\.]+)$ $1.php [NC,L]
-</VirtualHost>
-```
-
-... Alongside with it's redirect rules.
-```xml
-<VirtualHost *:443>
-	ServerName www.lolcat.ca
-	RedirectMatch 301 ^(.*)$ https://lolcat.ca$1
-</VirtualHost>
-```
+By default, the first rule dictates where traffic should be redirected to in case the client specifies an unknown domain name. Don't forget your webserver's other rules! For a complete real-world example, please <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2-example.md">check out my real-world config file I use on 4get.ca</a>.
 
 ## security.conf
 If you enabled the `headers` module, you can head over to `/etc/apache2/conf-enabled/security.conf` and edit:
