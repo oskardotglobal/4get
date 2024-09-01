@@ -92,6 +92,10 @@ $settings = [
 						"text" => "Qwant"
 					],
 					[
+						"value" => "ghostery",
+						"text" => "Ghostery"
+					],
+					[
 						"value" => "yep",
 						"text" => "Yep"
 					],
@@ -136,6 +140,10 @@ $settings = [
 					[
 						"value" => "qwant",
 						"text" => "Qwant"
+					],
+					[
+						"value" => "ghostery",
+						"text" => "Ghostery"
 					],
 					[
 						"value" => "yep",

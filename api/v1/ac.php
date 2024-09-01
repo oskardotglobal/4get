@@ -20,7 +20,8 @@ class autocomplete{
 			"yt" => "https://suggestqueries-clients6.youtube.com/complete/search?client=youtube&q={searchTerms}",
 			"sc" => "",
 			"startpage" => "https://www.startpage.com/suggestions?q={searchTerms}&format=opensearch&segment=startpage.defaultffx&lui=english",
-			"kagi" => "https://kagi.com/api/autosuggest?q={searchTerms}"
+			"kagi" => "https://kagi.com/api/autosuggest?q={searchTerms}",
+			"ghostery" => "https://ghosterysearch.com/suggest?q={searchTerms}"
 		];
 		
 		/*

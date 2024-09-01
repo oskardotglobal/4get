@@ -131,6 +131,7 @@ class config{
 	const PROXY_GOOGLE = false;
 	const PROXY_STARTPAGE = false;
 	const PROXY_QWANT = false;
+	const PROXY_GHOSTERY = false;
 	const PROXY_MARGINALIA = false;
 	const PROXY_MOJEEK = false;
 	const PROXY_SC = false; // soundcloud

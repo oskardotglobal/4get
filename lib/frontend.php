@@ -941,6 +941,7 @@ class frontend{
 						"google" => "Google",
 						"startpage" => "Startpage",
 						"qwant" => "Qwant",
+						"ghostery" => "Ghostery",
 						"yep" => "Yep",
 						"greppr" => "Greppr",
 						"crowdview" => "Crowdview",
