@@ -180,17 +180,34 @@ class solofield{
 			
 			if(count($thumb) !== 0){
 				
-				$thumb = [
-					"ratio" => "1:1",
-					"url" =>
-						"https://solofield.net" .
-						$this->fuckhtml
-						->getTextContent(
-							$thumb[0]
-							["attributes"]
-							["src"]
-						)
-				];
+				$uri =
+					$this->fuckhtml
+					->getTextContent(
+						$thumb[0]
+						["attributes"]
+						["src"]
+					);
+				
+				if(stripos($uri, "now_printing") === false){
+					
+					$thumb = [
+						"ratio" => "1:1",
+						"url" =>
+							"https://solofield.net" .
+							$this->fuckhtml
+							->getTextContent(
+								$thumb[0]
+								["attributes"]
+								["src"]
+							)
+					];
+				}else{
+					
+					$thumb = [
+						"ratio" => null,
+						"url" => null
+					];
+				}
 			}else{
 				
 				$thumb = [
