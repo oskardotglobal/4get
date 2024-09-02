@@ -132,7 +132,10 @@ class solofield{
 		];
 		
 		// check for errors and load the result div
-		$this->error_and_load($html, $out);
+		if($this->error_and_load($html)){
+			
+			return $out;
+		}
 		
 		$items =
 			$this->fuckhtml
@@ -272,7 +275,10 @@ class solofield{
 		];
 		
 		// check for errors and load the result div
-		$this->error_and_load($html, $out);
+		if($this->error_and_load($html)){
+			
+			return $out;
+		}
 		
 		$images =
 			$this->fuckhtml
@@ -399,7 +405,10 @@ class solofield{
 		];
 		
 		// check for errors and load the result div
-		$this->error_and_load($html, $out);
+		if($this->error_and_load($html)){
+			
+			return $out;
+		}
 		
 		$items =
 			$this->fuckhtml
@@ -576,7 +585,7 @@ class solofield{
 		}
 	}
 	
-	private function error_and_load($html, $out){
+	private function error_and_load($html){
 		
 		if(strlen($html) === 0){
 			
@@ -603,13 +612,14 @@ class solofield{
 			
 			if($nosearch){
 				
-				return $out;
+				return true;
 			}
 			
 			throw new Exception("Failed to grep search list");
 		}
 		
 		$this->fuckhtml->load($list);
+		return false;
 	}
 	
 	private function unfuckdate($date){
