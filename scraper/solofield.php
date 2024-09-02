@@ -132,7 +132,7 @@ class solofield{
 		];
 		
 		// check for errors and load the result div
-		$this->error_and_load($html);
+		$this->error_and_load($html, $out);
 		
 		$items =
 			$this->fuckhtml
@@ -272,7 +272,7 @@ class solofield{
 		];
 		
 		// check for errors and load the result div
-		$this->error_and_load($html);
+		$this->error_and_load($html, $out);
 		
 		$images =
 			$this->fuckhtml
@@ -399,7 +399,7 @@ class solofield{
 		];
 		
 		// check for errors and load the result div
-		$this->error_and_load($html);
+		$this->error_and_load($html, $out);
 		
 		$items =
 			$this->fuckhtml
@@ -576,7 +576,7 @@ class solofield{
 		}
 	}
 	
-	private function error_and_load($html){
+	private function error_and_load($html, $out){
 		
 		if(strlen($html) === 0){
 			
