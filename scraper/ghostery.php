@@ -130,26 +130,38 @@ class ghostery{
 			
 			$query = http_build_query($query);
 			
-			$html =
-				$this->get(
-					$proxy,
-					"https://ghosterysearch.com/search?" . $query,
-					[],
-					$country
-				);
+			try{
+				
+				$html =
+					$this->get(
+						$proxy,
+						"https://ghosterysearch.com/search?" . $query,
+						[],
+						$country
+					);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
 		}else{
 			
 			$proxy = $this->backend->get_ip();
 			
-			$html =
-				$this->get(
-					$proxy,
-					"https://ghosterysearch.com/search",
-					[
-						"q" => $get["s"]
-					],
-					$get["country"]
-				);
+			try{
+				
+				$html =
+					$this->get(
+						$proxy,
+						"https://ghosterysearch.com/search",
+						[
+							"q" => $get["s"]
+						],
+						$get["country"]
+					);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to fetch search page");
+			}
 		}
 		
 		$out = [

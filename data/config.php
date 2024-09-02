@@ -136,6 +136,7 @@ class config{
 	const PROXY_MOJEEK = false;
 	const PROXY_SC = false; // soundcloud
 	const PROXY_SPOTIFY = false;
+	const PROXY_SOLOFIELD = "onion";
 	const PROXY_WIBY = false;
 	const PROXY_CURLIE = false;
 	const PROXY_YT = false; // youtube

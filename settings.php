@@ -166,6 +166,10 @@ $settings = [
 						"text" => "Mojeek"
 					],
 					[
+						"value" => "solofield",
+						"text" => "Solofield"
+					],
+					[
 						"value" => "marginalia",
 						"text" => "Marginalia"
 					],
@@ -210,6 +214,10 @@ $settings = [
 					[
 						"value" => "yep",
 						"text" => "Yep"
+					],
+					[
+						"value" => "solofield",
+						"text" => "Solofield"
 					],
 					/*[
 						"value" => "pinterest",
@@ -257,6 +265,10 @@ $settings = [
 						"value" => "qwant",
 						"text" => "Qwant"
 					],
+					[
+						"value" => "solofield",
+						"text" => "Solofield"
+					]
 				]
 			],
 			[

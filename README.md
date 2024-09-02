@@ -1,4 +1,4 @@
-<a href="https://4get.ca/donate">Donate to the project here!</a>
+## <a href="https://4get.ca/donate">Donate to the project here!</a>
 
 # 4get search
 **4get** is a proxy search engine that doesn't suck.
@@ -38,11 +38,12 @@ tl;dr the best way to actually browse for shit.
 | Startpage  | Startpage    | Google     | Qwant      |            | Startpage     |
 | Qwant      | Qwant        | Startpage  | Mojeek     |            | Kagi          |
 | Ghostery   | Yep          | Qwant      |            |            | Qwant         |
-| Yep        | Imgur        |            |            |            | Yep           |
-| Greppr     | FindThatMeme |            |            |            | Marginalia    |
-| Crowdview  |              |            |            |            | YouTube       |
-| Mwmbl      |              |            |            |            | Soundcloud    |
-| Mojeek     |              |            |            |            |               |
+| Yep        | Solofield    | Solofield  |            |            | Ghostery      |
+| Greppr     | Imgur        |            |            |            | Yep           |
+| Crowdview  | FindThatMeme |            |            |            | Marginalia    |
+| Mwmbl      |              |            |            |            | YouTube       |
+| Mojeek     |              |            |            |            | Soundcloud    |
+| Solofield  |              |            |            |            |               |
 | Marginalia |              |            |            |            |               |
 | wiby       |              |            |            |            |               |
 | Curlie     |              |            |            |            |               |
