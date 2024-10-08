@@ -34,7 +34,7 @@
 
 </div>
 
-4. `cd` to `/etc/nginx` and make the `conf.d/` if it doesn't exist:
+4. `cd` to `/etc/nginx` and make the `conf.d/` directory if it doesn't exist:
    * Again, this guesses you're logged in as root.
    ```sh
    cd /etc/nginx
@@ -183,6 +183,7 @@
 
 <h2 align=center>Other important things</h2>
 1. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/configure.md">Configuration guide</a>: Things to do after setup.
+
 2. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">Apache2 guide</a>: Fallback to this if you couldn't get something to work, or you don't know something.
 
 <h2 align=center>Known issues</h2>
