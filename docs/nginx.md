@@ -14,7 +14,7 @@
    * On Debian-based, run `apt update`, then `apt upgrade`.
 3. Install the following dependencies:
    * `git`: So you can clone <a href="https://git.lolcat.ca/lolcat/4get">this</a> repository.
-   * `nginx`: So you can run Nginx. If using a non-systemd distribution, go to <a href=""></a>
+   * `nginx`: So you can run Nginx.
    * `php-fpm`: This is what allows Nginx to run *(and show)* PHP files.
    * `php-imagick`, `imagemagick`: Image manipulation.
    * `php-apcu`: Caching module.
@@ -22,9 +22,9 @@
    * `php-mbstring`: String utils.
    * `certbot`, `certbot-nginx`: ACME client. Used to create SSL certificates.
      * In Arch-based distributions:
-       * `pacman -S nginx certbot php-imagick imagemagick curl php-apcu git`
+       * `pacman -S nginx certbot php-imagick certbot-nginx imagemagick curl php-apcu git`
      * In Debian-based distributions:
-       * `apt install php-mbstring nginx certbot php-imagick imagemagick php-curl curl php-apcu git`
+       * `apt install php-mbstring nginx certbot-nginx certbot php-imagick imagemagick php-curl curl php-apcu git`
 
 <div align=right>
 
@@ -183,7 +183,7 @@
 
 <h2 align=center>Other important things</h2>
 1. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/configure.md">Configuration guide</a>: Things to do after setup.
-2. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">Apache2 guide</a>: Fallback to this if you couldn't get Nginx to work, or you don't know something.
+2. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">Apache2 guide</a>: Fallback to this if you couldn't get something to work, or you don't know something.
 
 <h2 align=center>Known issues</h2>
 1. `php-apcu` not working in Artix[^1], this might be because of it being a systemd daemon, but the binary isn't present. This might apply to Arch Linux as well, since it is from where the package was gotten. Read more in the issue.
