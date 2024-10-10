@@ -147,46 +147,47 @@
 4. Open *(or duplicate the configuration)* and edit it:
    * Example configuration, again:
     ```sh
-        server {
-            access_log /dev/null; # Search log file. Do you really need to?
-            error_log /dev/null;  # Error log file.
+    server {
+        access_log /dev/null; # Search log file. Do you really need to?
+        error_log /dev/null;  # Error log file.
 
-            # Change this if you have 4get in another folder.
-            root /var/www/4get;
-            # Change 'onionadress.onion' to your onion link.
-            server_name onionadress.onion;
-            # Port to listen to.
-            listen 80;
+        # Change this if you have 4get in another folder.
+        root /var/www/4get;
+        # Change 'onionadress.onion' to your onion link.
+        server_name onionadress.onion;
+        # Port to listen to.
+        listen 80;
 
-            location @php {
-                try_files $uri.php $uri/index.php =404;
-                # Change the unix socket address if it's different for you.
-                fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
-                fastcgi_index index.php;
-                # Change this to `fastcgi_params` if you use a debian based distribution.
-                include fastcgi.conf;
-                fastcgi_intercept_errors on;
-            }
-
-            location / {
-                try_files $uri @php;
-            }
-
-            location ~* ^(.*)\.php$ {
-                return 301 $1;
-            }
-
+        location @php {
+            try_files $uri.php $uri/index.php =404;
+            # Change the unix socket address if it's different for you.
+            fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+            fastcgi_index index.php;
+            # Change this to `fastcgi_params` if you use a debian based distribution.
+            include fastcgi.conf;
+            fastcgi_intercept_errors on;
         }
+
+        location / {
+            try_files $uri @php;
+        }
+
+        location ~* ^(.*)\.php$ {
+            return 301 $1;
+        }
+
+    }
     ```
     A real world example is present in [^2].
 5. Once done, check the configuration with `nginx -t`. If everything's fine and dandy, refer to <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/tor.md">the Tor guide</a> to setup your onion site.
 
 <h2 align=center>Other important things</h2>
-1. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/configure.md">Configuration guide</a>: Things to do after setup.
 
+1. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/configure.md">Configuration guide</a>: Things to do after setup.
 2. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">Apache2 guide</a>: Fallback to this if you couldn't get something to work, or you don't know something.
 
 <h2 align=center>Known issues</h2>
+
 1. `php-apcu` not working in Artix[^1], this might be because of it being a systemd daemon, but the binary isn't present. This might apply to Arch Linux as well, since it is from where the package was gotten. Read more in the issue.
 
 [^1]: lolcat/4get#40, It might be needed to create a boot entry, but the binary is unknown.
