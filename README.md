@@ -1,4 +1,4 @@
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W2OZK5H)
+## <a href="https://4get.ca/donate">Donate to the project here!</a>
 
 # 4get search
 **4get** is a proxy search engine that doesn't suck.
@@ -37,11 +37,13 @@ tl;dr the best way to actually browse for shit.
 | Google     | Google       | Yandex     | Startpage  |            | Google        |
 | Startpage  | Startpage    | Google     | Qwant      |            | Startpage     |
 | Qwant      | Qwant        | Startpage  | Mojeek     |            | Kagi          |
-| Yep        | Yep          | Qwant      |            |            | Qwant         |
+| Ghostery   | Yep          | Qwant      |            |            | Qwant         |
+| Yep        | Solofield    | Solofield  |            |            | Ghostery      |
 | Greppr     | Imgur        |            |            |            | Yep           |
 | Crowdview  | FindThatMeme |            |            |            | Marginalia    |
 | Mwmbl      |              |            |            |            | YouTube       |
 | Mojeek     |              |            |            |            | Soundcloud    |
+| Solofield  |              |            |            |            |               |
 | Marginalia |              |            |            |            |               |
 | wiby       |              |            |            |            |               |
 | Curlie     |              |            |            |            |               |

@@ -92,6 +92,10 @@ $settings = [
 						"text" => "Qwant"
 					],
 					[
+						"value" => "ghostery",
+						"text" => "Ghostery"
+					],
+					[
 						"value" => "yep",
 						"text" => "Yep"
 					],
@@ -138,6 +142,10 @@ $settings = [
 						"text" => "Qwant"
 					],
 					[
+						"value" => "ghostery",
+						"text" => "Ghostery"
+					],
+					[
 						"value" => "yep",
 						"text" => "Yep"
 					],
@@ -156,6 +164,10 @@ $settings = [
 					[
 						"value" => "mojeek",
 						"text" => "Mojeek"
+					],
+					[
+						"value" => "solofield",
+						"text" => "Solofield"
 					],
 					[
 						"value" => "marginalia",
@@ -203,6 +215,10 @@ $settings = [
 						"value" => "yep",
 						"text" => "Yep"
 					],
+					[
+						"value" => "solofield",
+						"text" => "Solofield"
+					],
 					/*[
 						"value" => "pinterest",
 						"text" => "Pinterest"
@@ -249,6 +265,10 @@ $settings = [
 						"value" => "qwant",
 						"text" => "Qwant"
 					],
+					[
+						"value" => "solofield",
+						"text" => "Solofield"
+					]
 				]
 			],
 			[

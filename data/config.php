@@ -143,10 +143,12 @@ class config{
 	const PROXY_GOOGLE = false;
 	const PROXY_STARTPAGE = false;
 	const PROXY_QWANT = false;
+	const PROXY_GHOSTERY = false;
 	const PROXY_MARGINALIA = false;
 	const PROXY_MOJEEK = false;
 	const PROXY_SC = false; // soundcloud
 	const PROXY_SPOTIFY = false;
+	const PROXY_SOLOFIELD = false;
 	const PROXY_WIBY = false;
 	const PROXY_CURLIE = false;
 	const PROXY_YT = false; // youtube

@@ -947,11 +947,13 @@ class frontend{
 						"google" => "Google",
 						"startpage" => "Startpage",
 						"qwant" => "Qwant",
+						"ghostery" => "Ghostery",
 						"yep" => "Yep",
 						"greppr" => "Greppr",
 						"crowdview" => "Crowdview",
 						"mwmbl" => "Mwmbl",
 						"mojeek" => "Mojeek",
+						"solofield" => "Solofield",
 						"marginalia" => "Marginalia",
 						"wiby" => "wiby",
 						"curlie" => "Curlie"
@@ -970,6 +972,7 @@ class frontend{
 						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
+						"solofield" => "Solofield",
 						//"pinterest" => "Pinterest",
 						"imgur" => "Imgur",
 						"ftm" => "FindThatMeme"
@@ -988,7 +991,8 @@ class frontend{
 						"yandex" => "Yandex",
 						"google" => "Google",
 						"startpage" => "Startpage",
-						"qwant" => "Qwant"
+						"qwant" => "Qwant",
+						"solofield" => "Solofield"
 					]
 				];
 				break;

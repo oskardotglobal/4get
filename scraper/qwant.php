@@ -353,25 +353,16 @@ class qwant{
 			"related" => []
 		];
 		
-		if($json["status"] != "success"){
+		if(
+			$json["status"] != "success" &&
+			$json["data"]["error_code"] === 5
+		){
 			
-			if($json["data"]["error_code"] === 5){
-				
-				return $out;
-			}
-			
-			if(isset($json["data"]["error_code"])){
-				
-				switch($json["data"]["error_code"]){
-					
-					case 27:
-						throw new Exception("Qwant returned a captcha");
-						break;
-				}
-			}
-			
-			throw new Exception("Qwant returned an error code: " . $json["data"]["error_code"]);
+			// no results
+			return $out;
 		}
+		
+		$this->detect_errors($json);
 		
 		if(!isset($json["data"]["result"]["items"]["mainline"])){
 			
@@ -654,10 +645,7 @@ class qwant{
 			throw new Exception("Failed to decode JSON");
 		}
 		
-		if($json["status"] != "success"){
-			
-			throw new Exception("Qwant returned an API error");
-		}
+		$this->detect_errors($json);
 		
 		if(isset($json["data"]["result"]["items"]["mainline"])){
 			
@@ -754,10 +742,7 @@ class qwant{
 			throw new Exception("Could not parse JSON");
 		}
 		
-		if($json["status"] != "success"){
-			
-			throw new Exception("Qwant returned an API error");
-		}
+		$this->detect_errors($json);
 		
 		if(isset($json["data"]["result"]["items"]["mainline"])){
 			
@@ -861,10 +846,7 @@ class qwant{
 			throw new Exception("Could not parse JSON");
 		}
 		
-		if($json["status"] != "success"){
-			
-			throw new Exception("Qwant returned an API error");
-		}
+		$this->detect_errors($json);
 		
 		if(isset($json["data"]["result"]["items"]["mainline"])){
 			
@@ -904,6 +886,28 @@ class qwant{
 		}
 		
 		return $out;
+	}
+	
+	private function detect_errors($json){
+		
+		if(
+			isset($json["status"]) &&
+			$json["status"] == "error"
+		){
+			
+			if(isset($json["data"]["error_data"]["captchaUrl"])){
+				
+				throw new Exception("Qwant returned a captcha");
+			}elseif(isset($json["data"]["error_data"]["error_code"])){
+				
+				throw new Exception(
+					"Qwant returned an API error: " .
+					$json["data"]["error_data"]["error_code"]
+				);
+			}
+			
+			throw new Exception("Qwant returned an API error");
+		}
 	}
 	
 	private function limitstrlen($text){
