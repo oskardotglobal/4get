@@ -30,7 +30,7 @@
 
 > IMPORTANT: `php-curl`, `php-mbstring` might be a Debian-only package, but this needs further fact checking.
 
-> IMPORTANT: `php-apcu` is known to not work on Artix[^1].
+> IMPORTANT: If having issues with `php-apcu` or `libsodium`, go to [^1].
 
 </div>
 
@@ -188,7 +188,7 @@
 
 <h2 align=center>Known issues</h2>
 
-1. `php-apcu` not working in Artix[^1], this might be because of it being a systemd daemon, but the binary isn't present. This might apply to Arch Linux as well, since it is from where the package was gotten. Read more in the issue.
+1. https://git.lolcat.ca/lolcat/4get/issues
 
-[^1]: lolcat/4get#40, It might be needed to create a boot entry, but the binary is unknown.
+[^1]: lolcat/4get#40, If having issues with `libsodium`, or `php-apcu`.
 [^2]: <a href="https://git.nadeko.net/Fijxu/etc-configs/src/branch/selfhost/nginx/conf.d/4get.conf">git.nadeko.net</a> nadeko.net's 4get instance configuration.
