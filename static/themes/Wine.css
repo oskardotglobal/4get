@@ -1,0 +1,40 @@
+:root
+{
+        --accent : #f79e98;
+        --1d2021 : #180d0c;
+        --282828 : #180d0c;
+        --3c3836 : #251615;
+        --504945 : #251615;
+        --928374 : var(--accent);
+        --a89984 : #d8c5c4;
+        --bdae93 : #d8c5c4;
+        --8ec07c : var(--accent);
+        --ebdbb2 : #d8c5c4;
+        --comment: #928374;
+        --default: #DCC9BC;
+        --keyword: #F07342;
+        --string : var(--accent);
+        --green  : #959A6B;
+        --yellow : #E39C45;
+        --red    : #CF223E;
+        --white  : var(--a89984);
+        --black  : var(--1d2021);
+        --hover  : #b18884
+}
+
+      a.link, a { color: var(--accent); text-decoration: none; }
+      .searchbox { width: 23%; }
+      .filters filter select { color: #E39C45; }
+      .web .separator::before { color: var(--white) }
+      .searchbox input[type="text"]::placeholder { color: var(--white); }
+      a.link:hover
+      {
+        color: var(--hover);
+        text-shadow: 0 0 .2rem var(--hover);
+      }
+      .code-inline
+      { border-color: var(--default); font-family: monospace;}
+      .home #center a
+      { color: var(--accent); }
+      .home .subtext
+      { color: var(--white); }
