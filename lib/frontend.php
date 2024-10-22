@@ -939,6 +939,7 @@ class frontend{
 						"brave" => "Brave",
 						"yandex" => "Yandex",
 						"google" => "Google",
+						"google_cse" => "Google CSE",
 						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"ghostery" => "Ghostery",
@@ -963,6 +964,7 @@ class frontend{
 						"yandex" => "Yandex",
 						"brave" => "Brave",
 						"google" => "Google",
+						"google_cse" => "Google CSE",
 						"startpage" => "Startpage",
 						"qwant" => "Qwant",
 						"yep" => "Yep",
@@ -1326,7 +1328,7 @@ class frontend{
 			return htmlspecialchars($image);
 		}
 		
-		return "/proxy?i=" . urlencode($image) . "&s=" . $format;
+		return "/proxy.php?i=" . urlencode($image) . "&s=" . $format;
 	}
 	
 	public function htmlnextpage($gets, $npt, $page){
