@@ -134,6 +134,10 @@ $settings = [
 						"text" => "Google"
 					],
 					[
+						"value" => "google_cse",
+						"text" => "Google CSE"
+					],
+					[
 						"value" => "startpage",
 						"text" => "Startpage"
 					],
@@ -202,6 +206,10 @@ $settings = [
 					[
 						"value" => "google",
 						"text" => "Google"
+					],
+					[
+						"value" => "google_cse",
+						"text" => "Google CSE"
 					],
 					[
 						"value" => "startpage",

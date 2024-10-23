@@ -119,7 +119,7 @@ class config{
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP
@@ -129,6 +129,7 @@ class config{
 	const PROXY_BRAVE = false;
 	const PROXY_FB = false; // facebook
 	const PROXY_GOOGLE = false;
+	const PROXY_GOOGLE_CSE = false;
 	const PROXY_STARTPAGE = false;
 	const PROXY_QWANT = false;
 	const PROXY_GHOSTERY = false;
@@ -156,6 +157,9 @@ class config{
 	//
 	// Scraper-specific parameters
 	//
+	
+	// GOOGLE CSE
+	const GOOGLE_CX_ENDPOINT = "d4e68b99b876541f0";
 	
 	// MARGINALIA
 	// Use "null" to default out to HTML scraping OR specify a string to
