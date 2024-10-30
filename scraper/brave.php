@@ -293,8 +293,8 @@ class brave{
 		/*
 		$handle = fopen("scraper/brave.html", "r");
 		$html = fread($handle, filesize("scraper/brave.html"));
-		fclose($handle);
-		*/
+		fclose($handle);*/
+		
 		
 		try{
 			$html =
@@ -411,9 +411,19 @@ class brave{
 		}
 		
 		$data =
+			rtrim(
+				preg_replace(
+					'/\(Array\(0\)\)\).*$/',
+					"",
+					$grep[1]
+				),
+				" ]"
+			) . "]";
+		
+		$data =
 			$this->fuckhtml
 			->parseJsObject(
-				$grep[1]
+				$data
 			);
 		unset($grep);
 		
