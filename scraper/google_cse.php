@@ -268,6 +268,13 @@ class google_cse{
 					"yes" => "Yes", // safe=active
 					"no" => "No" // safe=off
 				]
+			],
+			"spellcheck" => [
+				// display undefined
+				"option" => [
+					"yes" => "Yes",
+					"no" => "No"
+				]
 			]
 		];
 		
@@ -538,6 +545,11 @@ class google_cse{
 				"rurl" => "https://cse.google.com/cse?cx=" . config::GOOGLE_CX_ENDPOINT . "#gsc.tab=0&gsc.q=" . $get["s"] . "&gsc.sort="
 			];
 			
+			if($get["spellcheck"] == "no"){
+				
+				$req_params["nfpr"] = "1";
+			}
+			
 			$json =
 				$this->get(
 					$proxy,
@@ -595,6 +607,42 @@ class google_cse{
 			"news" => [],
 			"related" => []
 		];
+		
+		// detect word correction
+		if(isset($json["spelling"]["type"])){
+			
+			switch($json["spelling"]["type"]){
+				
+				case "DYM": // did you mean? @TODO fix wording
+					$type = "including";
+					break;
+				
+				case "SPELL_CORRECTED_RESULTS": // not many results for
+					$type = "not_many";
+					break;
+				
+				default:
+					$type = "not_many";
+			}
+			
+			if(isset($json["spelling"]["originalQuery"])){
+				
+				$using = $json["spelling"]["originalQuery"];
+			}
+			elseif(isset($json["spelling"]["anchor"])){
+				
+				$using = html_entity_decode(strip_tags($json["spelling"]["anchor"]));
+			}elseif(isset($json["spelling"]["originalAnchor"])){
+				
+				$using = html_entity_decode(strip_tags($json["spelling"]["originalAnchor"]));
+			}
+			
+			$out["spelling"] = [
+				"type" => $type,
+				"using" => $using,
+				"correction" => $json["spelling"]["correctedQuery"]
+			];
+		}
 		
 		if(!isset($json["results"])){
 			
@@ -729,8 +777,6 @@ class google_cse{
 	
 	public function image($get){
 		
-		
-		
 		if($get["npt"]){
 			
 			[$req_params, $proxy] =
@@ -858,6 +904,12 @@ class google_cse{
 			throw new Exception("Google returned an error object");
 		}
 		
+		$out = [
+			"status" => "ok",
+			"npt" => null,
+			"image" => []
+		];
+		
 		// detect next page
 		if(
 			isset($json["cursor"]["isExactTotalResults"]) || // detects last page
@@ -866,12 +918,6 @@ class google_cse{
 			
 			return $out;
 		}
-		
-		$out = [
-			"status" => "ok",
-			"npt" => null,
-			"image" => []
-		];
 		
 		foreach($json["results"] as $result){
 			
