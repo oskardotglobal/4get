@@ -28,6 +28,9 @@ class ddg{
 		
 		curl_setopt($curlproc, CURLOPT_URL, $url);
 		
+		// http2 bypass
+		curl_setopt($curlproc, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+		
 		switch($reqtype){
 			case self::req_web:
 				$headers =
@@ -36,27 +39,33 @@ class ddg{
 					"Accept-Encoding: gzip",
 					"Accept-Language: en-US,en;q=0.5",
 					"DNT: 1",
+					"Sec-GPC: 1",
 					"Connection: keep-alive",
 					"Upgrade-Insecure-Requests: 1",
 					"Sec-Fetch-Dest: document",
 					"Sec-Fetch-Mode: navigate",
-					"Sec-Fetch-Site: cross-site",
-					"Upgrade-Insecure-Requests: 1"];
+					"Sec-Fetch-Site: same-origin",
+					"Sec-Fetch-User: ?1",
+					"Priority: u=0, i",
+					"TE: trailers"];
 				break;
 			
 			case self::req_xhr:
 				$headers =
 					["User-Agent: " . config::USER_AGENT,
-					"Accept: */*",
+					"Accept: application/json, text/javascript, */*; q=0.01",
 					"Accept-Encoding: gzip",
 					"Accept-Language: en-US,en;q=0.5",
 					"Connection: keep-alive",
 					"Referer: https://duckduckgo.com/",
 					"X-Requested-With: XMLHttpRequest",
 					"DNT: 1",
-					"Sec-Fetch-Dest: script",
-					"Sec-Fetch-Mode: no-cors",
-					"Sec-Fetch-Site: same-site"];
+					"Sec-GPC: 1",
+					"Connection: keep-alive",
+					"Sec-Fetch-Dest: empty",
+					"Sec-Fetch-Mode: cors",
+					"Sec-Fetch-Site: same-origin",
+					"TE: trailers"];
 				break;
 		}
 		
@@ -1889,12 +1898,12 @@ class ddg{
 			[$npt, $proxy] = $this->backend->get($get["npt"], "images");
 			
 			try{
-				$json = json_decode($this->get(
+				$json = $this->get(
 					$proxy,
 					"https://duckduckgo.com/i.js?" . $npt,
 					[],
 					ddg::req_xhr
-				), true);
+				);
 				
 			}catch(Exception $err){
 				
@@ -1920,6 +1929,7 @@ class ddg{
 			
 			$filter = [];
 			$get_filters = [
+				"hps" => "1",
 				"q" => $search,
 				"iax" => "images",
 				"ia" => "images"
@@ -1970,7 +1980,7 @@ class ddg{
 			}
 			
 			$vqd = $vqd[1];
-				
+			
 			// @TODO: s param = image offset
 			$js_params = [
 				"l" => $country,
@@ -1994,17 +2004,24 @@ class ddg{
 			}
 			
 			try{
-				$json = json_decode($this->get(
+				$json = $this->get(
 					$proxy,
 					"https://duckduckgo.com/i.js",
 					$js_params,
 					ddg::req_xhr
-				), true);
+				);
 				
 			}catch(Exception $err){
 				
 				throw new Exception("Failed to get i.js");
 			}
+		}
+		
+		$json = json_decode($json, true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON");
 		}
 		
 		$out = [
