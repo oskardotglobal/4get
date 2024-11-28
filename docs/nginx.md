@@ -1,103 +1,194 @@
-# Install on NGINX
+<h1 align=center>Installation of 4get in NGINX</h1>
 
->I do NOT recommend following this guide, only follow this if you *really* need to use nginx. I recommend you use the apache2 steps instead.
+<div align=right>
 
-Login as root.
+> NOTE: As the previous version stated, it is better to follow the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">Apache2 guide</a> instead of the Nginx one.
 
-Create a file in `/etc/nginx/sites-avaliable/` called `4get.conf` or any name you want and put this into the file:
+> NOTE: This is going to guess that you're using either a <abbr title="(Arch Linux, Artix Linux, Endeavouros, etc...) ">Arch-based system</abbr> or a <abbr title="(Debian, Ubuntu, Devuan, etc...)">Debian-based system</abbr>, although you can still follow it with minor issues.
 
-```
-server {
-    # DO YOU REALLY NEED TO LOG SEARCHES?
-    access_log /dev/null;
-    error_log /dev/null;
-    # Change this if you have 4get in other folder.
-    root /var/www/4get;
-    # Change yourdomain by your domain lol
-    server_name www.yourdomain.com yourdomain.com;
+</div>
 
-    location @php {
-        try_files $uri.php $uri/index.php =404;
-                # Change the unix socket address if it's different for you.
-        fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
-        fastcgi_index index.php;
-                # Change this to `fastcgi_params` if you use a debian based distro.
-        include fastcgi.conf;
-        fastcgi_intercept_errors on;
-    }
+1. Login as root.
+2. Upgrade your system:
+   * On Arch-based, run `pacman -Syu`.
+   * On Debian-based, run `apt update`, then `apt upgrade`.
+3. Install the following dependencies:
+   * `git`: So you can clone <a href="https://git.lolcat.ca/lolcat/4get">this</a> repository.
+   * `nginx`: So you can run Nginx.
+   * `php-fpm`: This is what allows Nginx to run *(and show)* PHP files.
+   * `php-imagick`, `imagemagick`: Image manipulation.
+   * `php-apcu`: Caching module.
+   * `php-curl`, `curl`:  Transferring data with URLs.
+   * `php-mbstring`: String utils.
+   * `certbot`, `certbot-nginx`: ACME client. Used to create SSL certificates.
+     * In Arch-based distributions:
+       * `pacman -S nginx certbot php-imagick certbot-nginx imagemagick curl php-apcu git`
+     * In Debian-based distributions:
+       * `apt install php-mbstring nginx certbot-nginx certbot php-imagick imagemagick php-curl curl php-apcu git`
 
-    location / {
-        try_files $uri @php;
-    }
+<div align=right>
 
-    location ~* ^(.*)\.php$ {
-        return 301 $1;
-    }
+> IMPORTANT: `php-curl`, `php-mbstring` might be a Debian-only package, but this needs further fact checking.
 
+> IMPORTANT: If having issues with `php-apcu` or `libsodium`, go to [^1].
+
+</div>
+
+4. `cd` to `/etc/nginx` and make the `conf.d/` directory if it doesn't exist:
+   * Again, this guesses you're logged in as root.
+   ```sh
+   cd /etc/nginx
+   ls -l conf.d/ # If ls shows conf.d, then it means it exists.
+   # If it does not, run:
+   mkdir conf.d
+   ```
+5. Make a file inside `conf.d/` called `4get.conf` and place the following content:
+   * First run `touch conf.d/4get.conf` then `nano conf.d/4get.conf` to open the nano editor: *(Install it if it is not, or use another editor.)*
+    ```sh
+    server {
+        access_log /dev/null; # Search log file. Do you really need to?
+        error_log /dev/null;  # Error log file.
+
+        # Change this if you have 4get in another folder.
+        root /var/www/4get;
+        # Change 'yourdomain' to your domain.
+        server_name www.yourdomain.com yourdomain.com;
+        # Port to listen to.
         listen 80;
-}
-```
 
-That is a very basic config so you will need to adapt it to your needs in case you have a more complicated nginx configuration. Anyways, you can see a real world example [here](https://git.zzls.xyz/Fijxu/etc-configs/src/branch/selfhost/nginx/sites-available/4get.zzls.xyz.conf)
+        location @php {
+            try_files $uri.php $uri/index.php =404;
+            # Change the unix socket address if it's different for you.
+            fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+            fastcgi_index index.php;
+            # Change this to `fastcgi_params` if you use a debian based distribution.
+            include fastcgi.conf;
+            fastcgi_intercept_errors on;
+        }
 
-After you save the file you will need to do a symlink of the `4get.conf` file to `/etc/nignx/sites-enabled/`, you can do it with this command: 
+        location / {
+            try_files $uri @php;
+        }
 
-```sh
-ln -s /etc/nginx/sites-available/4get.conf /etc/nginx/sites-available/4get.conf
-```
+        location ~* ^(.*)\.php$ {
+            return 301 $1;
+        }
 
-Now test the nginx config with `nginx -t`, if it says that everything is good, restart nginx using `systemctl restart nginx`
-
-# Encryption setup
-
-Generate a certificate for the domain using:
-
-```sh
-certbot --nginx --key-type ecdsa -d www.yourdomain.com -d yourdomain.com
-```
-(Remember to install the nginx certbot plugin!!!)
-
-After doing that certbot should deploy the certificate automatically into your 4get nginx config file. It should be ready to use at that point.
-
-# Tor setup on NGINX
-
-Important Note: Tor onion addresses are significantly longer than traditional domain names. Before proceeding with Nginx configuration, ensure you increase the `server_names_hash_bucket_size` value in your `nginx.conf` file. This setting in your Nginx configuration controls the internal data structure used to manage multiple server names (hostnames) associated with your web server. Each hostname requires a certain amount of memory within this structure. If the size is insufficient, Nginx will encounter errors.
-
-1. Open your `nginx.conf` file (that is under `/etc/nginx/nginx.conf`).
-2. Find the line containing `# server_names_hash_bucket_size 64;`.
-3. Uncomment the line and adjust the value. Start with 64, but if you encounter issues, incrementally increase it (e.g., 128, 256) until it accommodates your configuration.
-
-Open your current 4get NGINX config (that is under `/etc/nginx/sites-available/`) and append this to the end of the file:
-
-```
-server {
-	access_log /dev/null;
-	error_log /dev/null;
-
-    listen 80;
-    server_name <youronionaddress>;
-    root /var/www/4get;
-
-    location @php {
-        try_files $uri.php $uri/index.php =404;
-        # Change the unix socket address if it's different for you.
-        fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
-        fastcgi_index index.php;
-        # Change this to `fastcgi_params` if you use a debian based distro.
-        include fastcgi.conf;
-        fastcgi_intercept_errors on;
     }
+    ```
+    * The above is a very basic configuration and thus will need tweaking to your personal needs. It should still work as-is, though. A 'real world' example is present in [^2].
+    * After saving the file, check that the `nginx.conf` file inside the main directory includes files inside `conf.d/`:
+      * It should be inside the the http block: *(The following is an example! Don't just Copy and Paste it!)*
+      ```sh
+      http {
+        include       mime.types;
+        include       conf.d/*.conf; 
+        types_hash_max_size 4096;
+        # ...
+      }
+      ```
+    * Now, test your configuration with `nginx -t`, if it says that everything is good, restart *(or start)* the Nginx daemon:
+      * This depends on the init manager, most distributions use `systemd`, but it's better practice to include most.
+      ```sh
+      # systemd
+      systemctl stop nginx
+      systemctl start nginxt
+      # or
+      systemctl restart nginx
 
-    location / {
-        try_files $uri @php;
+      # openrc
+      rc-service nginx stop
+      rc-service nginx start
+      # or
+      rc-service nginx restart
+
+      # runit
+      sv down nginx
+      sv up nginx
+      # or
+      sv restart nginx
+
+      # s6
+      s6-rc -d change nginx
+      s6-rc -u change nginx
+      # or
+      s6-svc -r /run/service/nginx
+
+      # dinit
+      dinitctl stop nginx
+      dinitctl start nginx
+      # or
+      dinitctl restart nginx
+      ```
+6. Clone the repository to `/var/www`:
+   * `git clone --depth 1 https://git.lolcat.ca/lolcat/4get 4get` - It clones the repository with the depth of one commit *(so it takes less time to download)* and saves the cloned repository as '4get'.
+7. That should be it! There are some extra steps you can take, but it really just depends on you.
+
+<h2 align=center>Encryption setup</h2>
+
+1. Generate a certificate for the domain you're using with:
+   * Note that `certbot-nginx` is needed.
+    ```sh
+    certbot --nginx --key-type ecdsa -d www.yourdomain.com -d yourdomain.com
+    ```
+2. After that, certbot will deploy the certificate automatically to your 4get conf file; It should be ready to use from there.
+
+<h2 align=center>Tor Setup</h2>
+
+<div align=right>
+
+> IMPORTANT: Tor onion addresses are very long compared to traditional domains, so, Before doing anything, edit `nginx.conf` and increase <abbr title="This setting in your Nginx configuration controls the internal data structure used to manage multiple server names (hostnames) associated with your web server. Each hostname requires a certain amount of memory within this structure. If the size is insufficient, Nginx will encounter errors."><code>server_names_hash_bucket_size</code></abbr> to your needs.
+
+</div>
+
+1. `cd` to `/etc/nginx` *(if you haven't)* and open your `nginx.conf` file.
+2. Find the line containing `# server_names_hash_bucket_size 64;` inside said file.
+3. Uncomment the line and adjust the value; start with 64, but if you encounter issues, incrementally increase it *(e.g., 128, 256)* until it accommodates your configuration.
+4. Open *(or duplicate the configuration)* and edit it:
+   * Example configuration, again:
+    ```sh
+    server {
+        access_log /dev/null; # Search log file. Do you really need to?
+        error_log /dev/null;  # Error log file.
+
+        # Change this if you have 4get in another folder.
+        root /var/www/4get;
+        # Change 'onionadress.onion' to your onion link.
+        server_name onionadress.onion;
+        # Port to listen to.
+        listen 80;
+
+        location @php {
+            try_files $uri.php $uri/index.php =404;
+            # Change the unix socket address if it's different for you.
+            fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+            fastcgi_index index.php;
+            # Change this to `fastcgi_params` if you use a debian based distribution.
+            include fastcgi.conf;
+            fastcgi_intercept_errors on;
+        }
+
+        location / {
+            try_files $uri @php;
+        }
+
+        location ~* ^(.*)\.php$ {
+            return 301 $1;
+        }
+
     }
+    ```
+    A real world example is present in [^2].
+5. Once done, check the configuration with `nginx -t`. If everything's fine and dandy, refer to <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/tor.md">the Tor guide</a> to setup your onion site.
 
-    location ~* ^(.*)\.php$ {
-        return 301 $1;
-    }
-}
-```
+<h2 align=center>Other important things</h2>
 
-Obviously replace `<youronionaddress>` by the onion address of `/var/lib/tor/4get/hostname` and then check if the nginx config is valid with `nginx -t` if yes, then restart the nginx service and try opening the onion address into the Tor Browser. You can see a real world example [here](https://git.zzls.xyz/Fijxu/etc-configs/src/branch/selfhost/nginx/sites-available/4get.zzls.xyz.conf)
+1. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/configure.md">Configuration guide</a>: Things to do after setup.
+2. <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">Apache2 guide</a>: Fallback to this if you couldn't get something to work, or you don't know something.
 
-Once you did the above, refer to <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/tor.md">this tor guide</a> to setup your onionsite.
+<h2 align=center>Known issues</h2>
+
+1. https://git.lolcat.ca/lolcat/4get/issues
+
+[^1]: lolcat/4get#40, If having issues with `libsodium`, or `php-apcu`.
+[^2]: <a href="https://git.nadeko.net/Fijxu/etc-configs/src/branch/selfhost/nginx/conf.d/4get.conf">git.nadeko.net</a> nadeko.net's 4get instance configuration.

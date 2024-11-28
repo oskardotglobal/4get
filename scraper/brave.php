@@ -293,8 +293,8 @@ class brave{
 		/*
 		$handle = fopen("scraper/brave.html", "r");
 		$html = fread($handle, filesize("scraper/brave.html"));
-		fclose($handle);
-		*/
+		fclose($handle);*/
+		
 		
 		try{
 			$html =
@@ -411,9 +411,19 @@ class brave{
 		}
 		
 		$data =
+			rtrim(
+				preg_replace(
+					'/\(Array\(0\)\)\).*$/',
+					"",
+					$grep[1]
+				),
+				" ]"
+			) . "]";
+		
+		$data =
 			$this->fuckhtml
 			->parseJsObject(
-				$grep[1]
+				$data
 			);
 		unset($grep);
 		
@@ -663,7 +673,10 @@ class brave{
 					$table["Address"] = $result["location"]["postal_address"]["displayAddress"];
 				}
 				
-				if(isset($result["location"]["rating"])){
+				if(
+					isset($result["location"]["rating"]) &&
+					$result["location"]["rating"] != "void 0"
+				){
 					
 					$table["Rating"] =
 						$result["location"]["rating"]["ratingValue"] . "/" .
@@ -671,13 +684,19 @@ class brave{
 						number_format($result["location"]["rating"]["reviewCount"]) . " votes)";
 				}
 				
-				if(isset($result["location"]["contact"]["telephone"])){
+				if(
+					isset($result["location"]["contact"]["telephone"]) &&
+					$result["location"]["contact"]["telephone"] != "void 0"
+				){
 					
 					$table["Phone number"] =
 						$result["location"]["contact"]["telephone"];
 				}
 				
-				if(isset($result["location"]["price_range"])){
+				if(
+					isset($result["location"]["price_range"]) &&
+					$result["location"]["price_range"] != "void 0"
+				){
 					
 					$table["Price"] =
 						$result["location"]["price_range"];

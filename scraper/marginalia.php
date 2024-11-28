@@ -220,6 +220,7 @@ class marginalia{
 			"related" => []
 		];
 		
+		// API scraper
 		if(config::MARGINALIA_API_KEY !== null){
 			
 			try{
@@ -263,34 +264,57 @@ class marginalia{
 			return $out;
 		}
 		
-		// no more cloudflare!! Parse html by default
-		$params = [
-			"query" => $search
-		];
+		// HTML parser
+		$proxy = $this->backend->get_ip();
 		
-		foreach(["adtech", "recent", "intitle"] as $v){
+		if($get["npt"]){
 			
-			if($get[$v] == "yes"){
+			[$params, $proxy] =
+				$this->backend->get(
+					$get["npt"],
+					"web"
+				);
+			
+			try{
+				$html =
+					$this->get(
+						$proxy,
+						"https://search.marginalia.nu/search?" . $params
+					);
+			}catch(Exception $error){
 				
-				switch($v){
+				throw new Exception("Failed to get HTML");
+			}
+			
+		}else{
+			$params = [
+				"query" => $search
+			];
+			
+			foreach(["adtech", "recent", "intitle"] as $v){
+				
+				if($get[$v] == "yes"){
 					
-					case "adtech": $params["adtech"] = "reduce"; break;
-					case "recent": $params["recent"] = "recent"; break;
-					case "adtech": $params["searchTitle"] = "title"; break;
+					switch($v){
+						
+						case "adtech": $params["adtech"] = "reduce"; break;
+						case "recent": $params["recent"] = "recent"; break;
+						case "adtech": $params["searchTitle"] = "title"; break;
+					}
 				}
 			}
-		}
-		
-		try{
-			$html =
-				$this->get(
-					$this->backend->get_ip(),
-					"https://search.marginalia.nu/search",
-					$params
-				);
-		}catch(Exception $error){
 			
-			throw new Exception("Failed to get HTML");
+			try{
+				$html =
+					$this->get(
+						$proxy,
+						"https://search.marginalia.nu/search",
+						$params
+					);
+			}catch(Exception $error){
+				
+				throw new Exception("Failed to get HTML");
+			}
 		}
 		
 		$this->fuckhtml->load($html);
@@ -385,6 +409,65 @@ class marginalia{
 				"sublink" => $sublinks,
 				"table" => []
 			];
+		}
+		
+		// get next page
+		$this->fuckhtml->load($html);
+		
+		$pagination =
+			$this->fuckhtml
+			->getElementsByAttributeValue(
+				"aria-label",
+				"pagination",
+				"nav"
+			);
+		
+		if(count($pagination) === 0){
+			
+			// no pagination
+			return $out;
+		}
+		
+		$this->fuckhtml->load($pagination[0]);
+		
+		$pages =
+			$this->fuckhtml
+			->getElementsByClassName(
+				"page-link",
+				"a"
+			);
+		
+		$found_current_page = false;
+		
+		foreach($pages as $page){
+			
+			if(
+				stripos(
+					$page["attributes"]["class"],
+					"active"
+				) !== false
+			){
+				
+				$found_current_page = true;
+				continue;
+			}
+			
+			if($found_current_page){
+				
+				// we found current page index, and we iterated over
+				// the next page <a>
+				
+				$out["npt"] =
+					$this->backend->store(
+						parse_url(
+							$page["attributes"]["href"],
+							PHP_URL_QUERY
+						),
+						"web",
+						$proxy
+					);
+				break;
+			}
 		}
 		
 		return $out;

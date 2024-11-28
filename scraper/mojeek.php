@@ -701,9 +701,11 @@ class mojeek{
 				if(count($thumb) === 2){
 					
 					$answer["thumb"] =
-						$this->fuckhtml
-						->getTextContent(
-							$thumb[1]
+						urldecode(
+							$this->fuckhtml
+							->getTextContent(
+								$thumb[1]
+							)
 						);
 				}
 			}

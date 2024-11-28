@@ -381,6 +381,8 @@ class fuckhtml{
 		$json_out = null;
 		$last_char = null;
 		
+		$keyword_check = null;
+		
 		for($i=0; $i<strlen($json); $i++){
 			
 			switch($json[$i]){
@@ -396,6 +398,7 @@ class fuckhtml{
 						
 						$bracket = false;
 						$is_close_bracket = true;
+						
 					}else{
 						
 						if($bracket === false){
@@ -428,6 +431,31 @@ class fuckhtml{
 				$bracket === false &&
 				$is_close_bracket === false
 			){
+				
+				// do keyword check
+				$keyword_check .= $json[$i];
+				
+				if(in_array($json[$i], [":", "{"])){
+					
+					$keyword_check = substr($keyword_check, 0, -1);
+					
+					if(
+						preg_match(
+							'/function|array|return/i',
+							$keyword_check
+						)
+					){
+						
+						$json_out =
+							preg_replace(
+								'/[{"]*' . preg_quote($keyword_check, "/") . '$/',
+								"",
+								$json_out
+							);
+					}
+					
+					$keyword_check = null;
+				}
 				
 				// here we know we're not iterating over a quoted string
 				switch($json[$i]){
