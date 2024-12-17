@@ -36,8 +36,8 @@ class ddg{
 				$headers =
 					["User-Agent: " . config::USER_AGENT,
 					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-					"Accept-Encoding: gzip",
 					"Accept-Language: en-US,en;q=0.5",
+					"Accept-Encoding: gzip",
 					"DNT: 1",
 					"Sec-GPC: 1",
 					"Connection: keep-alive",
@@ -53,19 +53,17 @@ class ddg{
 			case self::req_xhr:
 				$headers =
 					["User-Agent: " . config::USER_AGENT,
-					"Accept: application/json, text/javascript, */*; q=0.01",
-					"Accept-Encoding: gzip",
+					"Accept: */*",
 					"Accept-Language: en-US,en;q=0.5",
-					"Connection: keep-alive",
+					"Accept-Encoding: gzip",
 					"Referer: https://duckduckgo.com/",
-					"X-Requested-With: XMLHttpRequest",
 					"DNT: 1",
 					"Sec-GPC: 1",
 					"Connection: keep-alive",
-					"Sec-Fetch-Dest: empty",
-					"Sec-Fetch-Mode: cors",
-					"Sec-Fetch-Site: same-origin",
-					"TE: trailers"];
+					"Sec-Fetch-Dest: script",
+					"Sec-Fetch-Mode: no-cors",
+					"Sec-Fetch-Site: same-site",
+					"Priority: u=1"];
 				break;
 		}
 		
@@ -92,582 +90,270 @@ class ddg{
 	
 	public function getfilters($pagetype){
 		
+		$base = [
+			"country" => [
+				"display" => "Country",
+				"option" => [
+					"us-en" => "US (English)",
+					"ar-es" => "Argentina",
+					"au-en" => "Australia",
+					"at-de" => "Austria",
+					"be-fr" => "Belgium (fr)",
+					"be-nl" => "Belgium (nl)",
+					"br-pt" => "Brazil",
+					"bg-bg" => "Bulgaria",
+					"ca-en" => "Canada (en)",
+					"ca-fr" => "Canada (fr)",
+					"ct-ca" => "Catalonia",
+					"cl-es" => "Chile",
+					"cn-zh" => "China",
+					"co-es" => "Colombia",
+					"hr-hr" => "Croatia",
+					"cz-cs" => "Czech Republic",
+					"dk-da" => "Denmark",
+					"ee-et" => "Estonia",
+					"fi-fi" => "Finland",
+					"fr-fr" => "France",
+					"de-de" => "Germany",
+					"gr-el" => "Greece",
+					"hk-tzh" => "Hong Kong",
+					"hu-hu" => "Hungary",
+					"in-en" => "India (en)",
+					"id-en" => "Indonesia (en)",
+					"ie-en" => "Ireland",
+					"il-en" => "Israel (en)",
+					"it-it" => "Italy",
+					"jp-jp" => "Japan",
+					"kr-kr" => "Korea",
+					"lv-lv" => "Latvia",
+					"lt-lt" => "Lithuania",
+					"my-en" => "Malaysia (en)",
+					"mx-es" => "Mexico",
+					"nl-nl" => "Netherlands",
+					"nz-en" => "New Zealand",
+					"no-no" => "Norway",
+					"pk-en" => "Pakistan (en)",
+					"pe-es" => "Peru",
+					"ph-en" => "Philippines (en)",
+					"pl-pl" => "Poland",
+					"pt-pt" => "Portugal",
+					"ro-ro" => "Romania",
+					"ru-ru" => "Russia",
+					"xa-ar" => "Saudi Arabia",
+					"sg-en" => "Singapore",
+					"sk-sk" => "Slovakia",
+					"sl-sl" => "Slovenia",
+					"za-en" => "South Africa",
+					"es-ca" => "Spain (ca)",
+					"es-es" => "Spain (es)",
+					"se-sv" => "Sweden",
+					"ch-de" => "Switzerland (de)",
+					"ch-fr" => "Switzerland (fr)",
+					"tw-tzh" => "Taiwan",
+					"th-en" => "Thailand (en)",
+					"tr-tr" => "Turkey",
+					"us-es" => "US (Spanish)",
+					"ua-uk" => "Ukraine",
+					"uk-en" => "United Kingdom",
+					"vn-en" => "Vietnam (en)"
+				]
+			]
+		];
+		
 		switch($pagetype){
 			
 			case "web":
-				return
-				[
-					"country" => [
-						"display" => "Country",
-						"option" => [
-							"any" => "All Regions",
-							"ar-es" => "Argentina",
-							"au-en" => "Australia",
-							"at-de" => "Austria",
-							"be-fr" => "Belgium (fr)",
-							"be-nl" => "Belgium (nl)",
-							"br-pt" => "Brazil",
-							"bg-bg" => "Bulgaria",
-							"ca-en" => "Canada (en)",
-							"ca-fr" => "Canada (fr)",
-							"ct-ca" => "Catalonia",
-							"cl-es" => "Chile",
-							"cn-zh" => "China",
-							"co-es" => "Colombia",
-							"hr-hr" => "Croatia",
-							"cz-cs" => "Czech Republic",
-							"dk-da" => "Denmark",
-							"ee-et" => "Estonia",
-							"fi-fi" => "Finland",
-							"fr-fr" => "France",
-							"de-de" => "Germany",
-							"gr-el" => "Greece",
-							"hk-tzh" => "Hong Kong",
-							"hu-hu" => "Hungary",
-							"in-en" => "India (en)",
-							"id-en" => "Indonesia (en)",
-							"ie-en" => "Ireland",
-							"il-en" => "Israel (en)",
-							"it-it" => "Italy",
-							"jp-jp" => "Japan",
-							"kr-kr" => "Korea",
-							"lv-lv" => "Latvia",
-							"lt-lt" => "Lithuania",
-							"my-en" => "Malaysia (en)",
-							"mx-es" => "Mexico",
-							"nl-nl" => "Netherlands",
-							"nz-en" => "New Zealand",
-							"no-no" => "Norway",
-							"pk-en" => "Pakistan (en)",
-							"pe-es" => "Peru",
-							"ph-en" => "Philippines (en)",
-							"pl-pl" => "Poland",
-							"pt-pt" => "Portugal",
-							"ro-ro" => "Romania",
-							"ru-ru" => "Russia",
-							"xa-ar" => "Saudi Arabia",
-							"sg-en" => "Singapore",
-							"sk-sk" => "Slovakia",
-							"sl-sl" => "Slovenia",
-							"za-en" => "South Africa",
-							"es-ca" => "Spain (ca)",
-							"es-es" => "Spain (es)",
-							"se-sv" => "Sweden",
-							"ch-de" => "Switzerland (de)",
-							"ch-fr" => "Switzerland (fr)",
-							"tw-tzh" => "Taiwan",
-							"th-en" => "Thailand (en)",
-							"tr-tr" => "Turkey",
-							"us-en" => "US (English)",
-							"us-es" => "US (Spanish)",
-							"ua-uk" => "Ukraine",
-							"uk-en" => "United Kingdom",
-							"vn-en" => "Vietnam (en)"
-						]
-					],
-					"nsfw" => [
-						"display" => "NSFW",
-						"option" => [
-							"yes" => "Yes",
-							"maybe" => "Maybe",
-							"no" => "No"
-						]
-					],
-					"newer" => [
-						"display" => "Newer than",
-						"option" => "_DATE"
-					],
-					"older" => [
-						"display" => "Older than",
-						"option" => "_DATE"
-					],
-					"extendedsearch" => [
-						// undefined display, so it wont show in frontend
-						"option" => [
-							"yes" => "Yes",
-							"no" => "No"
+				$base["country"]["option"] =
+					array_merge(["any" => "All Regions"], $base["country"]["option"]);
+				
+				return array_merge($base,
+					[
+						"nsfw" => [
+							"display" => "NSFW",
+							"option" => [
+								"yes" => "Yes",
+								"maybe" => "Maybe",
+								"no" => "No"
+							]
+						],
+						"newer" => [
+							"display" => "Newer than",
+							"option" => "_DATE"
+						],
+						"older" => [
+							"display" => "Older than",
+							"option" => "_DATE"
+						],
+						"extendedsearch" => [
+							// undefined display
+							"option" => [
+								"yes" => "Yes",
+								"no" => "No",
+							]
 						]
 					]
-				];
+				);
 				break;
 			
 			case "images":
-				return
-				[
-					"country" => [
-						"display" => "Country",
-						"option" => [
-							"us-en" => "US (English)",
-							"ar-es" => "Argentina",
-							"au-en" => "Australia",
-							"at-de" => "Austria",
-							"be-fr" => "Belgium (fr)",
-							"be-nl" => "Belgium (nl)",
-							"br-pt" => "Brazil",
-							"bg-bg" => "Bulgaria",
-							"ca-en" => "Canada (en)",
-							"ca-fr" => "Canada (fr)",
-							"ct-ca" => "Catalonia",
-							"cl-es" => "Chile",
-							"cn-zh" => "China",
-							"co-es" => "Colombia",
-							"hr-hr" => "Croatia",
-							"cz-cs" => "Czech Republic",
-							"dk-da" => "Denmark",
-							"ee-et" => "Estonia",
-							"fi-fi" => "Finland",
-							"fr-fr" => "France",
-							"de-de" => "Germany",
-							"gr-el" => "Greece",
-							"hk-tzh" => "Hong Kong",
-							"hu-hu" => "Hungary",
-							"in-en" => "India (en)",
-							"id-en" => "Indonesia (en)",
-							"ie-en" => "Ireland",
-							"il-en" => "Israel (en)",
-							"it-it" => "Italy",
-							"jp-jp" => "Japan",
-							"kr-kr" => "Korea",
-							"lv-lv" => "Latvia",
-							"lt-lt" => "Lithuania",
-							"my-en" => "Malaysia (en)",
-							"mx-es" => "Mexico",
-							"nl-nl" => "Netherlands",
-							"nz-en" => "New Zealand",
-							"no-no" => "Norway",
-							"pk-en" => "Pakistan (en)",
-							"pe-es" => "Peru",
-							"ph-en" => "Philippines (en)",
-							"pl-pl" => "Poland",
-							"pt-pt" => "Portugal",
-							"ro-ro" => "Romania",
-							"ru-ru" => "Russia",
-							"xa-ar" => "Saudi Arabia",
-							"sg-en" => "Singapore",
-							"sk-sk" => "Slovakia",
-							"sl-sl" => "Slovenia",
-							"za-en" => "South Africa",
-							"es-ca" => "Spain (ca)",
-							"es-es" => "Spain (es)",
-							"se-sv" => "Sweden",
-							"ch-de" => "Switzerland (de)",
-							"ch-fr" => "Switzerland (fr)",
-							"tw-tzh" => "Taiwan",
-							"th-en" => "Thailand (en)",
-							"tr-tr" => "Turkey",
-							"us-es" => "US (Spanish)",
-							"ua-uk" => "Ukraine",
-							"uk-en" => "United Kingdom",
-							"vn-en" => "Vietnam (en)"
-						]
-					],
-					"nsfw" => [
-						"display" => "NSFW",
-						"option" => [
-							"yes" => "Yes",
-							"no" => "No"
-						]
-					],
-					"date" => [
-						"display" => "Time posted",
-						"option" => [
-							"any" => "Any time",
-							"Day" => "Past day",
-							"Week" => "Past week",
-							"Month" => "Past month"
-						]
-					],
-					"size" => [
-						"display" => "Size",
-						"option" => [
-							"any" => "Any size",
-							"Small" => "Small",
-							"Medium" => "Medium",
-							"Large" => "Large",
-							"Wallpaper" => "Wallpaper"
-						]
-					],
-					"color" => [
-						"display" => "Colors",
-						"option" => [
-							"any" => "All colors",
-							"Monochrome" => "Black and white",
-							"Red" => "Red",
-							"Orange" => "Orange",
-							"Yellow" => "Yellow",
-							"Green" => "Green",
-							"Blue" => "Blue",
-							"Purple" => "Purple",
-							"Pink" => "Pink",
-							"Brown" => "Brown",
-							"Black" => "Black",
-							"Gray" => "Gray",
-							"Teal" => "Teal",
-							"White" => "White"
-						]
-					],
-					"type" => [
-						"display" => "Type",
-						"option" => [
-							"any" => "All types",
-							"photo" => "Photograph",
-							"clipart" => "Clipart",
-							"gif" => "Animated GIF",
-							"transparent" => "Transparent"
-						]
-					],
-					"layout" => [
-						"display" => "Layout",
-						"option" => [
-							"any" => "All layouts",
-							"Square" => "Square",
-							"Tall" => "Tall",
-							"Wide" => "Wide"
-						]
-					],
-					"license" => [
-						"display" => "License",
-						"option" => [
-							"any" => "All licenses", // blame ddg for this
-							"Any" => "All Creative Commons",
-							"Public" => "Public domain",
-							"Share" => "Free to Share and Use",
-							"ShareCommercially" => "Free to Share and Use Commercially",
-							"Modify" => "Free to Modify, Share, and Use",
-							"ModifyCommercially" => "Free to Modify, Share, and Use Commercially"
+				return array_merge($base,
+					[
+						"nsfw" => [
+							"display" => "NSFW",
+							"option" => [
+								"yes" => "Yes",
+								"no" => "No"
+							]
+						],
+						"date" => [
+							"display" => "Time posted",
+							"option" => [
+								"any" => "Any time",
+								"Day" => "Past day",
+								"Week" => "Past week",
+								"Month" => "Past month"
+							]
+						],
+						"size" => [
+							"display" => "Size",
+							"option" => [
+								"any" => "Any size",
+								"Small" => "Small",
+								"Medium" => "Medium",
+								"Large" => "Large",
+								"Wallpaper" => "Wallpaper"
+							]
+						],
+						"color" => [
+							"display" => "Colors",
+							"option" => [
+								"any" => "All colors",
+								"Monochrome" => "Black and white",
+								"Red" => "Red",
+								"Orange" => "Orange",
+								"Yellow" => "Yellow",
+								"Green" => "Green",
+								"Blue" => "Blue",
+								"Purple" => "Purple",
+								"Pink" => "Pink",
+								"Brown" => "Brown",
+								"Black" => "Black",
+								"Gray" => "Gray",
+								"Teal" => "Teal",
+								"White" => "White"
+							]
+						],
+						"type" => [
+							"display" => "Type",
+							"option" => [
+								"any" => "All types",
+								"photo" => "Photograph",
+								"clipart" => "Clipart",
+								"gif" => "Animated GIF",
+								"transparent" => "Transparent"
+							]
+						],
+						"layout" => [
+							"display" => "Layout",
+							"option" => [
+								"any" => "All layouts",
+								"Square" => "Square",
+								"Tall" => "Tall",
+								"Wide" => "Wide"
+							]
+						],
+						"license" => [
+							"display" => "License",
+							"option" => [
+								"any" => "All licenses",
+								"Any" => "All Creative Commons",
+								"Public" => "Public domain",
+								"Share" => "Free to Share and Use",
+								"ShareCommercially" => "Free to Share and Use Commercially",
+								"Modify" => "Free to Modify, Share, and Use",
+								"ModifyCommercially" => "Free to Modify, Share, and Use Commercially"
+							]
 						]
 					]
-				];
+				);
 				break;
 			
 			case "videos":
-				return
-				[
-					"country" => [
-						"display" => "Country",
-						"option" => [
-							"us-en" => "US (English)",
-							"ar-es" => "Argentina",
-							"au-en" => "Australia",
-							"at-de" => "Austria",
-							"be-fr" => "Belgium (fr)",
-							"be-nl" => "Belgium (nl)",
-							"br-pt" => "Brazil",
-							"bg-bg" => "Bulgaria",
-							"ca-en" => "Canada (en)",
-							"ca-fr" => "Canada (fr)",
-							"ct-ca" => "Catalonia",
-							"cl-es" => "Chile",
-							"cn-zh" => "China",
-							"co-es" => "Colombia",
-							"hr-hr" => "Croatia",
-							"cz-cs" => "Czech Republic",
-							"dk-da" => "Denmark",
-							"ee-et" => "Estonia",
-							"fi-fi" => "Finland",
-							"fr-fr" => "France",
-							"de-de" => "Germany",
-							"gr-el" => "Greece",
-							"hk-tzh" => "Hong Kong",
-							"hu-hu" => "Hungary",
-							"in-en" => "India (en)",
-							"id-en" => "Indonesia (en)",
-							"ie-en" => "Ireland",
-							"il-en" => "Israel (en)",
-							"it-it" => "Italy",
-							"jp-jp" => "Japan",
-							"kr-kr" => "Korea",
-							"lv-lv" => "Latvia",
-							"lt-lt" => "Lithuania",
-							"my-en" => "Malaysia (en)",
-							"mx-es" => "Mexico",
-							"nl-nl" => "Netherlands",
-							"nz-en" => "New Zealand",
-							"no-no" => "Norway",
-							"pk-en" => "Pakistan (en)",
-							"pe-es" => "Peru",
-							"ph-en" => "Philippines (en)",
-							"pl-pl" => "Poland",
-							"pt-pt" => "Portugal",
-							"ro-ro" => "Romania",
-							"ru-ru" => "Russia",
-							"xa-ar" => "Saudi Arabia",
-							"sg-en" => "Singapore",
-							"sk-sk" => "Slovakia",
-							"sl-sl" => "Slovenia",
-							"za-en" => "South Africa",
-							"es-ca" => "Spain (ca)",
-							"es-es" => "Spain (es)",
-							"se-sv" => "Sweden",
-							"ch-de" => "Switzerland (de)",
-							"ch-fr" => "Switzerland (fr)",
-							"tw-tzh" => "Taiwan",
-							"th-en" => "Thailand (en)",
-							"tr-tr" => "Turkey",
-							"us-en" => "US (English)",
-							"us-es" => "US (Spanish)",
-							"ua-uk" => "Ukraine",
-							"uk-en" => "United Kingdom",
-							"vn-en" => "Vietnam (en)"
-						]
-					],
-					"nsfw" => [
-						"display" => "NSFW",
-						"option" => [
-							"yes" => "Yes",
-							"no" => "No"
-						]
-					],
-					"date" => [
-						"display" => "Time fetched",
-						"option" => [
-							"any" => "Any time",
-							"d" => "Past day",
-							"w" => "Past week",
-							"m" => "Past month"
-						]
-					],
-					"resolution" => [ //videoDefinition
-						"display" => "Resolution",
-						"option" => [
-							"any" => "Any resolution",
-							"high" => "High definition",
-							"standard" => "Standard definition"
-						]
-					],
-					"duration" => [ // videoDuration
-						"display" => "Duration",
-						"option" => [
-							"any" => "Any duration",
-							"short" => "Short (>5min)",
-							"medium" => "Medium (5-20min)",
-							"long" => "Long (<20min)"
-						]
-					],
-					"license" => [
-						"display" => "License",
-						"option" => [
-							"any" => "Any license",
-							"creativeCommon" => "Creative Commons",
-							"youtube" => "YouTube Standard"
+				return array_merge($base,
+					[
+						"nsfw" => [
+							"display" => "NSFW",
+							"option" => [
+								"yes" => "Yes",
+								"no" => "No"
+							]
+						],
+						"date" => [
+							"display" => "Time fetched",
+							"option" => [
+								"any" => "Any time",
+								"d" => "Past day",
+								"w" => "Past week",
+								"m" => "Past month"
+							]
+						],
+						"resolution" => [ //videoDefinition
+							"display" => "Resolution",
+							"option" => [
+								"any" => "Any resolution",
+								"high" => "High definition",
+								"standard" => "Standard definition"
+							]
+						],
+						"duration" => [ // videoDuration
+							"display" => "Duration",
+							"option" => [
+								"any" => "Any duration",
+								"short" => "Short (>5min)",
+								"medium" => "Medium (5-20min)",
+								"long" => "Long (<20min)"
+							]
+						],
+						"license" => [
+							"display" => "License",
+							"option" => [
+								"any" => "Any license",
+								"creativeCommon" => "Creative Commons",
+								"youtube" => "YouTube Standard"
+							]
 						]
 					]
-				];
+				);
 				break;
 				
 			case "news":
-				return
-				[
-					"country" => [
-						"display" => "Country",
-						"option" => [
-							"us-en" => "US (English)",
-							"ar-es" => "Argentina",
-							"au-en" => "Australia",
-							"at-de" => "Austria",
-							"be-fr" => "Belgium (fr)",
-							"be-nl" => "Belgium (nl)",
-							"br-pt" => "Brazil",
-							"bg-bg" => "Bulgaria",
-							"ca-en" => "Canada (en)",
-							"ca-fr" => "Canada (fr)",
-							"ct-ca" => "Catalonia",
-							"cl-es" => "Chile",
-							"cn-zh" => "China",
-							"co-es" => "Colombia",
-							"hr-hr" => "Croatia",
-							"cz-cs" => "Czech Republic",
-							"dk-da" => "Denmark",
-							"ee-et" => "Estonia",
-							"fi-fi" => "Finland",
-							"fr-fr" => "France",
-							"de-de" => "Germany",
-							"gr-el" => "Greece",
-							"hk-tzh" => "Hong Kong",
-							"hu-hu" => "Hungary",
-							"in-en" => "India (en)",
-							"id-en" => "Indonesia (en)",
-							"ie-en" => "Ireland",
-							"il-en" => "Israel (en)",
-							"it-it" => "Italy",
-							"jp-jp" => "Japan",
-							"kr-kr" => "Korea",
-							"lv-lv" => "Latvia",
-							"lt-lt" => "Lithuania",
-							"my-en" => "Malaysia (en)",
-							"mx-es" => "Mexico",
-							"nl-nl" => "Netherlands",
-							"nz-en" => "New Zealand",
-							"no-no" => "Norway",
-							"pk-en" => "Pakistan (en)",
-							"pe-es" => "Peru",
-							"ph-en" => "Philippines (en)",
-							"pl-pl" => "Poland",
-							"pt-pt" => "Portugal",
-							"ro-ro" => "Romania",
-							"ru-ru" => "Russia",
-							"xa-ar" => "Saudi Arabia",
-							"sg-en" => "Singapore",
-							"sk-sk" => "Slovakia",
-							"sl-sl" => "Slovenia",
-							"za-en" => "South Africa",
-							"es-ca" => "Spain (ca)",
-							"es-es" => "Spain (es)",
-							"se-sv" => "Sweden",
-							"ch-de" => "Switzerland (de)",
-							"ch-fr" => "Switzerland (fr)",
-							"tw-tzh" => "Taiwan",
-							"th-en" => "Thailand (en)",
-							"tr-tr" => "Turkey",
-							"us-en" => "US (English)",
-							"us-es" => "US (Spanish)",
-							"ua-uk" => "Ukraine",
-							"uk-en" => "United Kingdom",
-							"vn-en" => "Vietnam (en)"
-						]
-					],
-					"nsfw" => [
-						"display" => "NSFW",
-						"option" => [
-							"yes" => "Yes",
-							"maybe" => "Maybe",
-							"no" => "No"
-						]
-					],
-					"date" => [
-						"display" => "Time posted",
-						"option" => [
-							"any" => "Any time",
-							"d" => "Past day",
-							"w" => "Past week",
-							"m" => "Past month"
+				return array_merge($base,
+					[
+						"nsfw" => [
+							"display" => "NSFW",
+							"option" => [
+								"yes" => "Yes",
+								"maybe" => "Maybe",
+								"no" => "No"
+							]
+						],
+						"date" => [
+							"display" => "Time posted",
+							"option" => [
+								"any" => "Any time",
+								"d" => "Past day",
+								"w" => "Past week",
+								"m" => "Past month"
+							]
 						]
 					]
-				];
-				break;
-			
-			default:
-				return [];
+				);
 				break;
 		}
 	}
 	
 	public function web($get){
 		
-		if($get["npt"]){
-			
-			[$jsgrep, $proxy] = $this->backend->get($get["npt"], "web");
-						
-			$extendedsearch = false;
-			$inithtml = "";
-			
-		}else{
-			$search = $get["s"];
-			if(strlen($search) === 0){
-				
-				throw new Exception("Search term is empty!");
-			}
-			
-			$proxy = $this->backend->get_ip();
-			$country = $get["country"];
-			$nsfw = $get["nsfw"];
-			$older = $get["older"];
-			$newer = $get["newer"];
-			$extendedsearch = $get["extendedsearch"] == "yes" ? true : false;
-			
-			// generate filters
-			$get_filters = [
-				"q" => $search,
-				"kz" => "1" // force instant answers
-			];
-			
-			if($country == "any"){
-				
-				$get_filters["kl"] = "wt-wt";
-			}else{
-				
-				$get_filters["kl"] = $country;
-			}
-			
-			switch($nsfw){
-				
-				case "yes": $get_filters["kp"] = "-2"; break;
-				case "maybe": $get_filters["kp"] = "-1"; break;
-				case "no": $get_filters["kp"] = "1"; break;
-			}
-			
-			$df = true;
-			
-			if($newer === false){
-				
-				if($older !== false){
-					
-					$start = 36000;
-					$end = $older;
-				}else{
-					
-					$df = false;
-				}
-			}else{
-				
-				$start = $newer;
-				
-				if($older !== false){
-					
-					$end = $older;
-				}else{
-					
-					$end = time();
-				}
-			}
-			
-			if($df === true){
-				$get_filters["df"] = date("Y-m-d", $start) . ".." . date("Y-m-d", $end);
-			}
-			
-			/*
-				Get html
-			*/
-			try{
-				$inithtml = $this->get(
-					$proxy,
-					"https://duckduckgo.com/",
-					$get_filters
-				);
-			}catch(Exception $e){
-				
-				throw new Exception("Failed to get html");
-			}
-			
-			preg_match(
-				'/DDG\.deep\.initialize\(\'(.*)\',/U',
-				$inithtml,
-				$jsgrep
-			);
-			
-			if(!isset($jsgrep[1])){
-				
-				throw new Exception("Failed to get d.js URL");
-			}
-			
-			$jsgrep = $jsgrep[1];
-		}
-		
-		// get javascript
-		try{
-			
-			$js = $this->get(
-				$proxy,
-				"https://links.duckduckgo.com" . $jsgrep,
-				[],
-				ddg::req_xhr
-			);
-		}catch(Exception $e){
-			
-			throw new Exception("Failed to fetch d.js");
-		}
-		
-		// initialize api response array
 		$out = [
 			"status" => "ok",
 			"spelling" => [
@@ -684,1207 +370,903 @@ class ddg{
 			"related" => []
 		];
 		
-		/*
-			Additional requests
-		*/
-		
-		if($extendedsearch){
+		if($get["npt"]){
 			
-			/*
-				Check for worknik results
-			*/
-			preg_match(
-				'/nrj\(\'\/js\/spice\/dictionary\/definition\/([^\'\)]+)/',
-				$js,
-				$wordnik
-			);
+			[$js_link, $proxy] = $this->backend->get($get["npt"], "web");
+			$js_link = "https://links.duckduckgo.com" . $js_link;
 			
-			if(isset($wordnik[1])){
+			$html = "";
+			$get["extendedsearch"] = "no";
+			
+		}else{
+			if(strlen($get["s"]) === 0){
 				
-				try{
-				
-					$wordnik = $wordnik[1];
-					
-					// get definition
-					$wordnikjs = $this->get(
-						$proxy,
-						"https://duckduckgo.com/js/spice/dictionary/definition/" . $wordnik,
-						[],
-						ddg::req_xhr
-					);
-					
-					preg_match(
-						'/ddg_spice_dictionary_definition\(\n?(\[{[\S\s]*}])/',
-						$wordnikjs,
-						$wordnikjson
-					);
-					
-					if(isset($wordnikjson[1])){
-						
-						$wordnikjson = json_decode($wordnikjson[1], true);
-						
-						$out["answer"][0] = [
-							"title" => urldecode($wordnik),
-							"description" => [],
-							"url" => "https://www.wordnik.com/words/" . $wordnik,
-							"thumb" => null,
-							"table" => [],
-							"sublink" => []
-						];
-						
-						$partofspeech = false;
-						$wastext = false;
-						$textindent = 1;
-						
-						// get audio
-						
-						$wordnikaudio_json =
-							json_decode(
-								$this->get(
-									$proxy,
-									"https://duckduckgo.com/js/spice/dictionary/audio/" . $wordnik,
-									[],
-									ddg::req_xhr
-								),
-								true
-							);
-						
-						if(isset($wordnikaudio_json[0]["id"])){
-							
-							usort($wordnikaudio_json, function($a, $b){
-								
-								return $a["id"] < $b["id"];
-							});
-							
-							$out["answer"][0]["description"][] = [
-								"type" => "audio",
-								"url" => $wordnikaudio_json[0]["fileUrl"]
-							];
-						}
-						
-						$collection = [];
-						$e[] = [];
-						
-						foreach($wordnikjson as $data){
-							
-							if(!isset($data["partOfSpeech"])){
-								
-								continue;
-							}
-							
-							if(isset($data["text"])){
-								
-								if(!isset($collection[$data["partOfSpeech"]])){
-									
-									$collection[$data["partOfSpeech"]] = [];
-									$c = 0;
-								}else{
-									$c = count($collection[$data["partOfSpeech"]]);
-								}
-								
-								if(!isset($e[$data["partOfSpeech"]])){
-									
-									$e[$data["partOfSpeech"]] = 0;
-								}
-								
-								$e[$data["partOfSpeech"]]++;
-								$text = $e[$data["partOfSpeech"]] . ". " . $this->unescapehtml(strip_tags($data["text"]));
-								
-								$syn = false;
-								if(
-									isset($data["relatedWords"]) &&
-									count($data["relatedWords"]) !== 0
-								){
-									
-									$syn = " (";
-									
-									$u = 0;
-									foreach($data["relatedWords"] as $related){
-										
-										$syn .= ucfirst($related["relationshipType"]) . ": ";
-										
-										$c = count($related["words"]);
-										$b = 0;
-										foreach($related["words"] as $word){
-											
-											$syn .= trim($this->unescapehtml(strip_tags($word)));
-											
-											$b++;
-											if($b !== $c){
-												
-												$syn .= ", ";
-											}
-										}
-										
-										$u++;
-										if($u !== count($data["relatedWords"])){
-											
-											$syn .= ". ";
-										}
-									}
-									
-									$syn .= ")";
-								}
-								
-								if(
-									$c !== 0 &&
-									$collection[$data["partOfSpeech"]][$c - 1]["type"] == "text"
-								){
-									$collection[$data["partOfSpeech"]][$c - 1]["value"] .=
-										"\n" . $text;
-									
-								}else{
-									
-									if(
-										$c !== 0 &&
-										(
-											$collection[$data["partOfSpeech"]][$c - 1]["type"] == "text" ||
-											$collection[$data["partOfSpeech"]][$c - 1]["type"] == "italic"
-										)
-									){
-										
-										$text = "\n" . $text;
-									}
-									
-									$collection[$data["partOfSpeech"]][] =
-										[
-											"type" => "text",
-											"value" => $text
-										];
-								}
-								
-								if($syn){
-									
-									$collection[$data["partOfSpeech"]][] = [
-										"type" => "italic",
-										"value" => $syn
-									];
-								}
-								
-								if(isset($data["exampleUses"])){
-									
-									foreach($data["exampleUses"] as $use){
-										
-										$collection[$data["partOfSpeech"]][] = [
-											"type" => "quote",
-											"value" => $this->unescapehtml(strip_tags($use["text"]))
-										];
-									}
-								}
-								
-								if(isset($data["citations"])){
-									
-									foreach($data["citations"] as $citation){
-										
-										if(!isset($citation["cite"])){
-											
-											continue;
-										}
-										
-										$value = $this->unescapehtml(strip_tags($citation["cite"]));
-										
-										if(
-											isset($citation["source"]) &&
-											trim($citation["source"]) != ""
-										){
-											$value .= " - " . $this->unescapehtml(strip_tags($citation["source"]));
-										}
-										
-										$collection[$data["partOfSpeech"]][] = [
-											"type" => "quote",
-											"value" => $value
-										];
-									}
-								}
-							}
-						}
-						
-						foreach($collection as $key => $items){
-							
-							$out["answer"][0]["description"][] =
-								[
-									"type" => "title",
-									"value" => $key
-								];
-							
-							$out["answer"][0]["description"] =
-								array_merge($out["answer"][0]["description"], $items);
-						}
-					}
-					
-				}catch(Exception $e){
-					
-					// do nothing
-				}
+				throw new Exception("Search term is empty!");
 			}
 			
-			unset($wordnik);
+			$proxy = $this->backend->get_ip();
 			
-			/*
-				Check for stackoverflow answers
-			*/
+			// generate filters
+			$get_filters = [
+				"q" => $get["s"]
+			];
 			
-			// /a.js?p=1&src_id=stack_overflow&from=nlp_qa&id=3390396,2559318&q=how%20can%20i%20check%20for%20undefined%20in%20javascript&s=stackoverflow.com&tl=How%20can%20I%20check%20for%20%22undefined%22%20in%20JavaScript%3F%20%2D%20Stack%20Overflow
-			// /a.js?p=1&src_id=arqade&from=nlp_qa&id=370293,375682&q=what%20is%20the%20difference%20between%20at%20and%20positioned%20in%20execute&s=gaming.stackexchange.com&tl=minecraft%20java%20edition%20minecraft%20commands%20%2D%20What%20is%20the%20difference
-			// /a.js?p=1&src_id=unix&from=nlp_qa&id=312754&q=how%20to%20strip%20metadata%20from%20image%20files&s=unix.stackexchange.com&tl=How%20to%20strip%20metadata%20from%20image%20files%20%2D%20Unix%20%26%20Linux%20Stack%20Exchange
-			preg_match(
-				'/nrj\(\'(\/a\.js\?.*from=nlp_qa.*)\'\)/U',
-				$js,
-				$stack
-			);
-			
-			if(isset($stack[1])){
+			if($get["country"] == "any"){
 				
-				$stack = $stack[1];
+				$get_filters["kl"] = "wt-wt";
+			}else{
 				
-				try{
-					$stackjs = $this->get(
-						$proxy,
-						"https://duckduckgo.com" . $stack,
-						[],
-						ddg::req_xhr
-					);
-					
-					if(
-						!preg_match(
-							'/^DDG\.duckbar\.failed/',
-							$stackjs
-						)
-					){
-					
-						preg_match(
-							'/DDG\.duckbar\.add_array\((\[\{[\S\s]*}])\)/U',
-							$stackjs,
-							$stackjson
-						);
-						
-						$stackjson = json_decode($stackjson[1], true)[0]["data"][0];
-						
-						$out["answer"][] = [
-							"title" => $stackjson["Heading"],
-							"description" => $this->stackoverflow_parse($stackjson["Abstract"]),
-							"url" => str_replace(["http://", "ddg"], ["https://", ""], $stackjson["AbstractURL"]),
-							"thumb" => null,
-							"table" => [],
-							"sublink" => []
-						];
-					}
-					
-				}catch(Exception $e){
-					
-					// do nothing
-				}
+				$get_filters["kl"] = $get["country"];
 			}
 			
-			/*
-				Check for musicmatch (lyrics)
-			*/
-			preg_match(
-				'/nrj\(\'(\/a\.js\?.*&s=lyrics.*)\'\)/U',
-				$js,
-				$lyrics
-			);
-			
-			if(isset($lyrics[1])){
+			switch($get["nsfw"]){
 				
-				$lyrics = $lyrics[1];
-				
-				try{
-					$lyricsjs = $this->get(
-						$proxy,
-						"https://duckduckgo.com" . $lyrics,
-						[],
-						ddg::req_xhr
-					);
-					
-					if(
-						!preg_match(
-							'/^DDG\.duckbar\.failed/',
-							$lyricsjs
-						)
-					){
-					
-						preg_match(
-							'/DDG\.duckbar\.add_array\((\[\{[\S\s]*}])\)/U',
-							$lyricsjs,
-							$lyricsjson
-						);
-						
-						$lyricsjson = json_decode($lyricsjson[1], true)[0]["data"][0];
-						
-						$title = null;
-						
-						if(isset($lyricsjson["Heading"])){
-							
-							$title = $lyricsjson["Heading"];
-						}elseif(isset($lyricsjson["data"][1]["urlTitle"])){
-							
-							$title = $lyricsjson["data"][1]["urlTitle"];
-						}else{
-							
-							$title = $lyricsjson["data"][0]["song_title"];
-						}
-						
-						$description = [
-							[
-								"type" => "text",
-								"value" => null
-							]
-						];
-						$parts =
-							explode(
-								"<br>",
-								str_ireplace(
-									["<br>", "</br>", "<br/>"],
-									"<br>",
-									$lyricsjson["Abstract"]
-								),
-							);
-						
-						for($i=0; $i<count($parts); $i++){
-							
-							$description[0]["value"] .= trim($parts[$i]) . "\n";
-						}
-						
-						$description[0]["value"] = trim($description[0]["value"]);
-						
-						$description[] =
-						[
-							"type" => "quote",
-							"value" =>
-								"Written by " . implode(", ", $lyricsjson["data"][0]["writers"]) .
-								"\nFrom the album " . $lyricsjson["data"][0]["albums"][0]["title"] .
-								"\nReleased on the " . date("jS \of F Y", strtotime($lyricsjson["data"][0]["albums"][0]["release_date"]))
-						];
-
-						$out["answer"][] = [
-							"title" => $title,
-							"description" => $description,
-							"url" => $lyricsjson["AbstractURL"],
-							"thumb" => null,
-							"table" => [],
-							"sublink" => []
-						];
-					}
-					
-				}catch(Exception $e){
-					
-					// do nothing
-				}
+				case "yes": $get_filters["kp"] = "-2"; break;
+				case "maybe": $get_filters["kp"] = "-1"; break;
+				case "no": $get_filters["kp"] = "1"; break;
 			}
-		}
-		
-		/*
-			Get related searches
-		*/
-		preg_match(
-			'/DDG\.duckbar\.loadModule\(\'related_searches\', ?{[\s\S]*"results":(\[{[\s\S]*}]),"vqd"/U',
-			$js,
-			$related
-		);
-		
-		if(isset($related[1])){
 			
-			try{
-				$related = json_decode($related[1], true);
-				
-				for($i=0; $i<count($related); $i++){
-					
-					if(isset($related[$i]["text"])){
-						
-						array_push($out["related"], $related[$i]["text"]);
-					}
-				}
-				
-			}catch(Exception $e){
-				
-				// do nothing
-			}
-		}
-		
-		unset($related);
-		
-		/*
-			Get answers
-		*/
-		$answer_count = preg_match_all(
-			'/DDG\.duckbar\.add\(({.*[\S\s]*})(?:\);|,null,"index"\))/U',
-			$js . $inithtml,
-			$answers
-		);
-		
-		try{
+			$df = true;
 			
-			if(isset($answers[1])){
+			if($get["newer"] === false){
 				
-				$answers = $answers[1];
-				
-				for($i=0; $i<$answer_count; $i++){
+				if($get["older"] !== false){
 					
-					$answers[$i] = json_decode($answers[$i], true);
-					
-					// remove dupes
-					for($k=0; $k<count($out["answer"]); $k++){
-						
-						if(
-							!isset($answers[$i]["data"]["AbstractURL"]) ||
-							str_replace("_", "%20", $out["answer"][$k]["url"]) == str_replace("_", "%20", $this->sanitizeurl($answers[$i]["data"]["AbstractURL"]))
-						){
-							
-							continue 2;
-						}
-					}
-					
-					// get more related queries
-					if(
-						isset($answers[$i]["data"]["RelatedTopics"]) &&
-						$answers[$i]["data"]["RelatedTopics"] != 0
-					){
-						
-						for($k=0; $k<count($answers[$i]["data"]["RelatedTopics"]); $k++){
-							
-							if(isset($answers[$i]["data"]["RelatedTopics"][$k]["Result"])){
-								
-								preg_match(
-									'/">(.*)<\//',
-									$answers[$i]["data"]["RelatedTopics"][$k]["Result"],
-									$label
-								);
-								
-								array_push($out["related"], htmlspecialchars_decode(strip_tags($label[1])));
-							}
-						}
-					}
-					
-					$image = null;
-					
-					// get image
-					if(
-						isset($answers[$i]["data"]["Image"]) &&
-						!empty($answers[$i]["data"]["Image"]) &&
-						$answers[$i]["data"]["Image"] != "https://duckduckgo.com/i/"
-					){
-						if(strpos($answers[$i]["data"]["Image"], "https://duckduckgo.com/i/") === true){
-							
-							$image = $answers[$i]["data"]["Image"];
-						}else{
-							
-							if(
-								strlen($answers[$i]["data"]["Image"]) > 0 &&
-								$answers[$i]["data"]["Image"][0] == "/"
-							){
-								
-								$answers[$i]["data"]["Image"] = substr($answers[$i]["data"]["Image"], 1);
-							}
-							
-							$image = "https://duckduckgo.com/" . $answers[$i]["data"]["Image"];
-						}
-					}
-					
-					$count = count($out["answer"]);
-					
-					if(isset($answers[$i]["data"]["AbstractText"]) && !empty($answers[$i]["data"]["AbstractText"])){
-						
-						$description = $this->stackoverflow_parse($answers[$i]["data"]["AbstractText"]);
-					}elseif(isset($answers[$i]["data"]["Abstract"]) && !empty($answers[$i]["data"]["Abstract"])){
-						
-						$description = $this->stackoverflow_parse($answers[$i]["data"]["Abstract"]);
-					}elseif(isset($answers[$i]["data"]["Answer"]) && !empty($answers[$i]["data"]["Answer"])){
-						
-						$description = $this->stackoverflow_parse($answers[$i]["data"]["Answer"]);
-					}else{
-						
-						$description = [];
-					}
-					
-					if(isset($answers[$i]["data"]["Heading"]) && !empty($answers[$i]["data"]["Heading"])){
-						
-						$title = $this->unescapehtml($answers[$i]["data"]["Heading"]);
-					}else{
-						
-						// no title, ignore bs
-						continue;
-						//$title = null;
-					}
-					
-					if(isset($answers[$i]["data"]["AbstractURL"]) && !empty($answers[$i]["data"]["AbstractURL"])){
-						
-						$url = $answers[$i]["data"]["AbstractURL"];
-					}else{
-						
-						$url = null;
-					}
-					
-					$out["answer"][$count] = [
-						"title" => $title,
-						"description" => $description,
-						"url" => $this->sanitizeurl($url),
-						"thumb" => $image,
-						"table" => [],
-						"sublink" => []
-					];
-					
-					if(isset($answers[$i]["data"]["Infobox"]["content"])){
-						
-						for($k=0; $k<count($answers[$i]["data"]["Infobox"]["content"]); $k++){
-							
-							// populate table
-							if($answers[$i]["data"]["Infobox"]["content"][$k]["data_type"] == "string"){
-								
-								$out["answer"][$count]["table"][$answers[$i]["data"]["Infobox"]["content"][$k]["label"]] =
-									$answers[$i]["data"]["Infobox"]["content"][$k]["value"];
-									continue;
-							}
-							
-							$url = "";
-							$type = "Website";
-												
-							switch($answers[$i]["data"]["Infobox"]["content"][$k]["data_type"]){
-								case "official_site":
-								case "official_website":
-									$type = "Website";
-									break;
-								
-								case "wikipedia": $type = "Wikipedia"; break;
-								case "itunes": $type = "iTunes"; break;
-								case "amazon": $type = "Amazon"; break;
-								
-								case "imdb_title_id":
-								case "imdb_id":
-								case "imdb_name_id":
-									$type = "IMDb";
-									$delim = substr($answers[$i]["data"]["Infobox"]["content"][$k]["value"], 0, 2);
-									
-									if($delim == "nm"){
-										
-										$url = "https://www.imdb.com/name/";
-									}elseif($delim == "tt"){
-										
-										$url = "https://www.imdb.com/title/";
-									}elseif($delim == "co"){
-										
-										$url = "https://www.imdb.com/search/title/?companies=";
-									}else{
-										
-										$url = "https://www.imdb.com/title/";
-									}
-									break;
-
-								case "imdb_name_id": $url = "https://www.imdb.com/name/"; $type = "IMDb"; break;
-								case "twitter_profile": $url = "https://twitter.com/"; $type = "Twitter"; break;
-								case "instagram_profile": $url = "https://instagram.com/"; $type = "Instagram"; break;
-								case "facebook_profile": $url = "https://facebook.com/"; $type = "Facebook"; break;
-								case "spotify_artist_id": $url = "https://open.spotify.com/artist/"; $type = "Spotify"; break;
-								case "rotten_tomatoes": $url = "https://rottentomatoes.com/"; $type = "Rotten Tomatoes"; break;
-								case "youtube_channel": $url = "https://youtube.com/channel/"; $type = "YouTube"; break;
-								case "soundcloud_id": $url = "https://soundcloud.com/"; $type = "SoundCloud"; break;
-								
-								default:
-									continue 2;
-							}
-							
-							// populate sublinks
-							$out["answer"][$count]["sublink"][$type] =
-								$url . $answers[$i]["data"]["Infobox"]["content"][$k]["value"];
-						}	
-					}
-				}
-			}
-		
-		}catch(Exception $e){
-			
-			// do nothing
-		}
-		
-		/*
-			Get shitcoin conversions
-		*/
-		if($extendedsearch){
-			if(
-				preg_match(
-					'/"https?:\/\/(?:www\.coinbase\.com\/converter\/([a-z0-9]+)\/([a-z0-9]+)|changelly\.com\/exchange\/([a-z0-9]+)\/([a-z0-9]+)|coinmarketcap\.com\/currencies\/[a-z0-9]+\/([a-z0-9]+)\/([a-z0-9]+))\/?"/',
-					$js,
-					$shitcoins
-				)
-			){
-				
-				$shitcoins = array_values(array_filter($shitcoins));
-				
-				preg_match(
-					'/(?:[\s,.]*[0-9]+)+/',
-					$search,
-					$amount
-				);
-				
-				if(count($amount) === 1){
-					
-					$amount = (float)str_replace([" ", ","], ["", "."], $amount[0]);
+					$start = 36000;
+					$end = $get["older"];
 				}else{
 					
-					$amount = 1;
-				}
-				
-				try{
-					
-					$description = [];
-						
-					$shitcoinjs = $this->get(
-						$proxy,
-						"https://duckduckgo.com/js/spice/cryptocurrency/{$shitcoins[1]}/{$shitcoins[2]}/1",
-						[],
-						ddg::req_xhr
-					);
-					
-					preg_match(
-						'/ddg_spice_cryptocurrency\(\s*({[\S\s]*})\s*\);/',
-						$shitcoinjs,
-						$shitcoinjson
-					);
-					
-					$shitcoinjson = json_decode($shitcoinjson[1], true);
-					
-					if(
-						!isset($shitcoinjson["error"]) &&
-						$shitcoinjson["status"]["error_code"] == 0
-					){
-						
-						$shitcoinjson = $shitcoinjson["data"];
-						$array_values = array_values($shitcoinjson["quote"])[0];
-						
-						if($amount != 1){
-							
-							// show conversion
-							$description[] = [
-								"type" => "title",
-								"value" => "Conversion"
-							];
-							
-							$description[] = [
-								"type" => "text",
-								"value" =>
-									"{$amount} {$shitcoinjson["name"]} ({$shitcoinjson["symbol"]}) = " . $this->number_format($array_values["price"] * $amount) . " " . strtoupper($shitcoins[2]) . "\n" .
-									"{$amount} " . strtoupper($shitcoins[2]) . " = " . $this->number_format((1 / $array_values["price"]) * $amount) . " {$shitcoinjson["symbol"]}"
-							];
-						}
-						
-						$description[] = [
-							"type" => "title",
-							"value" => "Current rates"
-						];
-						
-						// rates
-						$description[] = [
-							"type" => "text",
-							"value" =>
-								"1 {$shitcoinjson["name"]} ({$shitcoinjson["symbol"]}) = " . $this->number_format($array_values["price"]) . " " . strtoupper($shitcoins[2]) . "\n" .
-								"1 " . strtoupper($shitcoins[2]) . " = " . $this->number_format(1 / $array_values["price"]) . " {$shitcoinjson["symbol"]}"
-						];
-						
-						$description[] = [
-							"type" => "quote",
-							"value" => "Last fetched: " . date("jS \of F Y @ g:ia", strtotime($shitcoinjson["last_updated"]))
-						];
-						
-						$out["answer"][] = [
-							"title" => $shitcoinjson["name"] . " (" . strtoupper($shitcoins[1]) . ") & " . strtoupper($shitcoins[2]) . " market",
-							"description" => $description,
-							"url" => "https://coinmarketcap.com/converter/" . strtoupper($shitcoins[1]) . "/" . strtoupper($shitcoins[2]) . "/?amt={$amount}",
-							"thumb" => null,
-							"table" => [],
-							"sublink" => []
-						];
-					}
-					
-				}catch(Exception $e){
-					
-					// do nothing
+					$df = false;
 				}
 			}else{
 				
-				/*
-					Get currency conversion
-				*/
-				if(
-					preg_match(
-						'/"https:\/\/www\.xe\.com\/currencyconverter\/convert\/\?From=([A-Z0-9]+)&To=([A-Z0-9]+)"/',
-						$js,
-						$currencies
-					)
-				){
-					
-					preg_match(
-						'/(?:[\s,.]*[0-9]+)+/',
-						$search,
-						$amount
-					);
-					
-					if(count($amount) === 1){
-						
-						$amount = (float)str_replace([" ", ","], ["", "."], $amount[0]);
-					}else{
-						
-						$amount = 1;
-					}
-					
-					try{
-						$currencyjs = $this->get(
-							$proxy,
-							"https://duckduckgo.com/js/spice/currency/{$amount}/" . strtolower($currencies[1]) . "/" . strtolower($currencies[2]),
-							[],
-							ddg::req_xhr
-						);
-						
-						preg_match(
-							'/ddg_spice_currency\(\s*({[\S\s]*})\s*\);/',
-							$currencyjs,
-							$currencyjson
-						);
-						
-						$currencyjson = json_decode($currencyjson[1], true);
-						
-						if(empty($currencyjson["headers"]["description"])){
-							
-							$currencyjson = $currencyjson["conversion"];
-							$description = [];
-							
-							if($amount != 1){
-								
-								$description[] =
-									[
-										"type" => "title",
-										"value" => "Conversion"
-									];
-								
-								$description[] =
-									[
-										"type" => "text",
-										"value" =>
-											$this->number_format($currencyjson["from-amount"]) . " {$currencyjson["from-currency-symbol"]} = " .
-											$this->number_format($currencyjson["converted-amount"]) . " {$currencyjson["to-currency-symbol"]}"
-									];
-							}
-							
-							$description[] =
-								[
-									"type" => "title",
-									"value" => "Current rates"
-								];
-								
-							$description[] =
-								[
-									"type" => "text",
-									"value" =>
-										"{$currencyjson["conversion-rate"]}\n" .
-										"{$currencyjson["conversion-inverse"]}"
-								];
-							
-							$description[] =
-								[
-									"type" => "quote",
-									"value" => "Last fetched: " . date("jS \of F Y @ g:ia", strtotime($currencyjson["rate-utc-timestamp"]))
-								];
-							
-							$out["answer"][] = [
-								"title" =>
-									"{$currencyjson["from-currency-name"]} ({$currencyjson["from-currency-symbol"]}) to " .
-									"{$currencyjson["to-currency-name"]} ({$currencyjson["to-currency-symbol"]})",
-								"description" => $description,
-								"url" => "https://www.xe.com/currencyconverter/convert/?Amount={$amount}&From={$currencies[1]}&To={$currencies[2]}",
-								"thumb" => null,
-								"table" => [],
-								"sublink" => []
-							];
-						}
-						
-					}catch(Exception $e){
-						
-						// do nothing
-					}
-				}
-			}
-		}
-		
-		/*
-			Get small answer
-		*/
-		preg_match(
-			'/DDG\.ready\(function ?\(\) ?{DDH\.add\(({[\S\s]+}),"index"\)}\)/U',
-			$inithtml,
-			$smallanswer
-		);
-		
-		if(isset($smallanswer[1])){
-			
-			$smallanswer = json_decode($smallanswer[1], true);
-			
-			if(
-				!isset($smallanswer["require"]) &&
-				isset($smallanswer["data"]["title"])
-			){
+				$start = $get["newer"];
 				
-				if(isset($smallanswer["data"]["url"])){
+				if($get["older"] !== false){
 					
-					$url = $this->unescapehtml($smallanswer["data"]["url"]);
-				}elseif(isset($smallanswer["meta"]["sourceUrl"])){
-					
-					$url = $this->unescapehtml($smallanswer["meta"]["sourceUrl"]);
+					$end = $get["older"];
 				}else{
 					
-					$url = null;
+					$end = time();
 				}
+			}
+			
+			if($df === true){
+				$get_filters["df"] = date("Y-m-d", $start) . ".." . date("Y-m-d", $end);
+			}
+			
+			//
+			// Get HTML
+			//
+			try{
+				$html = $this->get(
+					$proxy,
+					"https://duckduckgo.com/",
+					$get_filters
+				);
+			}catch(Exception $e){
 				
-				$out["answer"] = [
-					[
-						"title" => $this->unescapehtml($smallanswer["data"]["title"]),
-						"description" => [],
-						"url" => $this->sanitizeurl($url),
-						"thumb" => null,
-						"table" => [],
-						"sublink" => []
-					],
-					...$out["answer"]
-				];
+				throw new Exception("Failed to fetch search page");
+			}
+			
+			$this->fuckhtml->load($html);
+			
+			$script =
+				$this->fuckhtml
+				->getElementById(
+					"deep_preload_link",
+					"link"
+				);
+			
+			if(
+				$script === null ||
+				!isset($script["attributes"]["href"])
+			){
 				
-				if(isset($smallanswer["data"]["subtitle"])){
+				throw new Exception("Failed to grep d.js");
+			}
+			
+			$js_link =
+				$this->fuckhtml
+				->getTextContent(
+					$script["attributes"]["href"]
+				);
+		}
+		
+		//
+		// Get d.js
+		//
+		try{
+			$js = $this->get(
+				$proxy,
+				$js_link,
+				[],
+				ddg::req_xhr
+			);
+			
+		}catch(Exception $e){
+			
+			throw new Exception("Failed to fetch d.js");
+		}
+		
+		//echo htmlspecialchars($js);
+		
+		$js_tmp =
+			preg_split(
+				'/DDG\.pageLayout\.load\(\s*\'d\'\s*,\s*/',
+				$js,
+				2
+			);
+		
+		if(count($js_tmp) <= 1){
+			
+			throw new Exception("Failed to grep pageLayout(d)");
+		}
+		
+		$json =
+			json_decode(
+				$this->fuckhtml
+				->extract_json(
+					$js_tmp[1]
+				),
+				true
+			);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON");
+		}
+		
+		//
+		// Get search results + NPT token
+		//
+		foreach($json as $item){
+			
+			if(isset($item["c"])){
+				
+				$table = [];
+				
+				// get youtube video information
+				if(isset($item["video"]["thumbnail_url_template"])){
 					
-					$out["answer"][0]["description"][] =
+					$thumb =
 						[
-							"type" => "text",
-							"value" => isset($smallanswer["data"]["subtitle"]) ? $this->unescapehtml($smallanswer["data"]["subtitle"]) : null
+							"ratio" => "16:9",
+							"url" => $this->bingimg($item["video"]["thumbnail_url_template"])
+						];
+				}else{
+					
+					$thumb =
+						[
+							"ratio" => null,
+							"url" => null
 						];
 				}
-			}
-		}
-		
-		unset($inithtml);
-		unset($answers);
-		unset($answer_count);
-		
-		/*
-			Get spelling autocorrect
-		*/
-		
-		preg_match(
-			'/DDG\.page\.showMessage\(\'spelling\',({[\S\s]+})\)/U',
-			$js,
-			$spelling
-		);
-		
-		if(isset($spelling[1])){
-			
-			$spelling = json_decode($spelling[1], true);
-			
-			switch((int)$spelling["qc"]){
 				
-				case 1:
-				case 3:
-				case 5:
-					$type = "including";
-					break;
-				
-				default:
-					$type = "not_many";
-					break;
-			}
-			
-			$out["spelling"] = [
-				"type" => $type,
-				"using" => $this->unescapehtml(strip_tags($spelling["suggestion"])),
-				"correction" => $this->unescapehtml(strip_tags($spelling["recourseText"]))
-			];
-		}
-		
-		unset($spelling);
-		
-		/*
-			Get web results
-		*/
-		preg_match(
-			'/DDG\.pageLayout\.load\(\'d\', ?(\[{"[\S\s]*"}])\)/U',
-			$js,
-			$web
-		);
-		
-		if(isset($web[1])){
-			
-			try{
-				$web = json_decode($web[1], true);
-				
-				for($i=0; $i<count($web); $i++){
+				// get table items
+				if(isset($item["rf"])){
 					
-					// ignore google placeholder + fake next page
-					if(
-						isset($web[$i]["t"]) &&
-						(
-							$web[$i]["t"] == "EOP" ||
-							$web[$i]["t"] == "EOF"
-						) &&
-						strpos($web[$i]["c"], "://www.google.") !== false
-					){
+					foreach($item["rf"] as $hint){
 						
-						break;
-					}
-					
-					// store next page token
-					if(isset($web[$i]["n"])){
-						
-						$out["npt"] = $this->backend->store($web[$i]["n"] . "&biaexp=b&eslexp=a&litexp=c&msvrtexp=b&wrap=1", "web", $proxy);
-						continue;
-					}
-					
-					// ignore malformed data
-					if(!isset($web[$i]["t"])){
-						
-						continue;
-					}
-					
-					$sublinks = [];
-					
-					if(isset($web[$i]["l"])){
-						
-						for($k=0; $k<count($web[$i]["l"]); $k++){
+						if(
+							!isset($hint["label"]["text"]) ||
+							!isset($hint["items"][0]["text"])
+						){
 							
-							if(
-								!isset($web[$i]["l"][$k]["targetUrl"]) ||
-								!isset($web[$i]["l"][$k]["text"])
-							){
+							continue;
+						}
+						
+						$text = [];
+						
+						foreach($hint["items"] as $text_part){
+							
+							$text[] = $text_part["text"];
+						}
+						
+						$text = implode(", ", $text);
+						
+						if(is_numeric($text)){
+							
+							$text = number_format((string)$text);
+						}
+						
+						$table[$hint["label"]["text"]] = $text;
+					}
+				}
+				
+				// get ratings
+				if(isset($item["ar"])){
+					
+					foreach($item["ar"] as $rating){
+						
+						if(
+							isset($rating["aggregateRating"]["bestRating"]) &&
+							isset($rating["aggregateRating"]["ratingValue"])
+						){
+							
+							$text = $rating["aggregateRating"]["ratingValue"] . "/" . $rating["aggregateRating"]["bestRating"];
+							
+							if(isset($rating["aggregateRating"]["reviewCount"])){
 								
-								continue;
+								$text .= " (" . number_format($rating["aggregateRating"]["reviewCount"]) . " votes)";
 							}
 							
-							array_push(
-								$sublinks,
-								[
-									"title" => $this->titledots($this->unescapehtml($web[$i]["l"][$k]["text"])),
-									"date" => null,
-									"description" => isset($web[$i]["l"][$k]["snippet"]) ? $this->titledots($this->unescapehtml($web[$i]["l"][$k]["snippet"])) : null,
-									"url" => $this->sanitizeurl($web[$i]["l"][$k]["targetUrl"])
-								]
-							);
+							$table["Rating"] = $text;
 						}
 					}
-					
-					if(
-						preg_match(
-							'/^<span class="result__type">PDF<\/span>/',
-							$web[$i]["t"]
-						)
-					){
-						
-						$type = "pdf";
-						$web[$i]["t"] =
-							str_replace(
-								'<span class="result__type">PDF</span>',
-								"",
-								$web[$i]["t"]
-							);
-					}else{
-						
-						$type = "web";
-					}
-					
-					if(isset($web[$i]["e"])){
-						
-						$date = strtotime($web[$i]["e"]);
-					}else{
-						
-						$date = null;
-					}
-					
-					array_push(
-						$out["web"],
-						[
-							"title" => $this->titledots($this->unescapehtml(strip_tags($web[$i]["t"]))),
-							"description" => $this->titledots($this->unescapehtml(strip_tags($web[$i]["a"]))),
-							"url" => isset($web[$i]["u"]) ? $this->sanitizeurl($web[$i]["u"]) : $this->sanitizeurl($web[$i]["c"]),
-							"date" => $date,
-							"type" => $type,
-							"thumb" =>
-								[
-									"url" => null,
-									"ratio" => null
-								],
-							"sublink" => $sublinks,
-							"table" => []
-						]
-					);
 				}
 				
-			}catch(Exception $e){
+				// get sublinks
+				$sublinks = [];
 				
-				// do nothing
+				if(isset($item["l"])){
+					
+					foreach($item["l"] as $sublink){
+						
+						$sublinks[] = [
+							"title" => $this->titledots($sublink["text"]),
+							"description" => $this->titledots($sublink["snippet"]),
+							"url" => $sublink["targetUrl"],
+							"date" => null
+						];
+					}
+				}
+				
+				// parse search result
+				$out["web"][] = [
+					"title" =>
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$item["t"]
+							)
+						),
+					"description" =>
+						isset($item["a"]) ?
+						$this->titledots(
+							$this->fuckhtml
+							->getTextContent(
+								$item["a"]
+							)
+						) : null,
+					"url" => $this->unshiturl($item["c"]),
+					"date" =>
+						isset($item["e"]) ?
+						strtotime($item["e"]) : null,
+					"type" => "web",
+					"thumb" => $thumb,
+					"sublink" => $sublinks,
+					"table" => $table
+				];
+				continue;
 			}
-		}
-		
-		unset($web);
-		
-		/*
-			Get images
-		*/
-		preg_match(
-			'/DDG\.duckbar\.load\(\'images\', ?{[\s\S]*"results":(\[{"[\s\S]*}]),"vqd"/U',
-			$js,
-			$images
-		);
-		
-		if(isset($images[1])){
 			
-			try{
-				$images = json_decode($images[1], true);
+			if(isset($item["n"])){
 				
-				for($i=0; $i<count($images); $i++){
-					
-					if(
-						!isset($images[$i]["title"]) ||
-						!isset($images[$i]["image"]) ||
-						!isset($images[$i]["thumbnail"]) ||
-						!isset($images[$i]["width"]) ||
-						!isset($images[$i]["height"])
-					){
-						
-						continue;
-					}
-					
-					$ratio =
-						$this->bingratio(
-							(int)$images[$i]["width"],
-							(int)$images[$i]["height"]
-						);
-					
-					array_push(
-						$out["image"],
-						[
-							"title" => $this->titledots($this->unescapehtml($images[$i]["title"])),
-							"source" => [
-								[
-									"url" => $images[$i]["image"],
-									"width" => (int)$images[$i]["width"],
-									"height" => (int)$images[$i]["height"]
-								],
-								[
-									"url" => $this->bingimg($images[$i]["thumbnail"]),
-									"width" => $ratio[0],
-									"height" => $ratio[1]
-								]
-							],
-							"url" => $this->sanitizeurl($images[$i]["url"])
-						]
+				// get NPT
+				$out["npt"] =
+					$this->backend->store(
+						$item["n"],
+						"web",
+						$proxy
 					);
-				}
-				
-			}catch(Exception $e){
-				
-				// do nothing
+				continue;
 			}
 		}
 		
-		unset($images);
+		//
+		// Get spelling
+		//
+		$js_tmp =
+			preg_split(
+				'/DDG\.page\.showMessage\(\s*\'spelling\'\s*,\s*/',
+				$js,
+				2
+			);
 		
-		/*
-			Get videos
-		*/
-		preg_match(
-			'/DDG\.duckbar\.load\(\'videos\', ?{[\s\S]*"results":(\[{"[\s\S]*}]),"vqd"/U',
-			$js,
-			$videos
-		);
-		
-		if(isset($videos[1])){
-			try{
-				$videos = json_decode($videos[1], true);
+		if(count($js_tmp) > 1){
+			
+			$json =
+				json_decode(
+					$this->fuckhtml
+					->extract_json(
+						$js_tmp[1]
+					),
+					true
+				);
+			
+			if($json !== null){
 				
-				for($i=0; $i<count($videos); $i++){
+				// parse spelling
+				// qc=2: including
+				
+				switch((int)$json["qc"]){
 					
-					$cachekey = false;
+					case 2:
+						$type = "including";
+						break;
 					
-					foreach(["large", "medium", "small"] as &$key){
+					default:
+						$type = "not_many";
+						break;
+				}
+				
+				$out["spelling"] = [
+					"type" => $type,
+					"using" => $json["suggestion"],
+					"correction" => $json["recourseText"]
+				];
+			}
+		}
+		
+		//
+		// Get images
+		//
+		$js_tmp =
+			preg_split(
+				'/DDG\.duckbar\.load\(\s*\'images\'\s*,\s*/',
+				$js,
+				2
+			);
+		
+		if(count($js_tmp) > 1){
+			
+			$json =
+				json_decode(
+					$this->fuckhtml
+					->extract_json(
+						$js_tmp[1]
+					),
+					true
+				);
+			
+			if($json !== null){
+				
+				foreach($json["results"] as $image){
+					
+					$ratio = $this->bingratio((int)$image["width"], (int)$image["height"]);
+					
+					$out["image"][] = [
+						"title" => $image["title"],
+						"source" =>	[
+							[
+								"url" => $image["image"],
+								"width" => (int)$image["width"],
+								"height" => (int)$image["height"]
+							],
+							[
+								"url" => $this->bingimg($image["thumbnail"]),
+								"width" => $ratio[0],
+								"height" => $ratio[1]
+							]
+						],
+						"url" => $this->unshiturl($image["url"])
+					];
+				}
+			}
+		}
+		
+		//
+		// Get videos
+		//
+		$js_tmp =
+			preg_split(
+				'/DDG\.duckbar\.load\(\s*\'videos\'\s*,\s*/',
+				$js,
+				2
+			);
+		
+		if(count($js_tmp) > 1){
+			
+			$json =
+				json_decode(
+					$this->fuckhtml
+					->extract_json(
+						$js_tmp[1]
+					),
+					true
+				);
+			
+			if($json !== null){
+				
+				foreach($json["results"] as $video){
+					
+					$thumb = [
+						"ratio" => null,
+						"url" => null
+					];
+					
+					foreach(["large", "medium", "small"] as $contender){
 						
-						if(isset($videos[$i]["images"][$key])){
+						if(isset($video["images"][$contender])){
 							
-							$cachekey = $key;
+							$thumb = [
+								"ratio" => "16:9",
+								"url" => $this->bingimg($video["images"][$contender])
+							];
 							break;
 						}
 					}
 					
-					if(
-						!isset($videos[$i]["title"]) ||
-						!isset($videos[$i]["description"]) ||
-						$cachekey === false ||
-						!isset($videos[$i]["content"])
-					){
-						
-						continue;
-					}
-					
-					array_push(
-						$out["video"],
-						[
-							"title" => $this->titledots($this->unescapehtml($videos[$i]["title"])),
-							"description" => $videos[$i]["description"] == "" ? null : $this->titledots($this->unescapehtml($videos[$i]["description"])),
-							"date" => $videos[$i]["published"] == "" ? null : strtotime($videos[$i]["published"]),
-							"duration" => $videos[$i]["duration"] == 0 ? null : $this->hmstoseconds($videos[$i]["duration"]),
-							"views" => $videos[$i]["statistics"]["viewCount"] == 0 ? null : $videos[$i]["statistics"]["viewCount"],
-							"thumb" =>
-								[
-									"url" => $this->bingimg($videos[$i]["images"][$cachekey]),
-									"ratio" => "16:9"
-								],
-							"url" => $this->sanitizeurl($videos[$i]["content"])
-						]
-					);
+					$out["video"][] = [
+						"title" => $this->titledots($video["title"]),
+						"description" =>
+							$video["description"] != "" ?
+							$this->titledots($video["description"]) : null,
+						"date" => 
+							isset($video["published"]) ?
+							strtotime($video["published"]) : null,
+						"duration" =>
+							$video["duration"] != "" ?
+							$this->hms2int($video["duration"]) : null,
+						"views" =>
+							isset($video["statistics"]["viewCount"]) ?
+							(int)$video["statistics"]["viewCount"] : null,
+						"thumb" => $thumb,
+						"url" => $this->unshiturl($video["content"])
+					];
 				}
-				
-			}catch(Exception $e){
-				
-				// do nothing
 			}
 		}
 		
-		unset($videos);
+		//
+		// Get news
+		//
+		$js_tmp =
+			preg_split(
+				'/DDG\.duckbar\.load\(\s*\'news\'\s*,\s*/',
+				$js,
+				2
+			);
 		
-		/*
-			Get news
-		*/
-		preg_match(
-			'/DDG\.duckbar\.load\(\'news\', ?{[\s\S]*"results":(\[{"[\s\S]*}]),"vqd"/U',
-			$js,
-			$news
-		);
-		
-		if(isset($news[1])){
-			try{
-				$news = json_decode($news[1], true);
+		if(count($js_tmp) > 1){
+			
+			$json =
+				json_decode(
+					$this->fuckhtml
+					->extract_json(
+						$js_tmp[1]
+					),
+					true
+				);
+			
+			if($json !== null){
 				
-				for($i=0; $i<count($news); $i++){
+				foreach($json["results"] as $news){
 					
-					if(
-						!isset($news[$i]["title"]) ||
-						!isset($news[$i]["excerpt"]) ||
-						!isset($news[$i]["url"])
-					){
+					if(isset($news["image"])){
 						
-						continue;
+						$thumb = [
+							"ratio" => "16:9",
+							"url" => $news["image"]
+						];
+					}else{
+						
+						$thumb = [
+							"ratio" => null,
+							"url" => null
+						];
 					}
 					
-					array_push(
-						$out["news"],
-						[
-							"title" => $this->titledots($this->unescapehtml($news[$i]["title"])),
-							"description" => $this->titledots($this->unescapehtml(strip_tags($news[$i]["excerpt"]))),
-							"date" => isset($news[$i]["date"]) ? (int)$news[$i]["date"] : null,
-							"thumb" =>
-								[
-									"url" => isset($news[$i]["image"]) ? $news[$i]["image"] : null,
-									"ratio" => "16:9"
-								],
-							"url" => $this->sanitizeurl($news[$i]["url"])
-						]
-					);
+					$out["news"][] = [
+						"title" => $news["title"],
+						"description" =>
+							$this->fuckhtml
+							->getTextContent(
+								$news["excerpt"]
+							),
+						"date" => (int)$news["date"],
+						"thumb" => $thumb,
+						"url" => $news["url"]
+					];
+				}
+			}
+		}
+		
+		//
+		// Get related searches
+		//
+		$js_tmp =
+			preg_split(
+				'/DDG\.duckbar\.loadModule\(\s*\'related_searches\'\s*,\s*/',
+				$js,
+				2
+			);
+		
+		if(count($js_tmp) > 1){
+			
+			$json =
+				json_decode(
+					$this->fuckhtml
+					->extract_json(
+						$js_tmp[1]
+					),
+					true
+				);
+			
+			if($json !== null){
+				
+				foreach($json["results"] as $related){
+					
+					$out["related"][] = $related["text"];
+				}
+			}
+		}
+		
+		//
+		// Get instant answers
+		//
+		$js_tmp =
+			preg_split(
+				'/DDG\.duckbar\.add\(\s*/',
+				$html . $js,
+				2
+			);
+		
+		if(count($js_tmp) > 1){
+			
+			$json =
+				json_decode(
+					$this->fuckhtml
+					->extract_json(
+						$js_tmp[1]
+					),
+					true
+				);
+			
+			if($json !== null){
+				
+				$json = $json["data"];
+				$table = [];
+				$sublinks = [];
+				$description = [];
+				
+				// get official website
+				if(
+					isset($json["OfficialWebsite"]) &&
+					$json["OfficialWebsite"] !== null
+				){
+					
+					$sublinks["Website"] = $json["OfficialWebsite"];
 				}
 				
-			}catch(Exception $e){
+				// get sublinks & table elements
+				if(isset($json["Infobox"]["content"])){
+					foreach($json["Infobox"]["content"] as $info){
+						
+						if($info["data_type"] == "string"){
+							
+							// add table element
+							$table[$info["label"]] = $info["value"];
+							continue;
+						}
+						
+						if($info["data_type"] == "wd_description"){
+							
+							$description[] = [
+								"type" => "quote",
+								"value" => $info["value"]
+							];
+							continue;
+						}
+						
+						// add sublink
+						switch($info["data_type"]){
+							
+							case "official_site":
+							case "official_website":
+								$type = "Website";
+								break;
+							
+							case "wikipedia": $type = "Wikipedia"; break;
+							case "itunes": $type = "iTunes"; break;
+							case "amazon": $type = "Amazon"; break;
+							
+							case "imdb_title_id":
+							case "imdb_id":
+							case "imdb_name_id":
+								$type = "IMDb";
+								$delim = substr($info["value"], 0, 2);
+								
+								if($delim == "nm"){
+									
+									$prefix = "https://www.imdb.com/name/";
+								}elseif($delim == "tt"){
+									
+									$prefix = "https://www.imdb.com/title/";
+								}elseif($delim == "co"){
+									
+									$prefix = "https://www.imdb.com/search/title/?companies=";
+								}else{
+									
+									$prefix = "https://www.imdb.com/title/";
+								}
+								break;
+
+							case "imdb_name_id": $prefix = "https://www.imdb.com/name/"; $type = "IMDb"; break;
+							case "twitter_profile": $prefix = "https://twitter.com/"; $type = "Twitter"; break;
+							case "instagram_profile": $prefix = "https://instagram.com/"; $type = "Instagram"; break;
+							case "facebook_profile": $prefix = "https://facebook.com/"; $type = "Facebook"; break;
+							case "spotify_artist_id": $prefix = "https://open.spotify.com/artist/"; $type = "Spotify"; break;
+							case "itunes_artist_id": $prefix = "https://music.apple.com/us/artist/"; $type = "iTunes"; break;
+							case "rotten_tomatoes": $prefix = "https://rottentomatoes.com/"; $type = "Rotten Tomatoes"; break;
+							case "youtube_channel": $prefix = "https://youtube.com/channel/"; $type = "YouTube"; break;
+							case "soundcloud_id": $prefix = "https://soundcloud.com/"; $type = "SoundCloud"; break;
+							
+							default:							
+								$prefix = null;
+								$type = false;
+						}
+						
+						if($type !== false){
+							
+							if($prefix === null){
+								
+								$sublinks[$type] = $info["value"];
+							}else{
+								
+								$sublinks[$type] = $prefix . $info["value"];
+							}
+						}
+					}
+				}
 				
-				// do nothing
+				if(isset($json["Abstract"])){
+					
+					$description[] =
+						[
+							"type" => "text",
+							"value" => $json["Abstract"]
+						];
+				}
+				
+				$out["answer"][] = [
+					"title" => $json["Heading"],
+					"description" => $description,
+					"url" => $json["AbstractURL"],
+					"thumb" =>
+						(isset($json["Image"]) && $json["Image"]) !== null ?
+						"https://duckduckgo.com" . $json["Image"] : null,
+					"table" => $table,
+					"sublink" => $sublinks
+				];
+			}
+		}
+		
+		if($get["extendedsearch"] == "no"){
+			
+			return $out;
+		}
+		
+		//
+		// Get wordnik definition
+		//
+		//nrj('/js/spice/dictionary/definition/create', null, null, null, null, 'dictionary_definition');
+		
+		preg_match(
+			'/nrj\(\s*\'([^\']+)\'/',
+			$js,
+			$nrj
+		);
+		
+		if(isset($nrj[1])){
+			
+			$nrj = $nrj[1];
+			
+			preg_match(
+				'/\/js\/spice\/dictionary\/definition\/([^\/]+)/',
+				$nrj,
+				$word
+			);
+			
+			if(isset($word[1])){
+				
+				$word = $word[1];
+				
+				// found wordnik definition & word
+				try{
+					$nik =
+						$this->get(
+							$proxy,
+							"https://duckduckgo.com/js/spice/dictionary/definition/" . $word,
+							[],
+							ddg::req_xhr
+						);
+					
+				}catch(Exception $e){
+					
+					// fail gracefully
+					return $out;
+				}
+				
+				// remove javascript
+				$js_tmp =
+					preg_split(
+						'/ddg_spice_dictionary_definition\(\s*/',
+						$nik,
+						2
+					);
+				
+				if(count($js_tmp) > 1){
+					
+					$nik =
+						json_decode(
+							$this->fuckhtml
+							->extract_json(
+								$js_tmp[1]
+							),
+							true
+						);
+				}
+				
+				if($nik === null){
+					
+					return $out;
+				}
+				
+				$answer_cat = [];
+				$answer = [];
+				
+				foreach($nik as $snippet){
+					
+					if(!isset($snippet["partOfSpeech"])){ continue; }
+					
+					$push = [];
+					
+					// add text snippet
+					if(isset($snippet["text"])){
+						
+						$push[] = [
+							"type" => "text",
+							"value" =>
+								$this->fuckhtml
+								->getTextContent(
+									$snippet["text"]
+								)
+						];
+					}
+					
+					// add example uses
+					if(isset($snippet["exampleUses"])){
+						
+						foreach($snippet["exampleUses"] as $example){
+							
+							$push[] = [
+								"type" => "quote",
+								"value" => "\"" .
+									$this->fuckhtml
+									->getTextContent(
+										$example["text"]
+									) . "\""
+							];
+						}
+					}
+					
+					// add citations
+					if(isset($snippet["citations"])){
+						
+						foreach($snippet["citations"] as $citation){
+							
+							$push[] = [
+								"type" => "quote",
+								"value" =>
+									$this->fuckhtml
+									->getTextContent(
+										$citation["cite"]
+									) . " - " .
+									$this->fuckhtml
+									->getTextContent(
+										$citation["source"]
+									)
+							];
+						}
+					}
+					
+					// add related words
+					if(isset($snippet["relatedWords"])){
+						
+						$relations = [];
+						
+						foreach($snippet["relatedWords"] as $related){
+							
+							$words = [];
+							foreach($related["words"] as $wrd){
+								
+								$words[] =
+									$this->fuckhtml
+									->getTextContent(
+										$wrd
+									);
+							}
+							
+							if(count($words) !== 0){
+								
+								$relations[ucfirst($related["relationshipType"]) . "s"] =
+									implode(", ", $words);
+							}
+						}
+						
+						foreach($relations as $relation_title => $relation_content){
+							
+							$push[] = [
+								"type" => "quote",
+								"value" => $relation_title . ": " . $relation_content
+							];
+						}
+					}
+					
+					
+					if(count($push) !== 0){
+						
+						// push data to answer_cat
+						if(!isset($answer_cat[$snippet["partOfSpeech"]])){
+							
+							$answer_cat[$snippet["partOfSpeech"]] = [];
+						}
+						
+						$answer_cat[$snippet["partOfSpeech"]] =
+							array_merge(
+								$answer_cat[$snippet["partOfSpeech"]],
+								$push
+							);
+					}
+				}
+				
+				foreach($answer_cat as $answer_title => $answer_content){
+					
+					$i = 0;
+					$answer[] = [
+						"type" => "title",
+						"value" => $answer_title
+					];
+					
+					$old_type = $answer[count($answer) - 1]["type"];
+					
+					foreach($answer_content as $ans){
+						
+						if(
+							$ans["type"] == "text" &&
+							$old_type == "text"
+						){
+							
+							$i++;
+							$c = count($answer) - 1;
+							
+							// append text to existing textfield
+							$answer[$c] = [
+								"type" => "text",
+								"value" => $answer[$c]["value"] . "\n" . $i . ". " . $ans["value"]
+							];
+							
+						}elseif($ans["type"] == "text"){
+							
+							$i++;
+							$answer[] = [
+								"type" => "text",
+								"value" => $i . ". " . $ans["value"]
+							];
+						}else{
+							
+							// append normally
+							$answer[] = $ans;
+						}
+						
+						$old_type = $ans["type"];
+					}
+				}
+				
+				// yeah.. sometimes duckduckgo doesnt give us a definition back
+				if(count($answer) !== 0){
+					
+					$out["answer"][] = [
+						"title" => ucfirst($word),
+						"description" => $answer,
+						"url" => "https://www.wordnik.com/words/" . $word,
+						"thumb" => null,
+						"table" => [],
+						"sublink" => []
+					];
+				}
 			}
 		}
 		
@@ -1895,65 +1277,40 @@ class ddg{
 		
 		if($get["npt"]){
 			
-			[$npt, $proxy] = $this->backend->get($get["npt"], "images");
-			
-			try{
-				$json = $this->get(
-					$proxy,
-					"https://duckduckgo.com/i.js?" . $npt,
-					[],
-					ddg::req_xhr
-				);
-				
-			}catch(Exception $err){
-				
-				throw new Exception("Failed to get i.js");
-			}
+			[$js_link, $proxy] = $this->backend->get($get["npt"], "images");
 			
 		}else{
-			$search = $get["s"];
-			if(strlen($search) === 0){
+			if(strlen($get["s"]) === 0){
 				
 				throw new Exception("Search term is empty!");
 			}
 			
 			$proxy = $this->backend->get_ip();
-			$country = $get["country"];
-			$nsfw = $get["nsfw"];
-			$date = $get["date"];
-			$size = $get["size"];
-			$color = $get["color"];
-			$type = $get["type"];
-			$layout = $get["layout"];
-			$license = $get["license"];
 			
-			$filter = [];
+			$filters = [];
+			
+			if($get["date"] != "any"){ $filters[] = "time:{$get["date"]}"; }
+			if($get["size"] != "any"){ $filters[] = "size:{$get["size"]}"; }
+			if($get["color"] != "any"){ $filters[] = "color:{$get["color"]}"; }
+			if($get["type"] != "any"){ $filters[] = "type:{$get["type"]}"; }
+			if($get["layout"] != "any"){ $filters[] = "layout:{$get["layout"]}"; }
+			if($get["license"] != "any"){ $filters[] = "license:{$get["license"]}"; }
+			
+			$filters = implode(",", $filters);
+			
 			$get_filters = [
-				"hps" => "1",
-				"q" => $search,
+				"q" => $get["s"],
 				"iax" => "images",
 				"ia" => "images"
 			];
 			
-			if($date != "any"){ $filter[] = "time:$date"; }
-			if($size != "any"){ $filter[] = "size:$size"; }
-			if($color != "any"){ $filter[] = "color:$color"; }
-			if($type != "any"){ $filter[] = "type:$type"; }
-			if($layout != "any"){ $filter[] = "layout:$layout"; }
-			if($license != "any"){ $filter[] = "license:$license"; }
-			
-			$filter = implode(",", $filter);
-			
-			if($filter != ""){
+			if($filters != ""){
 				
-				$get_filters["iaf"] = $filter;
+				$get_filters["iaf"] = $filters;
 			}
 			
-			switch($nsfw){
-				
-				case "yes": $get_filters["kp"] = "-2"; break;
-				case "no": $get_filters["kp"] = "-1"; break;
-			}
+			$nsfw = $get["nsfw"] == "yes" ? "-2" : "-1";
+			$get_filters["kp"] = $nsfw;
 			
 			try{
 				
@@ -1965,56 +1322,44 @@ class ddg{
 				);
 			}catch(Exception $err){
 				
-				throw new Exception("Failed to get html");
+				throw new Exception("Failed to fetch search page");
 			}
 			
 			preg_match(
-				'/vqd=([0-9-]+)/',
+				'/vqd="([0-9-]+)"/',
 				$html,
 				$vqd
 			);
 			
 			if(!isset($vqd[1])){
 				
-				throw new Exception("Failed to get vqd token");
+				throw new Exception("Failed to grep VQD token");
 			}
 			
-			$vqd = $vqd[1];
+			$js_link =
+				"i.js?" .
+				http_build_query([
+					"l" => $get["country"],
+					"o" => "json",
+					"q" => $get["s"],
+					"vqd" => $vqd[1],
+					"f" => $filters,
+					"p" => $nsfw
+				]);
+		}
+		
+		try{
 			
-			// @TODO: s param = image offset
-			$js_params = [
-				"l" => $country,
-				"o" => "json",
-				"q" => $search,
-				"vqd" => $vqd
-			];
-			
-			switch($nsfw){
-				
-				case "yes": $js_params["p"] = "-1"; break;
-				case "no": $js_params["p"] = "1"; break;
-			}
-			
-			if(empty($filter)){
-				
-				$js_params["f"] = "1";
-			}else{
-				
-				$js_params["f"] = $filter;
-			}
-			
-			try{
-				$json = $this->get(
+			$json =
+				$this->get(
 					$proxy,
-					"https://duckduckgo.com/i.js",
-					$js_params,
+					"https://duckduckgo.com/" . $js_link,
+					[],
 					ddg::req_xhr
 				);
-				
-			}catch(Exception $err){
-				
-				throw new Exception("Failed to get i.js");
-			}
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to get i.js");
 		}
 		
 		$json = json_decode($json, true);
@@ -2030,46 +1375,67 @@ class ddg{
 			"image" => []
 		];
 		
-		if(isset($json["next"])){
+		if(!isset($json["results"])){
 			
-			if(!isset($vqd)){
-				
-				$vqd = array_values($json["vqd"])[0];
-			}
-			
-			$out["npt"] =
-				$this->backend->store(
-					explode("?", $json["next"])[1] . "&vqd=" .
-					$vqd,
-					"images",
-					$proxy
-				);
+			return $out;
 		}
 		
-		for($i=0; $i<count($json["results"]); $i++){
+		// get npt
+		if(
+			isset($json["next"]) &&
+			$json["next"] !== null
+		){
 			
-			$bingimg = $this->bingimg($json["results"][$i]["thumbnail"]);
+			$vqd = null;
+			
+			if(isset($vqd[1])){
+				
+				$vqd = $vqd[1];
+			}else{
+				
+				$vqd = array_values($json["vqd"]);
+				
+				if(count($vqd) > 0){
+					
+					$vqd = $vqd[0];
+				}
+			}
+			
+			if($vqd !== null){
+				
+				$out["npt"] =
+					$this->backend->store(
+						$json["next"] . "&vqd=" . $vqd,
+						"images",
+						$proxy
+					);
+			}
+		}
+		
+		// get images
+		foreach($json["results"] as $image){
+			
 			$ratio =
 				$this->bingratio(
-					(int)$json["results"][$i]["width"],
-					(int)$json["results"][$i]["height"]
+					(int)$image["width"],
+					(int)$image["height"]
 				);
 			
 			$out["image"][] = [
-				"title" => $this->titledots($this->unescapehtml($json["results"][$i]["title"])),
+				"title" => $this->titledots($image["title"]),
 				"source" => [
 					[
-						"url" => $json["results"][$i]["image"],
-						"width" => (int)$json["results"][$i]["width"],
-						"height" => (int)$json["results"][$i]["height"]
+						"url" => $image["image"],
+						"width" => (int)$image["width"],
+						"height" => (int)$image["height"]
 					],
 					[
-						"url" => $bingimg,
+						"url" => $this->bingimg($image["thumbnail"]),
 						"width" => $ratio[0],
-						"height" => $ratio[1],
+						"height" => $ratio[1]
 					]
 				],
-				"url" => $this->sanitizeurl($json["results"][$i]["url"])
+				"url" => $this->unshiturl($image["url"])
 			];
 		}
 		
@@ -2080,104 +1446,96 @@ class ddg{
 		
 		if($get["npt"]){
 			
-			[$npt, $proxy] = $this->backend->get($get["npt"], "videos");
+			[$js_link, $proxy] = $this->backend->get($get["npt"], "videos");
 			
-			try{
-				$json = json_decode($this->get(
-					$proxy,
-					"https://duckduckgo.com/v.js?" .
-					$npt,
-					[],
-					ddg::req_xhr
-				), true);
-				
-			}catch(Exception $err){
-				
-				throw new Exception("Failed to get v.js");
-			}
 		}else{
-			
-			$search = $get["s"];
-			if(strlen($search) === 0){
+			if(strlen($get["s"]) === 0){
 				
 				throw new Exception("Search term is empty!");
 			}
 			
 			$proxy = $this->backend->get_ip();
-			$country = $get["country"];
-			$nsfw = $get["nsfw"];
-			$date = $get["date"];
-			$resolution = $get["resolution"];
-			$duration = $get["duration"];
-			$license = $get["license"];
-			
-			$filter = [];
 			
 			$get_filters = [
-				"q" => $search,
+				"q" => $get["s"],
 				"iax" => "videos",
 				"ia" => "videos"
 			];
 			
-			switch($nsfw){
+			$nsfw = $get["nsfw"] == "yes" ? "-2" : "-1";
+			$get_filters["kp"] = $nsfw;
+			
+			$filters = [];
+			
+			if($get["date"] != "any"){ $filters[] = "publishedAfter:{$date}"; }
+			if($get["resolution"] != "any"){ $filters[] = "videoDefinition:{$resolution}"; }
+			if($get["duration"] != "any"){ $filters[] = "videoDuration:{$duration}"; }
+			if($get["license"] != "any"){ $filters[] = "videoLicense:{$license}"; }
+			
+			$filters = implode(",", $filters);
+			
+			if($filters != ""){
 				
-				case "yes": $get_filters["kp"] = "-2"; break;
-				case "no": $get_filters["kp"] = "-1"; break;
+				$get_filters["iaf"] = $filters;
 			}
-			
-			if($date != "any"){ $filter[] = "publishedAfter:{$date}"; }
-			if($resolution != "any"){ $filter[] = "videoDefinition:{$resolution}"; }
-			if($duration != "any"){ $filter[] = "videoDuration:{$duration}"; }
-			if($license != "any"){ $filter[] = "videoLicense:{$license}"; }
-			
-			$filter = implode(",", $filter);
 			
 			try{
 				
-				$html = $this->get(
-					$proxy,
-					"https://duckduckgo.com",
-					$get_filters,
-					ddg::req_web
-				);
-			}catch(Exception $err){
+				$html =
+					$this->get(
+						$proxy,
+						"https://duckduckgo.com/",
+						$get_filters,
+						ddg::req_web
+					);
+			}catch(Exception $error){
 				
-				throw new Exception("Failed to get html");
+				throw new Exception("Failed to fetch search page");
 			}
 			
 			preg_match(
-				'/vqd=([0-9-]+)/',
+				'/vqd="([0-9-]+)"/',
 				$html,
 				$vqd
 			);
 			
 			if(!isset($vqd[1])){
 				
-				throw new Exception("Failed to get vqd token");
+				throw new Exception("Failed to grep VQD token");
 			}
 			
-			$vqd = $vqd[1];
+			$js_link =
+				"v.js?" .
+				http_build_query([
+					"l" => $get["country"],
+					"o" => "json",
+					"sr" => "1",
+					"q" => $get["s"],
+					"vqd" => $vqd[1],
+					"f" => $filters,
+					"p" => $nsfw
+				]);
+		}
+		
+		try{
 			
-			try{
-				$json = json_decode($this->get(
+			$json =
+				$this->get(
 					$proxy,
-					"https://duckduckgo.com/v.js",
-					[
-						"l" => "us-en",
-						"o" => "json",
-						"sr" => 1,
-						"q" => $search,
-						"vqd" => $vqd,
-						"f" => $filter,
-						"p" => $get_filters["kp"]
-					],
+					"https://duckduckgo.com/" . $js_link,
+					[],
 					ddg::req_xhr
-				), true);
-				
-			}catch(Exception $err){
-				
-				throw new Exception("Failed to get v.js");
-			}
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to fetch JSON");
+		}
+		
+		$json = json_decode($json, true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON");
 		}
 		
 		$out = [
@@ -2190,59 +1548,75 @@ class ddg{
 			"reel" => []
 		];
 		
-		if(isset($json["next"])){
+		if(!isset($json["results"])){
+			
+			return $out;
+		}
+		
+		// get NPT
+		if(
+			isset($json["next"]) &&
+			$json["next"] !== null
+		){
 			
 			$out["npt"] =
 				$this->backend->store(
-					explode("?", $json["next"])[1],
+					$json["next"],
 					"videos",
 					$proxy
 				);
 		}
 		
-		for($i=0; $i<count($json["results"]); $i++){
+		foreach($json["results"] as $video){
 			
-			$cachekey = false;
+			$thumb = [
+				"ratio" => null,
+				"url" => null
+			];
 			
-			foreach(["large", "medium", "small"] as &$key){
+			foreach(["large", "medium", "small"] as $contender){
 				
-				if(isset($json["results"][$i]["images"][$key])){
+				if(isset($video["images"][$contender])){
 					
-					$cachekey = $key;
+					$thumb = [
+						"ratio" => "16:9",
+						"url" => $this->bingimg($video["images"][$contender])
+					];
 					break;
 				}
 			}
 			
-			if(
-				!isset($json["results"][$i]["title"]) ||
-				!isset($json["results"][$i]["description"]) ||
-				$cachekey === false ||
-				!isset($json["results"][$i]["content"])
-			){
-				
-				continue;
-			}
-			
-			array_push(
-				$out["video"],
-				[
-					"title" => $this->titledots($this->unescapehtml($json["results"][$i]["title"])),
-					"description" => $json["results"][$i]["description"] == "" ? null : $this->titledots($this->unescapehtml($json["results"][$i]["description"])),
-					"author" => [
-						"name" => empty($json["results"][$i]["uploader"]) ? null : $this->unescapehtml($json["results"][$i]["uploader"]),
-						"url" => null,
-						"avatar" => null
-					],
-					"date" => $json["results"][$i]["published"] == "" ? null : strtotime($json["results"][$i]["published"]),
-					"duration" => $json["results"][$i]["duration"] == 0 ? null : $this->hmstoseconds($json["results"][$i]["duration"]),
-					"views" => $json["results"][$i]["statistics"]["viewCount"] == 0 ? null : $json["results"][$i]["statistics"]["viewCount"],
-					"thumb" => [
-						"url" => $this->bingimg($json["results"][$i]["images"][$cachekey]),
-						"ratio" => "16:9"
-					],
-					"url" => $this->sanitizeurl($json["results"][$i]["content"])
-				]
-			);
+			$out["video"][] = [
+				"title" => $this->titledots($video["title"]),
+				"description" => $this->titledots($video["description"]),
+				"author" => [
+					"name" =>
+						(
+							isset($video["uploader"]) &&
+							$video["uploader"] != ""
+						) ?
+						$video["uploader"] : null,
+					"url" => null,
+					"avatar" => null
+				],
+				"date" =>
+					(
+						isset($video["published"]) &&
+						$video["published"] != ""
+					) ?
+					strtotime($video["published"]) : null,
+				"duration" =>
+					(
+						isset($video["duration"]) &&
+						$video["duration"] != ""
+					) ?
+					$this->hms2int($video["duration"]) : null,
+				"views" =>
+					isset($video["statistics"]["viewCount"]) ?
+					(int)$video["statistics"]["viewCount"] : null,
+				"thumb" => $thumb,
+				"url" => $this->unshiturl($video["content"])
+			];
 		}
 		
 		return $out;
@@ -2252,109 +1626,97 @@ class ddg{
 		
 		if($get["npt"]){
 			
-			[$req, $proxy] = $this->backend->get($get["npt"], "news");
+			[$js_link, $proxy] = $this->backend->get($get["npt"], "news");
 			
-			try{
-				
-				$json = json_decode($this->get(
-					$proxy,
-					"https://duckduckgo.com/news.js?" .
-					$req,
-					[],
-					ddg::req_xhr
-				), true);
-				
-			}catch(Exception $err){
-				
-				throw new Exception("Failed to get news.js");
-			}
 		}else{
-			
-			$search = $get["s"];
-			if(strlen($search) === 0){
+			if(strlen($get["s"]) === 0){
 				
 				throw new Exception("Search term is empty!");
 			}
 			
 			$proxy = $this->backend->get_ip();
-			$country = $get["country"];
-			$nsfw = $get["nsfw"];
-			$date = $get["date"];
 			
-			$get_params = [
-				"q" => $search,
+			$get_filters = [
+				"q" => $get["s"],
 				"iar" => "news",
 				"ia" => "news"
 			];
 			
-			switch($nsfw){
+			if($get["date"] != "any"){
+				
+				$date = $get["date"];
+				$get_filters["df"] = $date;
+			}else{
+				
+				$date = "";
+			}
+			
+			switch($get["nsfw"]){
 				
 				case "yes": $get_filters["kp"] = "-2"; break;
 				case "maybe": $get_filters["kp"] = "-1"; break;
 				case "no": $get_filters["kp"] = "1"; break;
 			}
 			
-			if($date != "any"){
-				
-				$get_params["df"] = $date;
-			}
-			
 			try{
 				
-				$html = $this->get(
-					$proxy,
-					"https://duckduckgo.com",
-					$get_params,
-					ddg::req_web
-				);
-			}catch(Exception $err){
+				$html =
+					$this->get(
+						$proxy,
+						"https://duckduckgo.com/",
+						$get_filters,
+						ddg::req_web
+					);
+			}catch(Exception $error){
 				
-				throw new Exception("Failed to get html");
+				throw new Exception("Failed to fetch search page");
 			}
 			
 			preg_match(
-				'/vqd=([0-9-]+)/',
+				'/vqd="([0-9-]+)"/',
 				$html,
 				$vqd
 			);
 			
 			if(!isset($vqd[1])){
 				
-				throw new Exception("Failed to get vqd token");
+				throw new Exception("Failed to grep VQD token");
 			}
 			
-			$vqd = $vqd[1];
-			
-			try{
-				
-				$js_params = [
-					"l" => $country,
+			$js_link =
+				"news.js?" .
+				http_build_query([
+					"l" => $get["country"],
 					"o" => "json",
 					"noamp" => "1",
-					"q" => $search,
-					"vqd" => $vqd,
-					"p" => $get_filters["kp"]
-				];
-				
-				if($date != "any"){
-					
-					$js_params["df"] = $date;
-				}else{
-					
-					$js_params["df"] = "";
-				}
-				
-				$json = json_decode($this->get(
+					"m" => "30",
+					"q" => $get["s"],
+					"vqd" => $vqd[1],
+					"p" => $get_filters["kp"],
+					"df" => $date,
+					"u" => "bing"
+				]);
+		}
+		
+		try{
+			
+			$json =
+				$this->get(
 					$proxy,
-					"https://duckduckgo.com/news.js",
-					$js_params,
+					"https://duckduckgo.com/" . $js_link,
+					[],
 					ddg::req_xhr
-				), true);
-				
-			}catch(Exception $err){
-				
-				throw new Exception("Failed to get news.js");
-			}
+				);
+		}catch(Exception $error){
+			
+			throw new Exception("Failed to fetch JSON");
+		}
+		
+		$json = json_decode($json, true);
+		
+		if($json === null){
+			
+			throw new Exception("Failed to decode JSON");
 		}
 		
 		$out = [
@@ -2363,36 +1725,88 @@ class ddg{
 			"news" => []
 		];
 		
-		if(isset($json["next"])){
+		if(!isset($json["results"])){
+			
+			return $out;
+		}
+		
+		// get NPT
+		if(
+			isset($json["next"]) &&
+			$json["next"] !== null
+		){
 			
 			$out["npt"] =
 				$this->backend->store(
-					explode("?", $json["next"])[1],
+					$json["next"],
 					"news",
 					$proxy
 				);
 		}
 		
-		for($i=0; $i<count($json["results"]); $i++){
+		foreach($json["results"] as $news){
+			
+			if(
+				isset($news["image"]) &&
+				$news["image"] != ""
+			){
+				
+				$thumb = [
+					"ratio" => "16:9",
+					"url" => $news["image"]
+				];
+			}else{
+				
+				$thumb = [
+					"ratio" => null,
+					"url" => null
+				];
+			}
 			
 			$out["news"][] = [
-				"title" => $this->titledots($this->unescapehtml($json["results"][$i]["title"])),
-				"author" => $this->unescapehtml($json["results"][$i]["source"]),
-				"description" => $this->titledots($this->unescapehtml(strip_tags($json["results"][$i]["excerpt"]))),
-				"date" => $json["results"][$i]["date"],
-				"thumb" =>
-					[
-						"url" => isset($json["results"][$i]["image"]) ? $json["results"][$i]["image"] : null,
-						"ratio" => "16:9"
-					],
-				"url" => $this->sanitizeurl($json["results"][$i]["url"])
+				"title" => $news["title"],
+				"author" =>
+					(
+						isset($news["source"]) &&
+						$news["source"] != ""
+					) ?
+					$news["source"] : null,
+				"description" =>
+					(
+						isset($news["excerpt"]) &&
+						$news["excerpt"] != ""
+					) ?
+					$this->fuckhtml
+					->getTextContent(
+						$news["excerpt"]
+					) : null,
+				"date" =>
+					isset($news["date"]) ?
+					(int)$news["date"] : null,
+				"thumb" => $thumb,
+				"url" => $this->unshiturl($news["url"])
 			];
 		}
 		
 		return $out;
 	}
 	
-	private function hmstoseconds($time){
+	private function titledots($title){
+		
+		$substr = substr($title, -3);
+		
+		if(
+			$substr == "..." ||
+			$substr == "…"
+		){
+						
+			return trim(substr($title, 0, -3));
+		}
+		
+		return trim($title);
+	}
+	
+	private function hms2int($time){
 		
 		$parts = explode(":", $time, 3);
 		$time = 0;
@@ -2416,255 +1830,9 @@ class ddg{
 		
 		return $time;
 	}
+
 	
-	private function titledots($title){
-		
-		$substr = substr($title, -3);
-		
-		if(
-			$substr == "..." ||
-			$substr == "…"
-		){
-						
-			return trim(substr($title, 0, -3));
-		}
-		
-		return trim($title);
-	}
-	
-	private function unescapehtml($str){
-		
-		return html_entity_decode(
-			str_replace(
-				[
-					"<br>",
-					"<br/>",
-					"</br>",
-					"<BR>",
-					"<BR/>",
-					"</BR>",
-				],
-				"\n",
-				$str
-			),
-			ENT_QUOTES | ENT_XML1, 'UTF-8'
-		);
-	}
-	
-	private function bingimg($url){
-		
-		$parse = parse_url($url);
-		parse_str($parse["query"], $parts);
-		
-		return "https://" . $parse["host"] . "/th?id=" . urlencode($parts["id"]);
-	}
-	
-	private function appendtext($payload, &$text, &$index){
-		
-		if(trim($payload) == ""){
-			
-			return;
-		}
-		
-		if(
-			$index !== 0 &&
-			$text[$index - 1]["type"] == "text"
-		){
-			
-			$text[$index - 1]["value"] .= preg_replace('/  $/', " ", $payload);
-		}else{
-			
-			$text[] = [
-				"type" => "text",
-				"value" => preg_replace('/  $/', " ", $payload)
-			];
-			$index++;
-		}
-	}
-	
-	private function stackoverflow_parse($html){
-		
-		$i = 0;
-		$answer = [];
-		
-		$this->fuckhtml->load($html);
-		
-		$tags = $this->fuckhtml->getElementsByTagName("*");
-		
-		if(count($tags) === 0){
-			
-			return [
-				[
-					"type" => "text",
-					"value" => htmlspecialchars_decode($html)
-				]
-			];
-		}
-		
-		foreach($tags as $snippet){
-			
-			switch($snippet["tagName"]){
-				
-				case "p":
-					$this->fuckhtml->load($snippet["innerHTML"]);
-					
-					$codetags =
-						$this->fuckhtml
-						->getElementsByTagName("*");
-					
-					$tmphtml = $snippet["innerHTML"];
-					
-					foreach($codetags as $tag){
-						
-						if(!isset($tag["outerHTML"])){
-							
-							continue;
-						}
-						
-						$tmphtml =
-							explode(
-								$tag["outerHTML"],
-								$tmphtml,
-								2
-							);
-						
-						$value = $this->fuckhtml->getTextContent($tmphtml[0], false, false);
-						$this->appendtext($value, $answer, $i);
-						
-						$type = null;
-						switch($tag["tagName"]){
-							
-							case "code": $type = "inline_code"; break;
-							case "em": $type = "italic"; break;
-							case "blockquote": $type = "quote"; break;
-							default: $type = "text";
-						}
-						
-						if($type !== null){
-							$value = $this->fuckhtml->getTextContent($tag, false, false);
-							
-							if(trim($value) != ""){
-								
-								$answer[] = [
-									"type" => $type,
-									"value" => rtrim($value)
-								];
-								$i++;
-							}
-						}
-						
-						if(count($tmphtml) === 2){
-							
-							$tmphtml = $tmphtml[1] . "\n";
-						}else{
-							
-							break;
-						}
-					}
-					
-					if(is_array($tmphtml)){
-						
-						$tmphtml = $tmphtml[0];
-					}
-					
-					if(strlen($tmphtml) !== 0){
-						
-						$value = $this->fuckhtml->getTextContent($tmphtml, true, false);
-						$this->appendtext($value, $answer, $i);
-					}
-					break;
-				
-				case "img":
-					$answer[] = [
-						"type" => "image",
-						"url" =>
-							$this->fuckhtml
-							->getTextContent(
-								$tag["attributes"]["src"]
-							)
-					];
-					$i++;
-					break;
-				
-				case "pre":
-					switch($answer[$i - 1]["type"]){
-						
-						case "text":
-						case "italic":
-							$answer[$i - 1]["value"] = rtrim($answer[$i - 1]["value"]);
-							break;
-					}
-					
-					$answer[] =
-						[
-							"type" => "code",
-							"value" =>
-								rtrim(
-									$this->fuckhtml
-									->getTextContent(
-										$snippet,
-										true,
-										false
-									)
-								)
-						];
-					$i++;
-					
-					break;
-				
-				case "ol":
-					$o = 0;
-					
-					$this->fuckhtml->load($snippet);
-					$li =
-						$this->fuckhtml
-						->getElementsByTagName("li");
-					
-					foreach($li as $elem){
-						$o++;
-						
-						$this->appendtext(
-							$o . ". " .
-							$this->fuckhtml
-							->getTextContent(
-								$elem
-							),
-							$answer,
-							$i
-						);
-					}
-					break;
-			}
-		}
-		
-		if(
-			$i !== 0 &&
-			$answer[$i - 1]["type"] == "text"
-		){
-			
-			$answer[$i - 1]["value"] = rtrim($answer[$i - 1]["value"]);
-		}
-		
-		return $answer;
-	}
-	
-	private function bstoutf8($bs){
-		
-		return iconv("UTF-8", "ISO-8859-1//TRANSLIT", $bs);
-	}
-	
-	private function limitnewlines($text){
-		
-		preg_replace(
-			'/(?:[\n\r] *){2,}/m',
-			"\n\n",
-			$text
-		);
-		
-		return $text;
-	}
-	
-	private function sanitizeurl($url){
+	private function unshiturl($url){
 		
 		// check for domains w/out first short subdomain (ex: www.)
 		
@@ -2732,16 +1900,12 @@ class ddg{
 		return $url;
 	}
 	
-	private function number_format($number){
+	private function bingimg($url){
 		
-		$number = explode(".", sprintf('%f', $number));
+		$parse = parse_url($url);
+		parse_str($parse["query"], $parts);
 		
-		if(count($number) === 1){
-			
-			return number_format((float)$number[0], 0, ",", ".");
-		}
-		
-		return number_format((float)$number[0], 0, ",", "") . "." . (string)$number[1];
+		return "https://" . $parse["host"] . "/th?id=" . urlencode($parts["id"]);
 	}
 	
 	private function bingratio($width, $height){
