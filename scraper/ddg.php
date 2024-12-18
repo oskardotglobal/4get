@@ -693,7 +693,11 @@ class ddg{
 				
 				$out["spelling"] = [
 					"type" => $type,
-					"using" => $json["suggestion"],
+					"using" =>
+						$this->fuckhtml
+						->getTextContent(
+							$json["suggestion"]
+						),
 					"correction" => $json["recourseText"]
 				];
 			}
@@ -1147,17 +1151,27 @@ class ddg{
 						
 						foreach($snippet["citations"] as $citation){
 							
-							$push[] = [
-								"type" => "quote",
-								"value" =>
-									$this->fuckhtml
-									->getTextContent(
-										$citation["cite"]
-									) . " - " .
+							if(!isset($citation["cite"])){ continue; }
+							
+							$text =
+								$this->fuckhtml
+								->getTextContent(
+									$citation["cite"]
+								);
+							
+							if(isset($citation["source"])){
+								
+								$text .=
+									" - " .
 									$this->fuckhtml
 									->getTextContent(
 										$citation["source"]
-									)
+									);
+							}
+							
+							$push[] = [
+								"type" => "quote",
+								"value" => $text
 							];
 						}
 					}
