@@ -844,10 +844,10 @@ class frontend{
 		}
 		
 		$payload .=
-				'<a href="https://webcache.googleusercontent.com/search?q=cache:' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://google.com" alt="go">Google cache</a>' .
 				'<a href="https://web.archive.org/web/' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://archive.org" alt="ar">Archive.org</a>' .
 				'<a href="https://archive.ph/newest/' . htmlspecialchars($link) . '" class="list" target="_BLANK"><img src="/favicon?s=https://archive.is" alt="ar">Archive.is</a>' .
 				'<a href="https://ghostarchive.org/search?term=' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://ghostarchive.org" alt="gh">Ghostarchive</a>' .
+				'<a href="https://arquivo.pt/wayback/' . htmlspecialchars($link) . '" class="list" target="_BLANK"><img src="/favicon?s=https://arquivo.pt" alt="ar">Arquivo.pt</a>' .
 				'<a href="https://www.bing.com/search?q=url%3A' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://bing.com" alt="bi">Bing cache</a>' .
 				'<a href="https://megalodon.jp/?url=' . $urlencode . '" class="list" target="_BLANK"><img src="/favicon?s=https://megalodon.jp" alt="me">Megalodon</a>' .
 			'</div>';

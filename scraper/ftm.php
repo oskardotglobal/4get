@@ -136,7 +136,7 @@ class ftm{
 				"source" => [
 					[
 						"url" =>
-							"https://findthatmeme.us-southeast-1.linodeobjects.com/" .
+							"https://s3.thehackerblog.com/findthatmeme/" .
 							$thumb,
 						"width" => null,
 						"height" => null

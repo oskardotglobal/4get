@@ -526,4 +526,85 @@ class fuckhtml{
 				$string
 			);
 	}
+	
+	public function extract_json($json){
+		
+		$len = strlen($json);
+		$array_level = 0;
+		$object_level = 0;
+		$in_quote = null;
+		$start = null;
+		
+		for($i=0; $i<$len; $i++){
+			
+			switch($json[$i]){
+				
+				case "[":
+					if($in_quote === null){
+						
+						$array_level++;
+						if($start === null){
+							
+							$start = $i;
+						}
+					}
+					break;
+				
+				case "]":
+					if($in_quote === null){
+						
+						$array_level--;
+					}
+					break;
+				
+				case "{":
+					if($in_quote === null){
+						
+						$object_level++;
+						if($start === null){
+							
+							$start = $i;
+						}
+					}
+					break;
+				
+				case "}":
+					if($in_quote === null){
+						
+						$object_level--;
+					}
+					break;
+				
+				case "\"":
+				case "'":
+					if(
+						$i !== 0 &&
+						$json[$i - 1] !== "\\"
+					){
+						// found a non-escaped quote
+						
+						if($in_quote === null){
+							
+							// open quote
+							$in_quote = $json[$i];
+						}elseif($in_quote === $json[$i]){
+							
+							// close quote
+							$in_quote = null;
+						}
+					}
+					break;
+			}
+			
+			if(
+				$start !== null &&
+				$array_level === 0 &&
+				$object_level === 0
+			){
+				
+				return substr($json, $start, $i - $start + 1);
+				break;
+			}
+		}
+	}
 }
