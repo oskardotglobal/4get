@@ -2531,6 +2531,8 @@ class google{
 							"div"
 						);
 					
+					$date = null;
+					
 					if(count($date_div) !== 0){
 						
 						foreach($date_div as $div){
@@ -2541,6 +2543,7 @@ class google{
 									"bottom:"
 								) !== false
 							){
+								
 								$date =
 									strtotime(
 										$this->fuckhtml
@@ -2548,7 +2551,6 @@ class google{
 											$div
 										)
 									);
-								
 								break;
 							}
 						}
@@ -4147,7 +4149,7 @@ class google{
 			throw new Exception("Failed to get HTML");
 		}
 		
-		//$html = file_get_contents("scraper/google.html");
+		//$html = file_get_contents("scraper/google.txt");
 		
 		return $this->parsepage($html, "web", $search, $proxy, $params);
 	}
