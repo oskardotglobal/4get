@@ -612,6 +612,25 @@ class ddg{
 					}
 				}
 				
+				$title =
+					$this->titledots(
+						$this->fuckhtml
+						->getTextContent(
+							$item["t"]
+						)
+					);
+				
+				if(
+					$title == "EOF" &&
+					strpos(
+						$item["c"],
+						"google"
+					)
+				){
+					
+					continue;
+				}
+				
 				// parse search result
 				$out["web"][] = [
 					"title" =>
