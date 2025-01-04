@@ -1209,15 +1209,16 @@ class yt{
 				
 				$reel =
 					$reel
-					->reelItemRenderer;
+					->shortsLockupViewModel;
 				
 				array_push(
 					$this->out["reel"],
 					[
 						"title" =>
 							$reel
-							->headline
-							->simpleText,
+							->overlayMetadata
+							->primaryText
+							->content,
 						"description" => null,
 						"author" => [
 							"name" => null,
@@ -1225,30 +1226,22 @@ class yt{
 							"avatar" => null
 						],
 						"date" => null,
-						"duration" =>
-							$this->textualtime2int(
-								$reel
-								->accessibility
-								->accessibilityData
-								->label
-							),
-						"views" =>
-							$this->truncatedcount2int(
-								$reel
-								->viewCountText
-								->simpleText
-							),
+						"duration" => null,
+						"views" => null,
 						"thumb" => [
 							"url" =>
 								$reel
 								->thumbnail
-								->thumbnails[0]
+								->sources[0]
 								->url,
 							"ratio" => "9:16"
 						],
 						"url" =>
 							"https://www.youtube.com/watch?v=" .
 							$reel
+							->onTap
+							->innertubeCommand
+							->reelWatchEndpoint
 							->videoId
 					]
 				);
