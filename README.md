@@ -39,9 +39,9 @@ tl;dr the best way to actually browse for shit.
 | Qwant      | Qwant        | Startpage  | Mojeek     |            | Kagi          |
 | Ghostery   | Yep          | Qwant      |            |            | Qwant         |
 | Yep        | Solofield    | Solofield  |            |            | Ghostery      |
-| Greppr     | Imgur        |            |            |            | Yep           |
-| Crowdview  | FindThatMeme |            |            |            | Marginalia    |
-| Mwmbl      |              |            |            |            | YouTube       |
+| Greppr     | Pinterest    |            |            |            | Yep           |
+| Crowdview  | Imgur        |            |            |            | Marginalia    |
+| Mwmbl      | FindThatMeme |            |            |            | YouTube       |
 | Mojeek     |              |            |            |            | Soundcloud    |
 | Solofield  |              |            |            |            |               |
 | Marginalia |              |            |            |            |               |
