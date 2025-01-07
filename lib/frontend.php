@@ -969,7 +969,7 @@ class frontend{
 						"qwant" => "Qwant",
 						"yep" => "Yep",
 						"solofield" => "Solofield",
-						//"pinterest" => "Pinterest",
+						"pinterest" => "Pinterest",
 						"imgur" => "Imgur",
 						"ftm" => "FindThatMeme"
 					]
