@@ -1212,7 +1212,10 @@ class ddg{
 									);
 							}
 							
-							if(count($words) !== 0){
+							if(
+								count($words) !== 0 &&
+								isset($related["relationshipType"])
+							){
 								
 								$relations[ucfirst($related["relationshipType"]) . "s"] =
 									implode(", ", $words);
