@@ -119,7 +119,7 @@ class config{
 	
 	// Default user agent to use for scraper requests. Sometimes ignored to get specific webpages
 	// Changing this might break things.
-	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0";
+	const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0";
 	
 	// Proxy pool assignments for each scraper
 	// false = Use server's raw IP
@@ -143,6 +143,7 @@ class config{
 	const PROXY_YT = false; // youtube
 	const PROXY_YEP = false;
 	const PROXY_PINTEREST = false;
+	const PROXY_FIVEHPX = false;
 	const PROXY_SEZNAM = false;
 	const PROXY_NAVER = false;
 	const PROXY_GREPPR = false;
