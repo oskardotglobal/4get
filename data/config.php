@@ -144,6 +144,7 @@ class config{
 	const PROXY_YEP = false;
 	const PROXY_PINTEREST = false;
 	const PROXY_FIVEHPX = false;
+	const PROXY_VSCO = false;
 	const PROXY_SEZNAM = false;
 	const PROXY_NAVER = false;
 	const PROXY_GREPPR = false;

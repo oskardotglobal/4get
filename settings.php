@@ -236,6 +236,10 @@ $settings = [
 						"text" => "500px"
 					],
 					[
+						"value" => "vsco",
+						"text" => "VSCO"
+					],
+					[
 						"value" => "imgur",
 						"text" => "Imgur"
 					],
