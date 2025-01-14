@@ -9,9 +9,11 @@ https://4get.ca/about
 ## Official instance
 https://4get.ca , or visit the official instance list: https://4get.ca/instances
 
+_NOT to be confused with 4get.ch, 4get.lol and friends! I **don't** host these._
+
 ## Totally unbiased comparison between alternatives
 
-|                            | 4get                    | searx(ng) | libreY      | araa      | hearch            |
+|                            | 4get                    | searx(ng) | libreY      | araa      | hearch.co         |
 |----------------------------|-------------------------|-----------|-------------|-----------|-------------------|
 | RAM usage                  | 200-400mb~              | 2GB~      | 200-400mb~  | 2GB~      | idk               |
 | Does it suck               | no (debunked by snopes) | yes       | yes         | a little  | better than searx |
@@ -23,9 +25,9 @@ https://4get.ca , or visit the official instance list: https://4get.ca/instances
 3. Bot protection that *actually* filters out the bots (when configured)
 4. Interface doesn't require javascript
 5. Favicon fetcher with caching support & image proxy
-6. Bunch of other shit
+6. Bunch of other shits
 
-tl;dr the best way to actually browse for shit.
+tl;dr 4get is the best way to browse for shit.
 
 # Supported websites
 
@@ -39,11 +41,11 @@ tl;dr the best way to actually browse for shit.
 | Qwant      | Qwant        | Startpage  | Mojeek     |            | Kagi          |
 | Ghostery   | Yep          | Qwant      |            |            | Qwant         |
 | Yep        | Solofield    | Solofield  |            |            | Ghostery      |
-| Greppr     | Imgur        |            |            |            | Yep           |
-| Crowdview  | FindThatMeme |            |            |            | Marginalia    |
-| Mwmbl      |              |            |            |            | YouTube       |
-| Mojeek     |              |            |            |            | Soundcloud    |
-| Solofield  |              |            |            |            |               |
+| Greppr     | Pinterest    |            |            |            | Yep           |
+| Crowdview  | 500px        |            |            |            | Marginalia    |
+| Mwmbl      | VSCO         |            |            |            | YouTube       |
+| Mojeek     | Imgur        |            |            |            | Soundcloud    |
+| Solofield  | FindThatMeme |            |            |            |               |
 | Marginalia |              |            |            |            |               |
 | wiby       |              |            |            |            |               |
 | Curlie     |              |            |            |            |               |
@@ -52,7 +54,7 @@ tl;dr the best way to actually browse for shit.
 Refer to the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/">documentation index</a>. I recommend following the <a href="https://git.lolcat.ca/lolcat/4get/src/branch/master/docs/apache2.md">apache2 guide</a>.
 
 ## Contact
-Shit breaks all the time but I repair it all the time too... Email me here: <b>will (at) lolcat.ca</b> or create an issue.
+Shit breaks all the time but I repair it all the time too. Email me here: <b>will (at) lolcat.ca</b> or create an issue.
 
 ## License
 AGPL

@@ -227,10 +227,18 @@ $settings = [
 						"value" => "solofield",
 						"text" => "Solofield"
 					],
-					/*[
+					[
 						"value" => "pinterest",
 						"text" => "Pinterest"
-					],*/
+					],
+					[
+						"value" => "fivehpx",
+						"text" => "500px"
+					],
+					[
+						"value" => "vsco",
+						"text" => "VSCO"
+					],
 					[
 						"value" => "imgur",
 						"text" => "Imgur"

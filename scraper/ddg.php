@@ -612,6 +612,25 @@ class ddg{
 					}
 				}
 				
+				$title =
+					$this->titledots(
+						$this->fuckhtml
+						->getTextContent(
+							$item["t"]
+						)
+					);
+				
+				if(
+					$title == "EOF" &&
+					strpos(
+						$item["c"],
+						"google"
+					)
+				){
+					
+					continue;
+				}
+				
 				// parse search result
 				$out["web"][] = [
 					"title" =>
@@ -1193,7 +1212,10 @@ class ddg{
 									);
 							}
 							
-							if(count($words) !== 0){
+							if(
+								count($words) !== 0 &&
+								isset($related["relationshipType"])
+							){
 								
 								$relations[ucfirst($related["relationshipType"]) . "s"] =
 									implode(", ", $words);

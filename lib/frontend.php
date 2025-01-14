@@ -975,7 +975,9 @@ class frontend{
 						"qwant" => "Qwant",
 						"yep" => "Yep",
 						"solofield" => "Solofield",
-						//"pinterest" => "Pinterest",
+						"pinterest" => "Pinterest",
+						"fivehpx" => "500px",
+						"vsco" => "VSCO",
 						"imgur" => "Imgur",
 						"ftm" => "FindThatMeme"
 					]

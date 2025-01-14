@@ -227,7 +227,7 @@ class marginalia{
 				$json =
 					$this->get(
 						$this->backend->get_ip(), // no nextpage
-						"https://api.marginalia.nu/" . config::MARGINALIA_API_KEY . "/search/" . urlencode($search),
+						"https://api.marginalia-search.com/" . config::MARGINALIA_API_KEY . "/search/" . urlencode($search),
 						[
 							"count" => 20
 						]
@@ -279,7 +279,7 @@ class marginalia{
 				$html =
 					$this->get(
 						$proxy,
-						"https://search.marginalia.nu/search?" . $params
+						"https://old-search.marginalia.nu/search?" . $params
 					);
 			}catch(Exception $error){
 				
@@ -308,7 +308,7 @@ class marginalia{
 				$html =
 					$this->get(
 						$proxy,
-						"https://search.marginalia.nu/search",
+						"https://old-search.marginalia.nu/search",
 						$params
 					);
 			}catch(Exception $error){
